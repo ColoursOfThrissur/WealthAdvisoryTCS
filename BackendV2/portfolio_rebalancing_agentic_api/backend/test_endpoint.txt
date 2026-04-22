@@ -1,0 +1,36 @@
+"""
+Add this endpoint to app.py to test MCP connectivity
+"""
+
+@app.get("/api/test/mcp-health")
+async def test_mcp_health():
+    """Test MCP server connectivity without running full agent"""
+    try:
+        from mcp_client import mcp_manager
+        
+        results = {}
+        for server_name in mcp_manager.servers.keys():
+            try:
+                client = await mcp_manager.get_client(server_name)
+                if client:
+                    # Try to list tools
+                    tools = await client.list_tools()
+                    results[server_name] = {
+                        "status": "connected",
+                        "tools_count": len(tools.tools),
+                        "sample_tools": [t.name for t in tools.tools[:3]]
+                    }
+                else:
+                    results[server_name] = {"status": "failed", "error": "Could not get client"}
+            except Exception as e:
+                results[server_name] = {"status": "error", "error": str(e)}
+        
+        return {
+            "success": True,
+            "mcp_servers": results,
+            "message": "MCP health check complete"
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
