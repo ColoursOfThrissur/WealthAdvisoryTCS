@@ -1,0 +1,81 @@
+/* ── Agent Trace v2 ── */
+.agent-trace-v2 {
+  max-width: 380px;
+  margin: 0 auto 24px;
+  animation: traceSlideIn 0.3s ease;
+}
+
+.agent-trace-v2.finishing {
+  animation: traceFadeOut 0.5s ease 1.2s forwards;
+}
+
+.trace-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  background: var(--glass-bg, rgba(99, 102, 241, 0.06));
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.15));
+}
+
+.trace-status-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--success, #6366f1);
+}
+
+.trace-step-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-secondary, #9ca3af);
+}
+
+.trace-step.active .trace-status-icon {
+  color: var(--success, #6366f1);
+}
+
+.trace-step.active .trace-step-icon {
+  color: var(--success, #6366f1);
+}
+
+.trace-step-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  line-height: 1;
+}
+
+.trace-timer {
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary, #9ca3af);
+  margin-left: auto;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes traceSlideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes traceFadeOut {
+  to { opacity: 0; height: 0; padding: 0; margin: 0; overflow: hidden; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

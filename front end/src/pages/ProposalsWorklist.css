@@ -1,0 +1,10 @@
+/* Import shared worklist styles */
+@import './RebalancingWorklist.css';
+
+/* AI Column Header */
+.ai-column-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  justify-content: flex-start;
+}

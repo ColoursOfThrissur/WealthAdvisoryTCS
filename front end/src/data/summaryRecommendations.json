@@ -1,0 +1,110 @@
+{
+  "15634602": {
+    "kpi": {
+      "portfolio_value": "$577,000",
+      "positions_to_fix": 5,
+      "trade_recos": 8,
+      "expected_benefit": "ER 0.69%→0.48%"
+    },
+    "recommended_option": {
+      "name": "Rebalance + Fund Substitution (Option B)",
+      "description": [
+        "The recommendation is to <strong>bring the portfolio back into balance</strong> after stocks have grown faster than expected, increasing overall risk. This delivers the same <strong>drift correction</strong> and <strong>policy alignment</strong> as Option A, but does more with it.",
+        "Trim the overweight positions in <strong>FSPGX, AEPGX, ANWPX</strong>, and reallocate the proceeds into underweight fixed-income holdings such as <strong>AMECX</strong>, and <strong>ABNDX</strong>.",
+        "Replacing <strong>CWBFX</strong> with the lower-cost Bond Index Fund <strong>VSCSX</strong> will materially <strong>reduce expense drag</strong>, while realizing an estimated <strong>$18,037 loss</strong> for tax efficiency.",
+        "This action eases <strong>volatility</strong>, reduces <strong>concentration risk</strong>, and brings the portfolio's behavior closer to its intended profile with a <strong>moderate growth</strong> objective."
+      ],
+      "tags": ["IPS Compliant", "Lower Cost", "Tax Efficient", "Approval Required"]
+    },
+    "rebalance_summary": [
+      { "asset_class": "Equity – Core", "ticker": "FSPGX", "before": "18.19%", "target": "15.0%", "after": "15.0%", "change": "-3.19%", "trade_value": "$18,406", "direction": "Sell" },
+      { "asset_class": "Equity – Aggressive", "ticker": "AGTHX", "before": "9.6%", "target": "10.0%", "after": "9.6%", "change": "0%", "trade_value": "$0", "direction": "Hold" },
+      { "asset_class": "Equity – Core", "ticker": "AIVSX", "before": "9.17%", "target": "10.0%", "after": "9.2%", "change": "0%", "trade_value": "$0", "direction": "Hold" },
+      { "asset_class": "Equity – Aggressive", "ticker": "AEPGX", "before": "14.16%", "target": "10.0%", "after": "10.0%", "change": "-4.16%", "trade_value": "$24,003", "direction": "Sell" },
+      { "asset_class": "Equity – Core", "ticker": "ANWPX", "before": "6.08%", "target": "5.0%", "after": "5.0%", "change": "-1.08%", "trade_value": "$6,232", "direction": "Sell" },
+      { "asset_class": "Equity – Defensive", "ticker": "AMECX", "before": "9.01%", "target": "10.0%", "after": "10.0%", "change": "+0.99%", "trade_value": "$5,712", "direction": "Buy" },
+      { "asset_class": "Fixed Income", "ticker": "ABNDX", "before": "18.94%", "target": "20.0%", "after": "20.0%", "change": "+1.06%", "trade_value": "$6,116", "direction": "Buy" },
+      { "asset_class": "Fixed Income", "ticker": "CWBFX", "before": "10.52%", "target": "0.0%", "after": "0.0%", "change": "-10.52%", "trade_value": "$60,712", "direction": "Sell" },
+      { "asset_class": "Fixed Income", "ticker": "VSCSX", "before": "0.0%", "target": "15.0%", "after": "15.0%", "change": "+15.0%", "trade_value": "$86,550", "direction": "Buy" },
+      { "asset_class": "Cash", "ticker": "CASH", "before": "4.33%", "target": "5.0%", "after": "4.3%", "change": "0%", "trade_value": "$0", "direction": "Hold" }
+    ],
+    "asset_allocation": [
+      { "category": "Equity", "current": 66.2, "target": 60.0, "rebalanced": 59.91 },
+      { "category": "Fixed Income", "current": 29.46, "target": 35.0, "rebalanced": 35.68 },
+      { "category": "Cash", "current": 4.33, "target": 5.0, "rebalanced": 4.41 }
+    ],
+    "options": {
+      "option_a": {
+        "name": "Pure Rebalance",
+        "description": "Adjust weights across existing holdings to meet IPS targets. All 9 positions retained — CWBFX bought up to 15% target instead of replaced.",
+        "trade_recommendations": [
+          { "action": "Sell", "ticker": "FSPGX", "fund": "Fidelity Large Cap Growth Index", "type": "Equity", "units": 424, "amount": 18406, "gain": 7370, "best_lot": "LOT-F3 (Nov-25)" },
+          { "action": "Hold", "ticker": "AGTHX", "fund": "American Funds Growth Fund of America", "type": "Equity", "units": 0, "amount": 0, "gain": 0, "best_lot": null },
+          { "action": "Hold", "ticker": "AIVSX", "fund": "American Funds Investment Company of America", "type": "Equity", "units": 0, "amount": 0, "gain": 0, "best_lot": null },
+          { "action": "Sell", "ticker": "AEPGX", "fund": "American Funds EuroPacific Growth", "type": "Equity", "units": 401, "amount": 24003, "gain": 3168, "best_lot": "LOT-E3 (Aug-25)" },
+          { "action": "Sell", "ticker": "ANWPX", "fund": "American Funds New Perspective", "type": "Equity", "units": 91, "amount": 6232, "gain": 2167, "best_lot": "LOT-N2 (Aug-25)" },
+          { "action": "Buy", "ticker": "AMECX", "fund": "American Funds Income Fund of America", "type": "Equity", "units": 211, "amount": -5712, "gain": 0, "best_lot": null },
+          { "action": "Buy", "ticker": "ABNDX", "fund": "American Funds Bond Fund of America", "type": "Fixed Income", "units": 539, "amount": -6116, "gain": 0, "best_lot": null },
+          { "action": "Buy", "ticker": "CWBFX", "fund": "American Funds Capital World Bond", "type": "Fixed Income", "units": 1597, "amount": -25850, "gain": 0, "best_lot": null },
+          { "action": "Hold", "ticker": "CASH", "fund": "Cash / Money Market", "type": "Cash", "units": 0, "amount": 0, "gain": 0, "best_lot": null }
+        ],
+        "trade_totals": { "total_sells": 48641, "total_buys": 37678, "net_value": 10963 }
+      },
+      "option_b": {
+        "name": "Rebalance + Fund Substitution",
+        "recommended": true,
+        "description": "Same equity rebalance as Option A, but fully liquidate CWBFX and replace with VSCSX (Vanguard Short-Term Corporate Bond). Reduces expense ratio from 0.98% to 0.06% and harvests −$18,037 in losses.",
+        "trade_recommendations": [
+          { "action": "Sell", "ticker": "FSPGX", "fund": "Fidelity Large Cap Growth Index", "type": "Equity", "units": 424, "amount": 18406, "gain": 7370, "best_lot": "LOT-F3 (Nov-25)" },
+          { "action": "Hold", "ticker": "AGTHX", "fund": "American Funds Growth Fund of America", "type": "Equity", "units": 0, "amount": 0, "gain": 0, "best_lot": null },
+          { "action": "Hold", "ticker": "AIVSX", "fund": "American Funds Investment Company of America", "type": "Equity", "units": 0, "amount": 0, "gain": 0, "best_lot": null },
+          { "action": "Sell", "ticker": "AEPGX", "fund": "American Funds EuroPacific Growth", "type": "Equity", "units": 401, "amount": 24003, "gain": 3168, "best_lot": "LOT-E3 (Aug-25)" },
+          { "action": "Sell", "ticker": "ANWPX", "fund": "American Funds New Perspective", "type": "Equity", "units": 91, "amount": 6232, "gain": 2167, "best_lot": "LOT-N2 (Aug-25)" },
+          { "action": "Buy", "ticker": "AMECX", "fund": "American Funds Income Fund of America", "type": "Equity", "units": 211, "amount": -5712, "gain": 0, "best_lot": null },
+          { "action": "Buy", "ticker": "ABNDX", "fund": "American Funds Bond Fund of America", "type": "Fixed Income", "units": 539, "amount": -6116, "gain": 0, "best_lot": null },
+          { "action": "Sell", "ticker": "CWBFX", "fund": "American Funds Capital World Bond", "type": "Fixed Income", "units": 3750, "amount": 60712, "gain": -18037, "best_lot": "LOT-C1 (Mar-25)" },
+          { "action": "Buy", "ticker": "VSCSX", "fund": "Vanguard Short-Term Corporate Bond", "type": "Fixed Income", "units": 69240, "amount": -86550, "gain": 0, "best_lot": null },
+          { "action": "Hold", "ticker": "CASH", "fund": "Cash / Money Market", "type": "Cash", "units": 0, "amount": 0, "gain": 0, "best_lot": null }
+        ],
+        "trade_totals": { "total_sells": 109353, "total_buys": 98378, "net_value": 10975 }
+      }
+    },
+    "trade_rationale": "Reduce overweight equity exposure (FSPGX -3.19%, AEPGX -4.16%, ANWPX -1.08%) to bring portfolio within IPS bands. Rotate proceeds into underweight defensive positions: AMECX (+0.99%), ABNDX (+1.06%). Replace CWBFX (ER 0.98%) with VSCSX (ER 0.06%) to harvest −$18,037 in losses and dramatically reduce fixed income costs. Option B preferred for tax efficiency and cost savings.",
+    "tax_efficiency": {
+      "estimated_realized_gains": 12705,
+      "short_term_gains": 0,
+      "long_term_gains": 12705,
+      "tax_rate_applied": "15% LTCG",
+      "estimated_tax_liability": 1906,
+      "note": "CWBFX loss of −$18,037 offsets equity gains of $12,705, resulting in net loss carry-forward. Effective tax impact near zero."
+    },
+    "cost_analysis": {
+      "current_weighted_er": "0.69%",
+      "post_rebalance_er": "0.48%",
+      "annual_savings": "$1,206",
+      "note": "Replacing CWBFX (0.98%) with VSCSX (0.06%) is the primary driver. Annual savings of ~$1,206 on $577K portfolio."
+    },
+    "escalations": [
+      { "rule": "Equity Sleeve >60%", "current": "66.2%", "post_trade": "60.0%", "target": "≤65%", "status": "PRE-TRADE BREACH", "action": "Resolved by rebalance — requires supervisor approval before execution" },
+      { "rule": "Fixed Income <30%", "current": "29.46%", "post_trade": "35.0%", "target": "≥30%", "status": "PRE-TRADE BREACH", "action": "Resolved by rebalance — ABNDX and VSCSX buys restore allocation" },
+      { "rule": "IT Sector >30% of Equity", "current": "31.0%", "post_trade": "28.5%", "target": "≤30%", "status": "PRE-TRADE BREACH", "action": "Resolved by FSPGX trim from 18.19% to 15.0%" }
+    ],
+    "post_trade_checks": [
+      { "check": "Asset Class Bands", "status": "PASS", "result": "Equity 58.8% (55–65%), Fixed Income 35.0% (30–40%), Cash 4.3% (2–10%)" },
+      { "check": "Drift Threshold ±5%", "status": "PASS", "result": "Equity drift corrected from +6.20pp to −0.09pp; Fixed Income from −5.54pp to +0.68pp" },
+      { "check": "Position Size ≤20%", "status": "PASS", "result": "All funds ≤20%; ABNDX 20.0%, FSPGX 15.0%" },
+      { "check": "IT Sector ≤30%", "status": "PASS", "result": "IT concentration reduced from ~31.2% to ~28.5% of equity" },
+      { "check": "Expense Ratio ≤1.0%", "status": "PASS", "result": "Weighted ER reduced from 0.69% to 0.48%" }
+    ],
+    "final_recommendation": {
+      "option": "Option B",
+      "title": "Rebalance + Fund Substitution",
+      "reasons": [
+        "Achieves identical drift correction and IPS compliance as Option A.",
+        "Reduces portfolio expense ratio (CWBFX 0.98% → VSCSX 0.06%).",
+        "Harvests −$18,037 in losses to offset realized gains and improve after-tax outcome.",
+        "Lowers volatility and sector concentration; improves beta alignment."
+      ]
+    }
+  }
+}

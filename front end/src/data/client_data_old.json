@@ -1,0 +1,67 @@
+[
+    {
+        "clientId": "C12345",
+        "gender": "Male",
+        "age": 45,
+        "joinDate": "2020-01-15",
+        "fum": "Gold | E11.2M",
+        "contribution": "M",
+        "disposableIncome": "E1.2M",
+        "agents": [
+            { "name": "Meeting" },
+            { "name": "Doc Intake Agent" }
+        ]
+    },
+    {
+        "clientId": "C67890",
+        "gender": "Female",
+        "age": 38,
+        "joinDate": "2018-05-22",
+        "fum": "Retirement Acc. | E5.2M",
+        "contribution": "L",
+        "disposableIncome": "E950K",
+        "agents": [
+            { "name": "Meeting prep Agent" },
+            { "name": "Rebalance Agent" }
+        ]
+    },
+    {
+        "clientId": "C24680",
+        "gender": "Male",
+        "age": 52,
+        "joinDate": "2022-03-10",
+        "fum": "Platinum | E25.8M",
+        "contribution": "H",
+        "disposableIncome": "E2.5M",
+        "agents": [
+            { "name": "Meeting" },
+            { "name": "Doc Intake Agent" },
+            { "name": "Meeting prep Agent" }
+        ]
+    },
+    {
+        "clientId": "C13579",
+        "gender": "Female",
+        "age": 29,
+        "joinDate": "2019-11-01",
+        "fum": "Silver | E3.7M",
+        "contribution": "M",
+        "disposableIncome": "E700K",
+        "agents": [
+            { "name": "Rebalance Agent" }
+        ]
+    },
+    {
+        "clientId": "C80246",
+        "gender": "Male",
+        "age": 61,
+        "joinDate": "2017-09-05",
+        "fum": "Retirement Acc. | E8.1M",
+        "contribution": "L",
+        "disposableIncome": "E1.1M",
+        "agents": [
+            { "name": "Meeting" },
+            { "name": "Doc Intake Agent" }
+        ]
+    }
+]

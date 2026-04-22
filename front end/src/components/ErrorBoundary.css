@@ -1,0 +1,113 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 2rem;
+  background: var(--bg-primary, #ffffff);
+}
+
+.error-boundary-content {
+  max-width: 600px;
+  text-align: center;
+}
+
+.error-boundary-icon {
+  color: var(--error, #ef4444);
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.error-boundary-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin-bottom: 0.5rem;
+}
+
+.error-boundary-message {
+  font-size: 1rem;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.error-boundary-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.error-boundary-retry:hover {
+  background: var(--primary-dark, #2563eb);
+  transform: translateY(-1px);
+}
+
+.error-boundary-retry:active {
+  transform: translateY(0);
+}
+
+.error-boundary-help {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-secondary, #f9fafb);
+  border-radius: 0.5rem;
+  text-align: left;
+}
+
+.error-boundary-help p {
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin-bottom: 0.75rem;
+}
+
+.error-boundary-help ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  color: var(--text-secondary, #6b7280);
+}
+
+.error-boundary-help li {
+  margin-bottom: 0.5rem;
+}
+
+.error-boundary-details {
+  margin-top: 2rem;
+  text-align: left;
+  background: var(--bg-secondary, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.error-boundary-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin-bottom: 1rem;
+}
+
+.error-boundary-stack,
+.error-boundary-component-stack {
+  background: var(--bg-tertiary, #ffffff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 0.25rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  font-family: 'Courier New', monospace;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

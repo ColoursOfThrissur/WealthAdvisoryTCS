@@ -1,0 +1,15 @@
+.pmd-date {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin-left: auto;
+  font-weight: 500;
+}
+
+.pmd-time {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--success);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}

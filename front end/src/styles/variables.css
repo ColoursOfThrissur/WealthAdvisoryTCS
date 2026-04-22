@@ -1,0 +1,95 @@
+:root {
+  /* Color System */
+  --primary-base: #050807;
+  --accent-glow: #0a1a14;
+  
+  /* Semantic Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Investment Proposal Colors */
+  --ip-header-dark: rgba(30, 58, 138, 0.9);
+  --ip-header-dark-hover: rgba(37, 99, 235, 0.9);
+  --ip-accent: #3b82f6;
+  --ip-text-primary: #1e293b;
+  --ip-text-secondary: #475569;
+  --ip-text-tertiary: #64748b;
+  --ip-bg-light: #f8fafc;
+  --ip-bg-white: white;
+  --ip-border: #e2e8f0;
+  --ip-border-light: #f1f5f9;
+  
+  /* Portfolio Rebalancing Colors */
+  --pr-header-dark: rgba(6, 95, 70, 0.9);
+  --pr-header-dark-hover: rgba(6, 120, 90, 0.9);
+  --pr-accent: #06b6d4;
+  --pr-text-primary: #1e293b;
+  --pr-text-secondary: #475569;
+  --pr-text-tertiary: #64748b;
+  --pr-bg-light: #f8fafc;
+  --pr-bg-white: white;
+  --pr-border: #e2e8f0;
+  --pr-border-light: #f1f5f9;
+  
+  /* Priority Colors */
+  --priority-critical: #ef4444;
+  --priority-high: #f59e0b;
+  --priority-medium: #3b82f6;
+  --priority-low: #6b7280;
+  
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-full: 9999px;
+  
+  /* Shadows & Glows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-hero: 0 12px 48px rgba(0, 0, 0, 0.25);
+  --glow-accent: 0 0 20px rgba(10, 26, 20, 0.5);
+  --glow-success: 0 0 20px rgba(16, 185, 129, 0.4);
+  --glow-success-strong: 0 0 30px rgba(16, 185, 129, 0.6);
+  --glow-critical: 0 0 20px rgba(239, 68, 68, 0.4);
+  --glow-high: 0 0 20px rgba(245, 158, 11, 0.4);
+  --glow-medium: 0 0 20px rgba(59, 130, 246, 0.4);
+  
+  /* Green Variations */
+  --success-dark: #059669;
+  --success-light: rgba(16, 185, 129, 0.1);
+  --success-lighter: rgba(16, 185, 129, 0.05);
+  --success-subtle: rgba(16, 185, 129, 0.02);
+  
+  /* Border Weights */
+  --border-thin: 1px;
+  --border-medium: 2px;
+  --border-thick: 3px;
+  
+  /* Blur */
+  --blur-sm: 8px;
+  --blur-md: 16px;
+  --blur-lg: 24px;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+  
+  /* Z-index */
+  --z-base: 1;
+  --z-elevated: 10;
+  --z-modal: 100;
+  --z-tooltip: 1000;
+}

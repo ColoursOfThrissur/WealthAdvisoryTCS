@@ -1,0 +1,510 @@
+{
+  "endpoints": [
+    {
+      "method": "POST",
+      "url": "/api/login",
+      "description": "Authenticate user and return JWT token",
+      "requestBody": {
+        "userID": "<user_email>",
+        "password": "<password>"
+      },
+      "response": {
+        "access_token": "<jwt_token_string>",
+        "token_type": "bearer"
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/register",
+      "description": "Register a new user account",
+      "requestBody": {
+        "userID": "<user_email>",
+        "password": "<password>"
+      },
+      "response": {
+        "message": "Registration successful",
+        "userID": "<user_email>"
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/session/create",
+      "description": "Create a new chat session for the report/chat interface",
+      "requestBody": {},
+      "response": {
+        "session_id": "abc123-session-uuid"
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/session/{sessionId}",
+      "description": "Get status of an existing session",
+      "response": {
+        "session_id": "abc123-session-uuid",
+        "status": "active",
+        "created_at": "2025-01-01T10:00:00Z"
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/upload",
+      "description": "Upload a file (PDF report etc.) for chat analysis",
+      "requestBody": "multipart/form-data: file=<binary>",
+      "response": {
+        "file_path": "/uploads/report_2025.pdf",
+        "file_name": "report_2025.pdf",
+        "size_bytes": 204800
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/download/{filename}",
+      "description": "Download a previously uploaded file",
+      "response": "Binary file stream"
+    },
+    {
+      "method": "POST",
+      "url": "/api/research/{sessionId}",
+      "description": "Run a research query (equity/sector research mode in chat)",
+      "requestBody": {
+        "query": "AAPL"
+      },
+      "response": {
+        "answer": "Apple Inc. (AAPL) is a large-cap technology company...",
+        "sources": ["reuters.com", "bloomberg.com"]
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/debug/save-response",
+      "description": "Internal debug endpoint — saves agent response to disk",
+      "requestBody": {
+        "message": "Agent response text",
+        "type": "response",
+        "data": {}
+      },
+      "response": {
+        "saved": true
+      }
+    },
+    {
+      "method": "WebSocket",
+      "url": "/ws/chat/{sessionId}",
+      "description": "WebSocket connection for real-time agent chat. Send messages, receive streamed status + results",
+      "clientMessage": {
+        "type": "message",
+        "content": "Generate performance report for Sarah Mitchell",
+        "file_path": "/uploads/report_2025.pdf",
+        "benchmark": null
+      },
+      "serverMessages": [
+        {
+          "type": "connected",
+          "message": "Connected to session abc123-session-uuid"
+        },
+        {
+          "type": "status",
+          "message": "Fetching portfolio data..."
+        },
+        {
+          "type": "status",
+          "message": "Running risk analysis..."
+        },
+        {
+          "type": "response",
+          "message": "Here is the performance report for Sarah Mitchell...",
+          "data": {},
+          "section": "performance_summary",
+          "sections": [
+            {
+              "section": "performance_summary",
+              "data": {
+                "client_name": "Sarah Mitchell",
+                "total_return": "12.4%",
+                "benchmark_return": "10.1%"
+              }
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "message": "Unable to fetch data for the requested client."
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "/api/client/{clientId}/full-analysis",
+      "description": "Full analysis — all 4 sub-APIs in one call. Cached for 30 min. Add ?refresh=true to force re-run.",
+      "response": {
+        "success": true,
+        "summary": {
+          "client_id": "15634602",
+          "client_name": "Sam Pai",
+          "total_aum": 548230.50,
+          "risk_profile": "Moderate",
+          "priority": "HIGH",
+          "priority_reason": "Portfolio drift exceeds 5% threshold",
+          "action_rationale": "Rebalance equity to fixed income to restore IPS compliance",
+          "compliance_status": "BREACH",
+          "rebalance_needed": true,
+          "ips_violations": 3,
+          "total_trades": 5,
+          "total_buy": 42000,
+          "total_sell": 38500,
+          "estimated_tax": 2100,
+          "portfolio_beta": 0.87,
+          "volatility_1y": 14.2,
+          "sharpe_1y": 1.12,
+          "overall_sentiment": -0.12,
+          "risk_score": 72,
+          "generated_at": "2025-01-01T10:00:00Z",
+          "cache_hit": false
+        },
+        "client_detail": { "$ref": "See GET /api/client/{clientId}/detail" },
+        "risk_analysis": { "$ref": "See GET /api/client/{clientId}/risk-analysis" },
+        "investment_details": { "$ref": "See GET /api/client/{clientId}/investment-details" },
+        "rebalancing_action": { "$ref": "See GET /api/action/rebalancing/{clientId}" }
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/client/{clientId}/detail",
+      "description": "Client profile, portfolio drift, risk summary and recommendations",
+      "response": {
+        "success": true,
+        "_from_cache": true,
+        "data": {
+          "client": {
+            "client_id": "15634602",
+            "name": "Sam Pai",
+            "age": 38,
+            "risk_tolerance": "Moderate",
+            "fum": "$548,230",
+            "Cash_in_Hand": "$23,500"
+          },
+          "asset_allocation": [
+            { "category": "Equity", "current": 66.2, "target": 60.0, "rebalanced": 59.9 },
+            { "category": "Fixed Income", "current": 29.5, "target": 35.0, "rebalanced": 35.7 },
+            { "category": "Cash", "current": 4.3, "target": 5.0, "rebalanced": 4.4 }
+          ],
+          "fund_drift": [
+            { "ticker": "FSPGX", "actual": 18.2, "target": 15.0, "drift": 3.19 },
+            { "ticker": "AGTHX", "actual": 9.6, "target": 10.0, "drift": -0.4 },
+            { "ticker": "CWBFX", "actual": 5.5, "target": 10.0, "drift": -4.48 }
+          ],
+          "risk_summary": [
+            { "title": "Portfolio Drift", "detail": "Equity overweight by 6.2pp vs IPS target", "type": "drift" },
+            { "title": "Volatility Risk", "detail": "Portfolio std dev 14.2% vs 12% IPS limit", "type": "risk" },
+            { "title": "IT Sector Concentration", "detail": "31% IT exposure exceeds 30% IPS cap", "type": "ips" }
+          ],
+          "recommendations": {
+            "kpi": {
+              "portfolio_value": "$548,230",
+              "positions_to_fix": 4,
+              "trade_recos": 5,
+              "expected_benefit": "$1,206/yr"
+            },
+            "recommended_option": {
+              "name": "Option B: Tax-Efficient Rebalance",
+              "description": ["Sell CWBFX to harvest $18,037 tax loss. Buy ABNDX to increase fixed income exposure."],
+              "tags": ["Tax Efficient", "IPS Compliant", "Approval Required"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/client/{clientId}/risk-analysis",
+      "description": "Risk score, stress tests, beta/volatility/drawdown breakdown, LLM insights",
+      "response": {
+        "success": true,
+        "_from_cache": true,
+        "data": {
+          "portfolio_beta": 0.87,
+          "target_beta": 0.75,
+          "volatility_1y_pct": 14.2,
+          "sharpe_1y": 1.12,
+          "total_it_concentration": 31.0,
+          "asset_drift": [
+            { "class": "Equity", "actual": 66.2, "target": 60.0, "diff": 6.2, "band": "±5%", "status": "BREACH" },
+            { "class": "Fixed Income", "actual": 29.5, "target": 35.0, "diff": -5.5, "band": "±5%", "status": "BREACH" },
+            { "class": "Cash", "actual": 4.3, "target": 5.0, "diff": -0.7, "band": "±3%", "status": "OK" }
+          ],
+          "fund_drift": [
+            { "ticker": "FSPGX", "actual": 18.2, "target": 15.0, "drift": 3.19 },
+            { "ticker": "CWBFX", "actual": 5.5, "target": 10.0, "drift": -4.48 }
+          ],
+          "volatility": [
+            { "tier": "High", "fund": "FSPGX", "std_dev": "18.4%", "var_95": "-2.1%", "weight": "18.2%", "risk_contrib": "3.35%" },
+            { "tier": "Moderate", "fund": "AGTHX", "std_dev": "14.1%", "var_95": "-1.6%", "weight": "9.6%", "risk_contrib": "1.35%" }
+          ],
+          "beta_exposure": [
+            { "fund": "FSPGX", "beta": 1.12, "weight": "18.2%", "contribution": 0.204 },
+            { "fund": "AGTHX", "beta": 0.98, "weight": "9.6%", "contribution": 0.094 }
+          ],
+          "drawdown_risk": [
+            { "fund": "FSPGX", "max_dd": "-32.1%", "var_95": "-2.1%", "note": "High growth fund, elevated drawdown" },
+            { "fund": "CWBFX", "max_dd": "-18.4%", "var_95": "-1.2%", "note": "Convertible bond, moderate risk" }
+          ],
+          "sector_concentration": [
+            { "fund": "FSPGX", "it_pct": "42%", "eq_weight": "18.2%", "it_contrib": "7.6%" },
+            { "fund": "AGTHX", "it_pct": "35%", "eq_weight": "9.6%", "it_contrib": "3.4%" }
+          ],
+          "risk_dashboard": [
+            { "metric": "Equity Allocation", "current": "66.2%", "target": "55-65%", "variance": "+1.2pp", "action": "BREACH — reduce equity" },
+            { "metric": "Portfolio Beta", "current": "0.87", "target": "≤0.75", "variance": "+0.12", "action": "FAIL — reduce beta" },
+            { "metric": "IT Sector", "current": "31.0%", "target": "≤30%", "variance": "+1.0pp", "action": "BREACH — trim IT" }
+          ],
+          "insights": {
+            "drift": ["FSPGX has drifted +3.19% above target", "CWBFX is -4.48% below target"],
+            "volatility": ["Top 3 high-vol funds contribute 58% of portfolio risk"],
+            "beta": ["Portfolio beta 0.87 exceeds IPS target of 0.75"],
+            "sector": ["IT concentration at 31% breaches 30% IPS cap"],
+            "drawdown": ["FSPGX max drawdown -32.1% is highest in portfolio"],
+            "sentiment": ["Overall portfolio sentiment slightly negative at -0.12"],
+            "dashboard": ["3 of 5 IPS checks currently in breach"]
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/client/{clientId}/investment-details",
+      "description": "Sentiment headlines, stock holdings, fund performance, market data",
+      "response": {
+        "success": true,
+        "_from_cache": true,
+        "data": {
+          "current_holdings": [
+            {
+              "ticker": "FSPGX",
+              "name": "Fidelity Large Cap Growth Index",
+              "current_price": 24.81,
+              "total_return_pct": 18.4,
+              "volatility_pct": 18.4,
+              "max_drawdown_pct": -32.1
+            },
+            {
+              "ticker": "AGTHX",
+              "name": "American Funds Growth Fund",
+              "current_price": 68.42,
+              "total_return_pct": 12.1,
+              "volatility_pct": 14.1,
+              "max_drawdown_pct": -28.6
+            }
+          ],
+          "detailed_news_data": {
+            "FSPGX": {
+              "total_articles": 8,
+              "sentiment_summary": {
+                "dominant_sentiment": "negative",
+                "avg_polarity": -0.18,
+                "sentiment_distribution": { "positive": 2, "neutral": 2, "negative": 4 }
+              },
+              "articles": [
+                {
+                  "headline": "Tech selloff drags growth funds lower",
+                  "summary": "Large-cap growth funds fell 2.3% as rate fears resurfaced.",
+                  "formatted_date": "Jan 5, 2025",
+                  "url": "https://example.com/article1",
+                  "sentiment_analysis": {
+                    "sentiment": "Negative",
+                    "market_impact": "High — directly impacts FSPGX holdings"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/action/rebalancing/{clientId}",
+      "description": "Trade list with rationales, tax analysis, compliance checks, approval workflow",
+      "response": {
+        "success": true,
+        "_from_cache": true,
+        "data": {
+          "rebalance_summary": [
+            { "asset_class": "Equity", "ticker": "FSPGX", "before": "18.2%", "target": "15.0%", "after": "15.1%", "change": "-3.1%", "trade_value": "$17,000", "direction": "Sell" },
+            { "asset_class": "Fixed Income", "ticker": "ABNDX", "before": "14.5%", "target": "20.0%", "after": "20.0%", "change": "+5.5%", "trade_value": "$30,000", "direction": "Buy" },
+            { "asset_class": "Equity", "ticker": "CWBFX", "before": "5.5%", "target": "0.0%", "after": "0.0%", "change": "-5.5%", "trade_value": "$30,000", "direction": "Sell" }
+          ],
+          "options": {
+            "option_a": {
+              "name": "Minimal Rebalance",
+              "description": "Trim only the most out-of-band positions with minimal tax impact.",
+              "recommended": false,
+              "trade_totals": { "total_sells": 17000, "total_buys": 12000, "net_value": -5000 },
+              "trade_recommendations": [
+                { "action": "Sell", "ticker": "FSPGX", "fund": "Fidelity Large Cap Growth", "type": "Equity", "units": 685, "amount": -17000, "gain": 3200, "best_lot": "2022-03-15" }
+              ]
+            },
+            "option_b": {
+              "name": "Tax-Efficient Full Rebalance",
+              "description": "Eliminate CWBFX to harvest tax loss of $18,037 and fully restore IPS compliance.",
+              "recommended": true,
+              "trade_totals": { "total_sells": 47000, "total_buys": 42000, "net_value": -5000 },
+              "trade_recommendations": [
+                { "action": "Sell", "ticker": "CWBFX", "fund": "American Century Diversified Bond", "type": "Fixed Income", "units": 1240, "amount": -30000, "gain": -18037, "best_lot": "2021-06-10" },
+                { "action": "Sell", "ticker": "FSPGX", "fund": "Fidelity Large Cap Growth", "type": "Equity", "units": 685, "amount": -17000, "gain": 3200, "best_lot": "2022-03-15" },
+                { "action": "Buy", "ticker": "ABNDX", "fund": "American Funds Bond Fund", "type": "Fixed Income", "units": 1850, "amount": 30000, "gain": 0, "best_lot": null },
+                { "action": "Buy", "ticker": "AIVSX", "fund": "American Funds Investment Co", "type": "Equity", "units": 210, "amount": 12000, "gain": 0, "best_lot": null }
+              ]
+            }
+          },
+          "trade_rationale": "Eliminating CWBFX harvests an $18,037 tax loss while reducing fixed income drag. Proceeds fund ABNDX to restore IPS band compliance.",
+          "tax_efficiency": {
+            "estimated_realized_gains": 3200,
+            "long_term_gains": 3200,
+            "tax_rate_applied": "15%",
+            "estimated_tax_liability": 480,
+            "note": "Net tax benefit after harvesting CWBFX loss offsets gains from FSPGX sale."
+          },
+          "cost_analysis": {
+            "current_weighted_er": "0.69%",
+            "post_rebalance_er": "0.48%",
+            "annual_savings": "$1,206",
+            "note": "Eliminating high-ER CWBFX (0.91%) and replacing with low-ER ABNDX (0.31%) drives savings."
+          },
+          "post_trade_checks": [
+            { "check": "Asset Class Bands", "status": "PASS", "result": "Equity 59.9%, Fixed Income 35.7% — within IPS bands" },
+            { "check": "Single Fund ≤20%", "status": "PASS", "result": "ABNDX at 20.0% — at limit" },
+            { "check": "Weighted ER ≤1.0%", "status": "PASS", "result": "0.48% post-rebalance" },
+            { "check": "Drift Threshold ≤5%", "status": "PASS", "result": "All funds within band" },
+            { "check": "IT Sector ≤30%", "status": "PASS", "result": "~28.5% post-rebalance" }
+          ],
+          "final_recommendation": {
+            "option": "Option B",
+            "title": "Tax-Efficient Full Rebalance",
+            "reasons": [
+              "Restores full IPS compliance across all 5 checks",
+              "Harvests $18,037 tax loss from CWBFX",
+              "Reduces annual expense ratio by 30.3%, saving $1,206/yr",
+              "Reduces portfolio beta from 0.87 toward 0.75 target"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/worklist/rebalancing",
+      "description": "All clients needing rebalancing, sorted by priority. Supports ?priority=all|1|2|3|4 and ?search=name",
+      "response": {
+        "success": true,
+        "data": {
+          "clients": [
+            {
+              "client_id": "15634602",
+              "client_name": "Sam Pai",
+              "aum": 548230.50,
+              "aum_formatted": "$548,231",
+              "risk_profile": "Moderate",
+              "priority": { "level": 1, "label": "Critical", "color": "#ef4444", "description": "Drift >5.2% - rebalance required" },
+              "trigger": { "reason": "Drift >5.2% - rebalance required", "drift_score": 5.2, "rebalance_needed": true },
+              "next_best_action": { "action_label": "Review Portfolio", "action_url": "/client/15634602/rebalancing", "requires_approval": true },
+              "metrics": { "equity_weight": 0.662, "bond_weight": 0.295, "volatility_1y": 14.2, "sharpe_1y": 1.12 }
+            },
+            {
+              "client_id": "28741903",
+              "client_name": "Mary Hargrave",
+              "aum": 1240000.00,
+              "aum_formatted": "$1,240,000",
+              "risk_profile": "Conservative",
+              "priority": { "level": 2, "label": "High", "color": "#f97316", "description": "Drift 3.8% - review needed" },
+              "trigger": { "reason": "Drift 3.8% - review needed", "drift_score": 3.8, "rebalance_needed": false },
+              "next_best_action": { "action_label": "Review Portfolio", "action_url": "/client/28741903/rebalancing", "requires_approval": true },
+              "metrics": { "equity_weight": 0.42, "bond_weight": 0.52, "volatility_1y": 8.6, "sharpe_1y": 0.94 }
+            }
+          ],
+          "summary_stats": {
+            "total_clients": 2,
+            "critical": 1,
+            "high": 1,
+            "medium": 0,
+            "low": 0,
+            "total_aum": 1788230.50
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/worklist/trigger/acknowledge",
+      "description": "Acknowledge a rebalancing trigger for a client",
+      "requestBody": {
+        "client_id": "15634602",
+        "acknowledged": true,
+        "notes": "Reviewed with client, proceeding with Option B"
+      },
+      "response": {
+        "success": true,
+        "data": {
+          "client_id": "15634602",
+          "acknowledged": true,
+          "notes": "Reviewed with client, proceeding with Option B",
+          "message": "Trigger acknowledged successfully"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/rebalancing/{action}",
+      "description": "Execute a rebalancing workflow action. {action} must be one of: approve | hold | verify | scenario",
+      "requestBody": {
+        "client_id": "15634602",
+        "action": "approve"
+      },
+      "response": {
+        "success": true,
+        "data": {
+          "client_id": "15634602",
+          "action": "approve",
+          "status": "completed",
+          "message": "Action 'approve' recorded for client 15634602"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/api/cache/status",
+      "description": "Show all cached client analyses and their TTL remaining",
+      "response": {
+        "success": true,
+        "cache_dir": "/tmp/rebalancing_cache",
+        "ttl_minutes": 30,
+        "entries": [
+          {
+            "client_id": "15634602",
+            "cached_at": "2025-01-01T09:45:00",
+            "expires_at": "2025-01-01T10:15:00",
+            "is_fresh": true,
+            "ttl_remaining_min": 14
+          }
+        ]
+      }
+    },
+    {
+      "method": "DELETE",
+      "url": "/api/client/{clientId}/cache",
+      "description": "Clear cached analysis for a client, forcing fresh run on next call",
+      "response": {
+        "success": true,
+        "message": "Cache cleared for 15634602"
+      }
+    },
+    {
+      "method": "GET",
+      "url": "/health",
+      "description": "Backend health check",
+      "response": {
+        "status": "ok",
+        "version": "2.1.0"
+      }
+    }
+  ]
+}
