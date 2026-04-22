@@ -539,15 +539,15 @@ def _build_news_data(sentiment: dict) -> dict:
                 })
         avg = fund_data.get("avg_sentiment_score", 0)
         dominant = fund_data.get("dominant_sentiment", "neutral")
-        total_articles = sum(s.get("articles", 0) for s in fund_data.get("stock_detail", {}).values())
+        actual_articles = articles  # already built above
         result[fund_id] = {
-            "total_articles": total_articles,
+            "total_articles": len(actual_articles),
             "sentiment_summary": {
                 "dominant_sentiment": dominant,
                 "avg_polarity": avg,
                 "sentiment_distribution": {},
             },
-            "articles": articles,
+            "articles": actual_articles,
         }
     return result
 

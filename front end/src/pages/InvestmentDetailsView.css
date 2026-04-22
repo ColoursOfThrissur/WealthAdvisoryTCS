@@ -1,0 +1,429 @@
+.idv-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 60px var(--space-2xl) var(--space-2xl) var(--space-2xl);
+  overflow: auto;
+  animation: idvFadeIn 0.3s ease;
+}
+
+@keyframes idvFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Header ─────────────────────────────────────────────── */
+.idv-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.idv-back-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.idv-back-btn:hover { border-color: var(--success); color: var(--text-primary); }
+
+.idv-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.idv-header-badge { margin-left: auto; }
+
+/* ── Loading / Error / Empty ─────────────────────────────── */
+.idv-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: var(--space-lg);
+  color: var(--text-tertiary);
+  font-size: 0.9375rem;
+}
+
+.idv-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--glass-border);
+  border-top-color: var(--success);
+  border-radius: 50%;
+  animation: idvSpin 0.8s linear infinite;
+}
+
+@keyframes idvSpin { to { transform: rotate(360deg); } }
+
+.idv-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xl);
+  text-align: center;
+  color: var(--error);
+  font-size: 0.9375rem;
+}
+
+.idv-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  gap: var(--space-md);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.idv-empty svg { opacity: 0.3; }
+.idv-empty p { font-size: 1rem; font-weight: 600; color: var(--text-secondary); margin: 0; }
+.idv-empty span { font-size: 0.875rem; max-width: 400px; }
+
+/* ── Tabs ────────────────────────────────────────────────── */
+.idv-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: var(--space-xl);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  width: fit-content;
+}
+
+.idv-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-xl);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.idv-tab.active {
+  background: var(--success);
+  color: var(--bg-primary);
+}
+
+.idv-tab:hover:not(.active) { color: var(--text-primary); }
+
+/* ── Content ─────────────────────────────────────────────── */
+.idv-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ── Sentiment Summary Bar ───────────────────────────────── */
+.idv-sentiment-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+}
+
+.idv-sentiment-kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+}
+
+.idv-sentiment-kpi.positive { border-top: 3px solid var(--success); }
+.idv-sentiment-kpi.neutral { border-top: 3px solid var(--warning); }
+.idv-sentiment-kpi.negative { border-top: 3px solid var(--error); }
+
+.idv-sentiment-kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.idv-sentiment-kpi.positive .idv-sentiment-kpi-value { color: var(--success); }
+.idv-sentiment-kpi.neutral .idv-sentiment-kpi-value { color: var(--warning); }
+.idv-sentiment-kpi.negative .idv-sentiment-kpi-value { color: var(--error); }
+
+.idv-sentiment-kpi-label {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── News List ───────────────────────────────────────────── */
+.idv-news-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ── Fund Card ───────────────────────────────────────────── */
+.idv-fund-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color var(--transition-base);
+}
+
+.idv-fund-card:hover { border-color: rgba(107, 114, 128, 0.4); }
+
+.idv-fund-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-xl);
+  cursor: pointer;
+  user-select: none;
+  gap: var(--space-lg);
+}
+
+.idv-fund-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.idv-fund-ticker {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.idv-fund-name {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.idv-fund-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex-shrink: 0;
+}
+
+.idv-sentiment-badge {
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.idv-sentiment-badge.positive { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+.idv-sentiment-badge.neutral { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+.idv-sentiment-badge.negative { background: rgba(239, 68, 68, 0.12); color: var(--error); }
+
+.idv-fund-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.idv-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.idv-stat-label {
+  font-size: 0.625rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.idv-stat-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.idv-stat-value.positive { color: var(--success); }
+.idv-stat-value.neutral { color: var(--warning); }
+.idv-stat-value.negative { color: var(--error); }
+
+.idv-stat-sep { color: var(--glass-border); font-size: 1rem; }
+
+/* ── Polarity Bar ────────────────────────────────────────── */
+.idv-polarity-bar {
+  padding: 0 var(--space-xl) var(--space-sm);
+}
+
+.idv-polarity-track {
+  position: relative;
+  height: 6px;
+  background: var(--glass-bg);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.idv-polarity-center {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--glass-border);
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.idv-polarity-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.idv-polarity-fill.positive { background: var(--success); }
+.idv-polarity-fill.negative { background: var(--error); }
+
+/* ── Articles Grid ───────────────────────────────────────── */
+.idv-no-articles {
+  padding: var(--space-lg) var(--space-xl);
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  border-top: 1px solid var(--glass-border);
+}
+
+.idv-articles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-xl) var(--space-xl);
+  border-top: 1px solid var(--glass-border);
+}
+
+.idv-article-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-base);
+}
+
+.idv-article-card:hover { border-color: var(--success); }
+
+.idv-article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.idv-article-sentiment {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.idv-article-sentiment.positive { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+.idv-article-sentiment.neutral { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+.idv-article-sentiment.negative { background: rgba(239, 68, 68, 0.12); color: var(--error); }
+
+.idv-article-date {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.idv-article-headline {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin: 0;
+  flex: 1;
+}
+
+.idv-article-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--success);
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+.idv-article-link:hover { text-decoration: underline; }
+
+/* ── Holdings Table ──────────────────────────────────────── */
+.idv-holdings-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.idv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.idv-table th {
+  background: var(--glass-bg);
+  color: var(--text-tertiary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  padding: var(--space-sm) var(--space-lg);
+  text-align: left;
+  border-bottom: 1px solid var(--glass-border);
+  white-space: nowrap;
+}
+
+.idv-table td {
+  padding: var(--space-sm) var(--space-lg);
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.idv-table tr:last-child td { border-bottom: none; }
+.idv-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+.idv-ticker { font-weight: 700; color: var(--text-primary) !important; }
+.idv-table td.positive { color: var(--success); font-weight: 600; }
+.idv-table td.negative { color: var(--error); font-weight: 600; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .idv-articles-grid { grid-template-columns: 1fr; }
+  .idv-sentiment-summary { grid-template-columns: repeat(2, 1fr); }
+}
