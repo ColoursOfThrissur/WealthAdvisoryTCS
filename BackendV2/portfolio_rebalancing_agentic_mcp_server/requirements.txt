@@ -1,0 +1,12 @@
+mcp[cli]
+httpx
+python-dotenv
+pandas
+python-docx
+pdfplumber
+tabulate
+openpyxl
+yfinance
+boto3
+numpy
+finnhub-python
