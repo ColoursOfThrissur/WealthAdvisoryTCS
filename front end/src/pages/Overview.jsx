@@ -20,6 +20,7 @@ const Overview = () => {
   const [selectedMailClient, setSelectedMailClient] = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isDayGlanceExpanded, setIsDayGlanceExpanded] = useState(true);
+  const [isMeetingsOpen, setIsMeetingsOpen] = useState(false);
   const [activeMode, setActiveMode] = useState('report');
 
   const modeSuggestions = {
@@ -538,78 +539,94 @@ const Overview = () => {
         {/* Day at a Glance - Collapsible Overlay */}
         <div className={`day-glance-overlay ${isDayGlanceExpanded ? 'day-glance-overlay--expanded' : 'day-glance-overlay--collapsed'}`}>
           <div className="sidebar-section sidebar-section--day-glance">
-          <div className="day-glance-header">
-            <div className="day-glance-header-top">
-              <h3 className="sidebar-section-main-title">Day at a Glance</h3>
-            </div>
-          </div>
-          
-          {/* Priority Actions - Combined */}
+
+          {/* Priority Actions */}
           <div className="day-glance-subsection">
             <div className="day-glance-subsection-header">
               <h4 className="day-glance-subtitle">Priority Actions</h4>
               <button className="view-more-link" onClick={() => navigate('/prioritize')}>View More</button>
             </div>
-            
-            {/* Meetings Group */}
+
+            {/* Meetings - Dropdown Row */}
             <div className="priority-section-group">
-              <div className="meetings-timeline">
-              <div className="meeting-timeline-item" onClick={() => console.log('Prep meeting')}>
-                <div className="meeting-timeline-left">
-                  <div className="meeting-timeline-time">
-                    <span className="meeting-time-hour">10:00</span>
-                    <span className="meeting-time-period">AM</span>
+              <button
+                className={`meetings-dropdown-trigger ${isMeetingsOpen ? 'meetings-dropdown-trigger--open' : ''}`}
+                onClick={() => setIsMeetingsOpen(!isMeetingsOpen)}
+              >
+                <div className="meetings-dropdown-trigger__left">
+                  <div className="meetings-dropdown-trigger__icon">
+                    <Calendar size={18} />
                   </div>
-                  <div className="meeting-timeline-content">
-                    <span className="meeting-timeline-client">Mary Hargrave</span>
-                    <span className="meeting-timeline-topic">Portfolio Review</span>
-                  </div>
-                </div>
-                <button className="meeting-timeline-action">Prep</button>
-              </div>
-              <div className="meeting-timeline-item" onClick={() => console.log('Join meeting')}>
-                <div className="meeting-timeline-left">
-                  <div className="meeting-timeline-time">
-                    <span className="meeting-time-hour">11:00</span>
-                    <span className="meeting-time-period">AM</span>
-                  </div>
-                  <div className="meeting-timeline-content">
-                    <span className="meeting-timeline-client">Sam Pai</span>
-                    <span className="meeting-timeline-topic">Investment Strategy</span>
+                  <div className="meetings-dropdown-trigger__info">
+                    <span className="meetings-dropdown-trigger__name">Today's Meetings</span>
+                    <span className="meetings-dropdown-trigger__count">3 meetings</span>
                   </div>
                 </div>
-                <button className="meeting-timeline-action meeting-timeline-action--live">Join</button>
-              </div>
-              <div className="meeting-timeline-item" onClick={() => console.log('Prep meeting')}>
-                <div className="meeting-timeline-left">
-                  <div className="meeting-timeline-time">
-                    <span className="meeting-time-hour">2:30</span>
-                    <span className="meeting-time-period">PM</span>
+                <div className="meetings-dropdown-trigger__right">
+                  <span className="view-more-link meetings-view-more" onClick={(e) => { e.stopPropagation(); navigate('/prioritize'); }}>View More</span>
+                  <ChevronRight size={16} className={`meetings-dropdown-chevron ${isMeetingsOpen ? 'meetings-dropdown-chevron--open' : ''}`} />
+                </div>
+              </button>
+
+              {isMeetingsOpen && (
+                <div className="meetings-dropdown-list">
+                  <div className="meeting-timeline-item" onClick={() => console.log('Prep meeting')}>
+                    <div className="meeting-timeline-left">
+                      <div className="meeting-timeline-time">
+                        <span className="meeting-time-hour">10:00</span>
+                        <span className="meeting-time-period">AM</span>
+                      </div>
+                      <div className="meeting-timeline-content">
+                        <span className="meeting-timeline-client">Mary Hargrave</span>
+                        <span className="meeting-timeline-topic">Portfolio Review</span>
+                      </div>
+                    </div>
+                    <button className="meeting-timeline-action">Prep</button>
                   </div>
-                  <div className="meeting-timeline-content">
-                    <span className="meeting-timeline-client">Alex Morgan</span>
-                    <span className="meeting-timeline-topic">Quarterly Review</span>
+                  <div className="meeting-timeline-item" onClick={() => console.log('Join meeting')}>
+                    <div className="meeting-timeline-left">
+                      <div className="meeting-timeline-time">
+                        <span className="meeting-time-hour">11:00</span>
+                        <span className="meeting-time-period">AM</span>
+                      </div>
+                      <div className="meeting-timeline-content">
+                        <span className="meeting-timeline-client">Sam Pai</span>
+                        <span className="meeting-timeline-topic">Investment Strategy</span>
+                      </div>
+                    </div>
+                    <button className="meeting-timeline-action meeting-timeline-action--live">Join</button>
+                  </div>
+                  <div className="meeting-timeline-item" onClick={() => console.log('Prep meeting')}>
+                    <div className="meeting-timeline-left">
+                      <div className="meeting-timeline-time">
+                        <span className="meeting-time-hour">2:30</span>
+                        <span className="meeting-time-period">PM</span>
+                      </div>
+                      <div className="meeting-timeline-content">
+                        <span className="meeting-timeline-client">Alex Morgan</span>
+                        <span className="meeting-timeline-topic">Quarterly Review</span>
+                      </div>
+                    </div>
+                    <button className="meeting-timeline-action">Prep</button>
                   </div>
                 </div>
-                <button className="meeting-timeline-action">Prep</button>
-              </div>
-              </div>
+              )}
             </div>
 
             <div className="priority-section-divider" />
-            
-            {/* Action Items Group */}
+
+            {/* Action Items */}
             <div className="priority-section-group">
               <div className="priority-actions-grid">
-              {actionCards.map((card) => (
-                <div key={card.name} className={card.urgent ? 'action-card-wrapper action-card-wrapper--urgent' : 'action-card-wrapper'}>
-                  <UniversalCard
-                    type="action-list"
-                    data={{ name: card.name, clients: card.clients, icon: card.icon, onClick: card.onClick }}
-                  />
-                </div>
-              ))}
-            </div>
+                {actionCards.map((card) => (
+                  <div key={card.name} className={card.urgent ? 'action-card-wrapper action-card-wrapper--urgent' : 'action-card-wrapper'}>
+                    <UniversalCard
+                      type="action-list"
+                      data={{ name: card.name, clients: card.clients, icon: card.icon, onClick: card.onClick }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

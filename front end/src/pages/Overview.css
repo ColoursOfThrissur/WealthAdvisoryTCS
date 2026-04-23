@@ -298,7 +298,8 @@
   transition: transform 0.3s ease;
   z-index: 100;
   overflow-y: auto;
-  padding: 80px var(--space-xl) var(--space-xl) var(--space-xl);
+  padding: var(--space-xl);
+  padding-top: calc(var(--space-xl) + 60px);
 }
 
 .day-glance-overlay--expanded {
@@ -420,28 +421,6 @@
   text-decoration-color: var(--success-dark);
 }
 
-.day-glance-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: var(--space-lg);
-}
-
-.day-glance-header-top {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.sidebar-section-main-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-  text-transform: none;
-  letter-spacing: normal;
-}
-
 .day-glance-subsection {
   margin-bottom: var(--space-xl);
 }
@@ -457,6 +436,98 @@
   margin: 0 0 var(--space-md) 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Meetings dropdown trigger row */
+.meetings-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border: var(--border-thin) solid var(--glass-border);
+  border-left: var(--border-thick) solid var(--success);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: left;
+}
+
+.meetings-dropdown-trigger:hover,
+.meetings-dropdown-trigger--open {
+  background: var(--success-subtle);
+  border-color: var(--success);
+}
+
+.meetings-dropdown-trigger__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.meetings-dropdown-trigger__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--success-light);
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+}
+
+.meetings-dropdown-trigger:hover .meetings-dropdown-trigger__icon,
+.meetings-dropdown-trigger--open .meetings-dropdown-trigger__icon {
+  background: var(--success);
+  color: var(--bg-primary);
+}
+
+.meetings-dropdown-trigger__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meetings-dropdown-trigger__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.meetings-dropdown-trigger__count {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.meetings-dropdown-trigger__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.meetings-view-more {
+  font-size: 0.6875rem;
+}
+
+.meetings-dropdown-chevron {
+  color: var(--text-tertiary);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.meetings-dropdown-chevron--open {
+  transform: rotate(90deg);
+}
+
+.meetings-dropdown-list {
+  border: var(--border-thin) solid var(--glass-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-primary);
 }
 
 /* Meetings Compact List Design */

@@ -132,7 +132,8 @@ const ClientDetail = () => {
       
       console.log(`[ClientDetail] Rerunning analysis for client ${clientId}`, config);
       
-      // Force refresh on backend (bypass server cache) and invalidate frontend cache
+      // Force refresh on backend — result is stored in frontend cache
+      // fetchClientData will read from that fresh cache, no second agent call
       await clientDataService.getFullAnalysis(clientId, {
         include_sentiment: config.include_sentiment !== false,
         include_fund_universe: config.include_fund_universe !== false,
@@ -140,9 +141,6 @@ const ClientDetail = () => {
         refresh: true
       });
 
-      // Invalidate frontend cache so fetchClientData reads the new result
-      clientDataService.invalidateCache(clientId);
-      
       await fetchClientData();
     } catch (err) {
       setError(err.message);

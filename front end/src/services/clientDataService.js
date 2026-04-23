@@ -10,6 +10,7 @@
  */
 
 import apiClient from './apiClient';
+import { API_BASE_URL } from '../config/api.js';
 
 class ClientDataService {
   constructor() {
@@ -162,15 +163,8 @@ class ClientDataService {
       return this.inFlight.get(lockKey);
     }
 
-    // Set lock SYNCHRONOUSLY before any await to prevent race conditions
-    const { API_BASE_URL } = await import('../config/api.js');
-    
-    // Check again after await in case another call slipped through
-    if (this.inFlight.has(lockKey)) {
-      console.log(`[ClientDataService] 🔒 Deduplicating in-flight request for ${clientId}`);
-      return this.inFlight.get(lockKey);
-    }
-
+    // Build the promise synchronously and set the lock before any await,
+    // eliminating the race window that existed when API_BASE_URL was dynamic-imported.
     const url = `${API_BASE_URL}/api/client/${clientId}/full-analysis`;
     const body = JSON.stringify({
       include_sentiment: options.include_sentiment ?? true,
