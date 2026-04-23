@@ -146,11 +146,10 @@ logs/
 # Project-specific
 # ─────────────────────────────────────────────────────────────
 backend/
-backend/_cache/
+_cache/
 backend/_tmp_*.txt
 backend/prompt_security.log
 backend/test_*.py
 backend/verify_*.py
 *.zip
 caddy.exe
-# requirements_*.txt
