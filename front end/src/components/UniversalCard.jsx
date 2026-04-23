@@ -105,7 +105,10 @@ const UniversalCard = ({ type, data, className = '' }) => {
               {data.icon && <div className="ucard__action-list-icon">{data.icon}</div>}
               <div className="ucard__action-list-info">
                 <h4 className="ucard__action-list-name">{data.name}</h4>
-                <p className="ucard__action-list-clients">{data.clients}</p>
+                <p className="ucard__action-list-clients">
+                  {data.clients}
+                  {data.critical > 0 && <span className="ucard__action-list-critical">{data.critical} critical</span>}
+                </p>
               </div>
             </div>
             <button className="ucard__action-list-btn">

@@ -343,10 +343,17 @@
 
 .day-glance-toggle--collapsed {
   right: 0;
+  height: auto;
+  min-height: 140px;
+  padding: var(--space-lg) var(--space-sm);
+  justify-content: flex-start;
+  gap: 14px;
+  width: 48px;
 }
 
 .day-glance-toggle--expanded {
   right: 33.33%;
+  height: 140px;
 }
 
 .day-glance-toggle:hover {
@@ -639,14 +646,157 @@
   50% { box-shadow: 0 0 16px rgba(16, 185, 129, 0.8); }
 }
 
-/* Action card urgency wrapper */
-.action-card-wrapper .ucard__action-list-clients {
+/* Action card wrapper */
+.action-card-wrapper {
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  border: var(--border-thin) solid var(--glass-border);
+  border-left: var(--border-thick) solid var(--success);
+  background: var(--bg-secondary);
+  transition: all var(--transition-base);
+}
+
+.action-card-wrapper:hover {
+  background: var(--success-subtle);
+  border-color: var(--success);
+  transform: translateX(3px);
+}
+
+.action-card-wrapper--urgent {
+  border-left-color: var(--error);
+}
+
+.action-card-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.action-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--success-light);
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+}
+
+.action-card-wrapper--urgent .action-card-icon {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+
+.action-card-wrapper:hover .action-card-icon {
+  background: var(--success);
+  color: var(--bg-primary);
+}
+
+.action-card-wrapper--urgent:hover .action-card-icon {
+  background: var(--error);
+  color: var(--bg-primary);
+}
+
+.action-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.action-card-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.6875rem;
   color: var(--text-tertiary);
 }
 
-.action-card-wrapper--urgent .ucard__action-list-clients {
-  color: var(--error);
+.action-card-critical {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--bg-primary);
+  background: var(--error);
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+/* Priority Actions AI badge */
+.priority-actions-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6875rem;
   font-weight: 600;
+  color: var(--success);
+  background: var(--success-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Toggle collapsed icon badges */
+.day-glance-toggle-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.day-glance-toggle-icon-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.day-glance-toggle-icon-badge svg {
+  width: 20px;
+  height: 20px;
+}
+
+.toggle-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.55rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.toggle-badge--green {
+  background: var(--success);
+  color: #ffffff;
+}
+
+.toggle-badge--red {
+  background: var(--error);
+  color: #ffffff;
 }
 .priority-actions-grid {
   display: flex;

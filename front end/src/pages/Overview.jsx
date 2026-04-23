@@ -118,14 +118,17 @@ const Overview = () => {
   };
 
   const actionCards = [
-    { name: 'Portfolio Rebalancing', clients: '12 clients', icon: <TrendingUp size={20} />, urgent: false, onClick: () => navigate('/worklist/rebalancing') },
-    { name: 'Investment Proposals', clients: '8 clients', icon: <FileText size={20} />, urgent: false, onClick: () => navigate('/worklist/proposals') },
-    { name: 'Tax Analysis', clients: '3 clients', icon: <TrendingUp size={20} />, urgent: false, onClick: () => navigate('/worklist/rebalancing') },
-    { name: 'Market Event Mailers', clients: '2 clients', icon: <AlertTriangle size={20} />, urgent: true, onClick: handleEventAlertClick },
-    { name: 'Invest Idle Cash', clients: '5 clients', icon: <DollarSign size={20} />, urgent: false, onClick: () => {} },
-    { name: 'KYC Expiring', clients: '1 client', icon: <User size={20} />, urgent: true, onClick: () => {} },
-    { name: 'Portfolio Review', clients: '12 clients', icon: <BarChart3 size={20} />, urgent: false, onClick: () => navigate('/worklist/rebalancing') },
+    { name: 'Portfolio Rebalancing', clients: '12 clients', critical: 3, icon: <TrendingUp size={18} />, urgent: false, onClick: () => navigate('/worklist/rebalancing') },
+    { name: 'Investment Proposals', clients: '8 clients', critical: 2, icon: <FileText size={18} />, urgent: false, onClick: () => navigate('/worklist/proposals') },
+    { name: 'Tax Analysis', clients: '3 clients', critical: 0, icon: <TrendingUp size={18} />, urgent: false, onClick: () => navigate('/worklist/rebalancing') },
+    { name: 'Market Event Mailers', clients: '2 clients', critical: 2, icon: <AlertTriangle size={18} />, urgent: true, onClick: handleEventAlertClick },
+    { name: 'Invest Idle Cash', clients: '5 clients', critical: 1, icon: <DollarSign size={18} />, urgent: false, onClick: () => {} },
+    { name: 'KYC Expiring', clients: '1 client', critical: 1, icon: <User size={18} />, urgent: true, onClick: () => {} },
+    { name: 'Portfolio Review', clients: '12 clients', critical: 0, icon: <BarChart3 size={18} />, urgent: false, onClick: () => navigate('/worklist/rebalancing') },
   ];
+
+  const totalPending = actionCards.reduce((sum, c) => sum + parseInt(c.clients), 0);
+  const totalCritical = actionCards.reduce((sum, c) => sum + c.critical, 0);
 
   return (
     <div className="overview">
@@ -544,7 +547,7 @@ const Overview = () => {
           <div className="day-glance-subsection">
             <div className="day-glance-subsection-header">
               <h4 className="day-glance-subtitle">Priority Actions</h4>
-              <button className="view-more-link" onClick={() => navigate('/prioritize')}>View More</button>
+              <span className="priority-actions-ai-badge"><Sparkles size={12} /> AI Prioritized</span>
             </div>
 
             {/* Meetings - Dropdown Row */}
@@ -563,7 +566,6 @@ const Overview = () => {
                   </div>
                 </div>
                 <div className="meetings-dropdown-trigger__right">
-                  <span className="view-more-link meetings-view-more" onClick={(e) => { e.stopPropagation(); navigate('/prioritize'); }}>View More</span>
                   <ChevronRight size={16} className={`meetings-dropdown-chevron ${isMeetingsOpen ? 'meetings-dropdown-chevron--open' : ''}`} />
                 </div>
               </button>
@@ -619,12 +621,11 @@ const Overview = () => {
             <div className="priority-section-group">
               <div className="priority-actions-grid">
                 {actionCards.map((card) => (
-                  <div key={card.name} className={card.urgent ? 'action-card-wrapper action-card-wrapper--urgent' : 'action-card-wrapper'}>
-                    <UniversalCard
-                      type="action-list"
-                      data={{ name: card.name, clients: card.clients, icon: card.icon, onClick: card.onClick }}
-                    />
-                  </div>
+                  <UniversalCard
+                    key={card.name}
+                    type="action-list"
+                    data={{ name: card.name, clients: card.clients, critical: card.critical, icon: card.icon, onClick: card.onClick }}
+                  />
                 ))}
               </div>
             </div>
@@ -639,7 +640,23 @@ const Overview = () => {
           aria-label={isDayGlanceExpanded ? 'Collapse' : 'Expand'}
         >
           <span className="day-glance-toggle-text">DAY AT GLANCE</span>
-          {isDayGlanceExpanded ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
+          {!isDayGlanceExpanded && (
+            <div className="day-glance-toggle-badges">
+              <div className="day-glance-toggle-icon-badge">
+                <Calendar size={14} />
+                <span className="toggle-badge toggle-badge--green">3</span>
+              </div>
+              {actionCards.map((card) => (
+                <div key={card.name} className="day-glance-toggle-icon-badge">
+                  {card.icon}
+                  <span className={`toggle-badge ${card.critical > 0 ? 'toggle-badge--red' : 'toggle-badge--green'}`}>
+                    {card.critical > 0 ? card.critical : parseInt(card.clients)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          {isDayGlanceExpanded ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
     </div>
