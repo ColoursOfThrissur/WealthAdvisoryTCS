@@ -128,7 +128,7 @@ def format_structured_response(tool_results: Dict[str, Any], client_id: str = ""
                 "trade_recos": trades.get("trade_count", len(trade_list)),
                 "expected_benefit": f"Save {_fmt_dollar(trades.get('total_tax', 0))} tax" if trades.get('total_tax', 0) > 0 else f"ER {risk.get('weighted_expense_ratio', 0):.2f}%",
             },
-            "recommended_option": _build_recommended_option(trade_list, sim_b),
+            "recommended_option": _build_recommended_option(trade_list, sim_b, trades, risk, violations, ac_drift),
         },
     }
 
@@ -417,23 +417,64 @@ def _drawdown_note(dd_pct) -> str:
     return "Low drawdown risk; stable fund"
 
 
-def _build_recommended_option(trade_list: list, sim_b: dict) -> dict:
-    if sim_b:
-        return {
-            "name": "Option B: Optimized Universe",
-            "description": [
-                "Replace high-cost active funds with low-cost ETFs for better cost efficiency.",
-                f"Execute {len([t for t in trade_list if t.get('action') == 'SELL'])} sells and replace with diversified ETF alternatives.",
-            ],
-            "tags": ["Cost Efficient", "IPS Compliant", "Approval Required"],
-        }
+def _build_recommended_option(trade_list: list, sim_b: dict, trades: dict = None, risk: dict = None, violations: list = None, ac_drift: list = None) -> dict:
+    trades = trades or {}
+    risk = risk or {}
+    violations = violations or []
+    ac_drift = ac_drift or []
+
     sells = [t for t in trade_list if t.get("action") == "SELL"]
     buys = [t for t in trade_list if t.get("action") == "BUY"]
-    desc = [f"Execute {len(trade_list)} trades to restore IPS target weights."]
-    if sells:
-        desc.append(f"Sell: {', '.join(t.get('fund_id','') for t in sells[:3])}{'...' if len(sells) > 3 else ''}.")
-    if buys:
-        desc.append(f"Buy: {', '.join(t.get('fund_id','') for t in buys[:3])}{'...' if len(buys) > 3 else ''}.")
+    total_sell = trades.get("total_sell", 0)
+    total_buy = trades.get("total_buy", 0)
+    total_tax = trades.get("total_tax", 0)
+    beta = risk.get("portfolio_beta", 0)
+    vol = risk.get("volatility_1y_pct", 0)
+    er = risk.get("weighted_expense_ratio", 0)
+    breached = [ac for ac in ac_drift if ac.get("status") == "REBALANCE_REQUIRED"]
+
+    # Build drift context sentence
+    drift_parts = []
+    for ac in breached:
+        cat = ac.get("category", "")
+        drift_val = ac.get("drift", 0)
+        label = "overweight" if drift_val > 0 else "underweight"
+        drift_parts.append(f"{cat} is {label} by {abs(drift_val):.1f}%")
+    drift_sentence = f"Currently, {' and '.join(drift_parts)}, triggering {len(violations)} IPS violation(s) that require immediate attention." if drift_parts else f"The portfolio has {len(violations)} IPS violation(s) requiring attention."
+
+    # Build sell/buy detail
+    sell_names = ", ".join(t.get("fund_id", "") for t in sells[:4])
+    buy_names = ", ".join(t.get("fund_id", "") for t in buys[:4])
+    sell_sentence = f"This involves trimming overweight positions in {sell_names} totaling {_fmt_dollar(total_sell)} in sell orders" if sells else ""
+    buy_sentence = f"and deploying {_fmt_dollar(total_buy)} into underweight holdings including {buy_names}" if buys else ""
+    trade_sentence = f"{sell_sentence} {buy_sentence}.".strip() if (sell_sentence or buy_sentence) else ""
+
+    # Risk context
+    risk_sentence = f"The portfolio currently carries a beta of {beta} and 1-year annualized volatility of {vol}% with a weighted expense ratio of {er:.3f}%."
+
+    # Tax note
+    tax_sentence = f"The estimated tax impact from realized gains is {_fmt_dollar(total_tax)}, and all trades are structured to be tax-aware." if total_tax > 0 else "No significant tax liability is expected from these trades."
+
+    if sim_b:
+        desc = [
+            f"This strategy recommends replacing high-cost active funds with low-cost, diversified ETF alternatives to improve cost efficiency and portfolio alignment. {drift_sentence}",
+            f"The plan executes {len(sells)} sell(s) and reallocates proceeds into broad-market ETFs that offer lower expense ratios and better diversification. {trade_sentence}",
+            f"{risk_sentence} By switching to optimized ETFs, the portfolio is expected to achieve lower ongoing costs, reduced concentration risk, and full IPS compliance.",
+            tax_sentence,
+        ]
+        return {
+            "name": "Option B: Optimized Universe",
+            "description": desc,
+            "tags": ["Cost Efficient", "IPS Compliant", "Approval Required"],
+        }
+
+    desc = [
+        f"This rebalancing plan executes {len(trade_list)} trades to restore the portfolio to its IPS-mandated target weights and resolve all compliance breaches. {drift_sentence}",
+        trade_sentence,
+        f"{risk_sentence} Post-rebalance, all asset class allocations will fall within their prescribed IPS bands, bringing the portfolio back into full compliance.",
+        tax_sentence,
+    ]
+    desc = [d for d in desc if d]
     return {
         "name": "Option A: Rebalance to IPS Targets",
         "description": desc,
