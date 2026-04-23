@@ -1,13 +1,10 @@
 # ─────────────────────────────────────────────────────────────
-# Ignore entire backend folder
-# ─────────────────────────────────────────────────────────────
-backend/
-
-# ─────────────────────────────────────────────────────────────
 # Environment variables
 # ─────────────────────────────────────────────────────────────
 .env
 .env.*
+.env.local
+.env.*.local
 !.env.example
 !.env.sample
 
@@ -21,6 +18,7 @@ __pycache__/
 .Python
 *.egg
 *.egg-info/
+.eggs/
 dist/
 build/
 eggs/
@@ -37,6 +35,8 @@ pip-delete-this-directory.txt
 .pip-cache/
 Pipfile.lock
 poetry.lock
+
+# Virtual Environments
 venv/
 .venv/
 env/
@@ -45,8 +45,15 @@ ENV/
 env.bak/
 venv.bak/
 myenv/
+backend/venv/
+backend/myenv/
+backend/.venv/
+
+# PyInstaller
 *.manifest
 *.spec
+
+# Unit test / coverage
 htmlcov/
 .tox/
 .nox/
@@ -60,11 +67,15 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 pytestdebug.log
+
+# mypy / pyright / ruff
 .mypy_cache/
 .dmypy.json
 dmypy.json
 .pytype/
 .ruff_cache/
+
+# Jupyter Notebook
 .ipynb_checkpoints
 
 # ─────────────────────────────────────────────────────────────
@@ -76,9 +87,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-dist/
 dist-ssr/
-build/
 .next/
 .nuxt/
 .vite/
@@ -93,6 +102,7 @@ storybook-static/
 # IDE & Editors
 # ─────────────────────────────────────────────────────────────
 .vscode/
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
@@ -133,5 +143,12 @@ logs/
 # ─────────────────────────────────────────────────────────────
 # Project-specific
 # ─────────────────────────────────────────────────────────────
+backend/
+backend/_cache/
+backend/_tmp_*.txt
+backend/prompt_security.log
+backend/test_*.py
+backend/verify_*.py
 *.zip
 caddy.exe
+# requirements_*.txt

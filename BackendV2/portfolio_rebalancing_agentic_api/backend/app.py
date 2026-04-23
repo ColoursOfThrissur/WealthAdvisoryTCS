@@ -837,6 +837,52 @@ async def cache_status():
 
 
 # ─────────────────────────────────────────────────────────────
+# API: Fund Universe (all funds from DynamoDB FundMaster)
+# ─────────────────────────────────────────────────────────────
+@app.get("/api/fund-universe")
+async def fund_universe():
+    """Return all funds from the FundMaster DynamoDB table."""
+    try:
+        import boto3
+        from decimal import Decimal
+        from dotenv import load_dotenv as _ld
+        _ld()
+
+        db = boto3.resource(
+            "dynamodb",
+            region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1"),
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        )
+
+        def _decimal_to_float(obj):
+            if isinstance(obj, list):    return [_decimal_to_float(i) for i in obj]
+            if isinstance(obj, dict):    return {k: _decimal_to_float(v) for k, v in obj.items()}
+            if isinstance(obj, Decimal): return float(obj)
+            return obj
+
+        table = db.Table("FundMaster")
+        result = table.scan()
+        items = result.get("Items", [])
+
+        # Handle pagination for large tables
+        while "LastEvaluatedKey" in result:
+            result = table.scan(ExclusiveStartKey=result["LastEvaluatedKey"])
+            items.extend(result.get("Items", []))
+
+        items = _decimal_to_float(items)
+
+        return {
+            "success": True,
+            "data": items,
+            "total_count": len(items),
+        }
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ─────────────────────────────────────────────────────────────
 # Health check
 # ─────────────────────────────────────────────────────────────
 @app.get("/health")
