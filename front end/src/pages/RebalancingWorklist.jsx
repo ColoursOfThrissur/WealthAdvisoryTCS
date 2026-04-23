@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, TrendingUp } from 'lucide-react';
+import { ArrowLeft, TrendingUp, AlertCircle } from 'lucide-react';
 import { useWorklist } from '../contexts/WorklistContext';
 import { API_BASE_URL } from '../config/api';
 import AIBadge from '../components/AIBadge';
@@ -125,7 +125,7 @@ const RebalancingWorklist = () => {
           </div>
         </div>
         <div className="worklist-error">
-          <div className="worklist-error-icon">⚠️</div>
+          <div className="worklist-error-icon"><AlertCircle size={40} style={{ opacity: 0.4 }} /></div>
           <p className="worklist-error-text">Unable to load worklist</p>
           <p className="worklist-error-detail">{error}</p>
           <button className="worklist-error-retry" onClick={() => window.location.reload()}>Retry</button>

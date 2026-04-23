@@ -26,6 +26,7 @@ const ClientDetail = () => {
   const [allocChartOpen, setAllocChartOpen] = useState(false);
   const [rerunModalOpen, setRerunModalOpen] = useState(false);
   const toggleRisk = (idx) => setExpandedRisk(prev => ({ ...prev, [idx]: !prev[idx] }));
+  const fetchingRef = React.useRef(false);
 
   const fetchClientData = async () => {
     try {
@@ -34,7 +35,6 @@ const ClientDetail = () => {
       
       console.log(`[ClientDetail] Fetching data for client ${clientId}`);
       
-      // Use production-ready service with request deduplication and queuing
       const fullData = await clientDataService.getFullAnalysis(clientId, {
         include_sentiment: true,
         include_fund_universe: true,
@@ -106,6 +106,12 @@ const ClientDetail = () => {
       setRiskData(fullData.risk_analysis);
       setRebalancingData(fullData.rebalancing_action);
     } catch (err) {
+      // If agent is busy, retry after a delay with refresh:false to hit backend file cache
+      if (err.message && err.message.includes('already processing')) {
+        console.log(`[ClientDetail] Agent busy, retrying in 8s with cache...`);
+        await new Promise(resolve => setTimeout(resolve, 8000));
+        return fetchClientData();
+      }
       setError(err.message);
     } finally {
       setLoading(false);
@@ -113,7 +119,10 @@ const ClientDetail = () => {
   };
 
   useEffect(() => {
-    fetchClientData();
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
+    fetchClientData().finally(() => { fetchingRef.current = false; });
+    return () => { fetchingRef.current = false; };
   }, [clientId]);
 
   const handleRerunAnalysis = async (config) => {
@@ -123,7 +132,8 @@ const ClientDetail = () => {
       
       console.log(`[ClientDetail] Rerunning analysis for client ${clientId}`, config);
       
-      // Force refresh on backend (bypass server cache) and invalidate frontend cache
+      // Force refresh on backend — result is stored in frontend cache
+      // fetchClientData will read from that fresh cache, no second agent call
       await clientDataService.getFullAnalysis(clientId, {
         include_sentiment: config.include_sentiment !== false,
         include_fund_universe: config.include_fund_universe !== false,
@@ -131,9 +141,6 @@ const ClientDetail = () => {
         refresh: true
       });
 
-      // Invalidate frontend cache so fetchClientData reads the new result
-      clientDataService.invalidateCache(clientId);
-      
       await fetchClientData();
     } catch (err) {
       setError(err.message);
@@ -156,8 +163,8 @@ const ClientDetail = () => {
         </div>
         <div className="client-detail-loading">
           <div className="client-detail-loading-spinner"></div>
-          <p className="client-detail-loading-text">Loading client details...</p>
-          <p className="client-detail-loading-subtext">Fetching portfolio, risk analysis, and recommendations</p>
+          <p className="client-detail-loading-text">Analyzing client portfolio...</p>
+          <p className="client-detail-loading-subtext">AI agent is running — this may take 2–4 minutes on first load</p>
         </div>
       </div>
     );
@@ -177,7 +184,7 @@ const ClientDetail = () => {
           </div>
         </div>
         <div className="client-detail-error">
-          <div className="client-detail-error-icon">⚠️</div>
+          <div className="client-detail-error-icon"><AlertCircle size={48} style={{ opacity: 0.4 }} /></div>
           <p className="client-detail-error-text">Unable to load client details</p>
           <p className="client-detail-error-detail">{error}</p>
           <button className="client-detail-error-retry" onClick={() => window.location.reload()}>Retry</button>

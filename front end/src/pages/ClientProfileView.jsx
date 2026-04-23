@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Shield, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Shield, TrendingUp, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import clientDataService from '../services/clientDataService';
 import './ClientProfileView.css';
@@ -100,7 +100,7 @@ const ClientProfileView = () => {
           <h1 className="cpv-title">Client Portfolio</h1>
         </div>
         <div className="cpv-error">
-          <div className="cpv-error-icon">⚠️</div>
+          <div className="cpv-error-icon"><AlertTriangle size={40} style={{ opacity: 0.4 }} /></div>
           <p className="cpv-error-text">Unable to load portfolio</p>
           <p className="cpv-error-detail">{error}</p>
           <button className="cpv-error-retry" onClick={() => window.location.reload()}>Retry</button>

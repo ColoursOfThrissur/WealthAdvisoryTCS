@@ -10,6 +10,7 @@
  */
 
 import apiClient from './apiClient';
+import { API_BASE_URL } from '../config/api.js';
 
 class ClientDataService {
   constructor() {
@@ -162,7 +163,8 @@ class ClientDataService {
       return this.inFlight.get(lockKey);
     }
 
-    const { API_BASE_URL } = await import('../config/api.js');
+    // Build the promise synchronously and set the lock before any await,
+    // eliminating the race window that existed when API_BASE_URL was dynamic-imported.
     const url = `${API_BASE_URL}/api/client/${clientId}/full-analysis`;
     const body = JSON.stringify({
       include_sentiment: options.include_sentiment ?? true,
@@ -175,7 +177,7 @@ class ClientDataService {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body,
-      signal: AbortSignal.timeout(360000) // 6 minute timeout
+      signal: AbortSignal.timeout(360000)
     })
     .then(async res => {
       if (!res.ok) {
@@ -216,12 +218,33 @@ class ClientDataService {
   }
 
   /**
+   * Wait for in-flight full-analysis if running, then slice section.
+   * Returns sliced data or null.
+   */
+  async _waitForFullThenSlice(clientId, section) {
+    const lockKey = `lock_${clientId}`;
+    if (this.inFlight.has(lockKey)) {
+      console.log(`[ClientDataService] Waiting for in-flight full-analysis to slice '${section}'`);
+      try {
+        await this.inFlight.get(lockKey);
+      } catch (e) {
+        // full-analysis failed, can't slice
+        return null;
+      }
+    }
+    const sliced = this._sliceFromFull(clientId, section);
+    return sliced.success ? sliced.data : null;
+  }
+
+  /**
    * Get client detail
    */
   async getClientDetail(clientId, refresh = false) {
     if (!refresh) {
       const sliced = this._sliceFromFull(clientId, 'client_detail');
       if (sliced.success) return sliced.data;
+      const waited = await this._waitForFullThenSlice(clientId, 'client_detail');
+      if (waited) return waited;
     }
 
     const cacheKey = this.getCacheKey(clientId, 'detail');
@@ -230,7 +253,7 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/client/${clientId}/detail`, { priority: 1, retryable: true });
+      const data = await apiClient.get(`/api/client/${clientId}/detail`, { priority: 1, retryable: false });
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {
@@ -246,6 +269,8 @@ class ClientDataService {
     if (!refresh) {
       const sliced = this._sliceFromFull(clientId, 'risk_analysis');
       if (sliced.success) return sliced.data;
+      const waited = await this._waitForFullThenSlice(clientId, 'risk_analysis');
+      if (waited) return waited;
     }
 
     const cacheKey = this.getCacheKey(clientId, 'risk');
@@ -254,7 +279,7 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/client/${clientId}/risk-analysis`, { priority: 1, retryable: true });
+      const data = await apiClient.get(`/api/client/${clientId}/risk-analysis`, { priority: 1, retryable: false });
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {
@@ -270,6 +295,8 @@ class ClientDataService {
     if (!refresh) {
       const sliced = this._sliceFromFull(clientId, 'investment_details');
       if (sliced.success) return sliced.data;
+      const waited = await this._waitForFullThenSlice(clientId, 'investment_details');
+      if (waited) return waited;
     }
 
     const cacheKey = this.getCacheKey(clientId, 'investment');
@@ -278,7 +305,7 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/client/${clientId}/investment-details`, { priority: 1, retryable: true });
+      const data = await apiClient.get(`/api/client/${clientId}/investment-details`, { priority: 1, retryable: false });
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {
@@ -294,6 +321,8 @@ class ClientDataService {
     if (!refresh) {
       const sliced = this._sliceFromFull(clientId, 'rebalancing_action');
       if (sliced.success) return sliced.data;
+      const waited = await this._waitForFullThenSlice(clientId, 'rebalancing_action');
+      if (waited) return waited;
     }
 
     const cacheKey = this.getCacheKey(clientId, 'rebalancing');
@@ -302,7 +331,7 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/action/rebalancing/${clientId}`, { priority: 1, retryable: true });
+      const data = await apiClient.get(`/api/action/rebalancing/${clientId}`, { priority: 1, retryable: false });
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {

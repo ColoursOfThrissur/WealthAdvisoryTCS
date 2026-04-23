@@ -141,7 +141,7 @@ def _safe_json(data: dict) -> JSONResponse:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
