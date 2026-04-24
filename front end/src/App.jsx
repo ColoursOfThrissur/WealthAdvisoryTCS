@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import CanvasLayout from './layouts/CanvasLayout';
 import Overview from './pages/Overview';
-import Dashboard from './pages/Dashboard';
+import BackendChatInterface from './components/BackendChatInterface';
 import RebalancingWorklist from './pages/RebalancingWorklist';
 import ProposalsWorklist from './pages/ProposalsWorklist';
 import ClientDetail from './pages/ClientDetail';
@@ -15,6 +15,7 @@ import InvestmentProposalSimple from './pages/InvestmentProposal/InvestmentPropo
 import PortfolioRebalancingNative from './pages/PortfolioRebalancing/PortfolioRebalancingNative';
 import ReportChat from './pages/ReportChat/ReportChat';
 import PrioritizeMyDay from './pages/PrioritizeMyDay';
+import MeetingPrep from './pages/MeetingPrep';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import { WorklistProvider } from './contexts/WorklistContext';
@@ -29,7 +30,7 @@ function ProtectedRoute({ children }) {
 }
 
 function App() {
-  const [activeTab, setActiveTab] = useState('Assets View');
+  const [activeTab, setActiveTab] = useState('cockpit');
 
   return (
     <BrowserRouter>
@@ -42,16 +43,7 @@ function App() {
             <ProtectedRoute>
             <MainLayout activeTab={activeTab} onTabChange={setActiveTab}>
               <CanvasLayout>
-                {activeTab === 'Assets View' ? <Overview /> : <Dashboard />}
-              </CanvasLayout>
-            </MainLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/chat" element={
-            <ProtectedRoute>
-            <MainLayout activeTab={activeTab} onTabChange={setActiveTab}>
-              <CanvasLayout>
-                <Overview />
+                {activeTab === 'cockpit' ? <Overview /> : <BackendChatInterface onClose={() => setActiveTab('cockpit')} />}
               </CanvasLayout>
             </MainLayout>
             </ProtectedRoute>
@@ -142,6 +134,15 @@ function App() {
             <MainLayout activeTab={activeTab} onTabChange={setActiveTab}>
               <CanvasLayout>
                 <PrioritizeMyDay />
+              </CanvasLayout>
+            </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/meeting-prep/:clientId" element={
+            <ProtectedRoute>
+            <MainLayout activeTab={activeTab} onTabChange={setActiveTab}>
+              <CanvasLayout>
+                <MeetingPrep />
               </CanvasLayout>
             </MainLayout>
             </ProtectedRoute>

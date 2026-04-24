@@ -4,7 +4,11 @@
  */
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ??
-  (import.meta.env.DEV ? 'http://localhost:8000' : '');
+  (import.meta.env.DEV ? 'http://localhost:8001' : '');
+
+export const REBALANCING_API_URL =
+  import.meta.env.VITE_REBALANCING_API_URL ??
+  (import.meta.env.DEV ? 'http://localhost:8003' : '');
 
 /** Full URL for an API path (e.g. /api/health -> http://localhost:8000/api/health or /api/health) */
 export const getApiUrl = (path) => {

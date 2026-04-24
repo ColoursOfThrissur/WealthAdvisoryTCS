@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, RefreshCw, AlertCircle } from 'lucide-react';
+import clientDataService from '../services/clientDataService';
 import './RerunModal.css';
 
 const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
@@ -11,30 +12,37 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
   const [loadingFunds, setLoadingFunds] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      fetchFundUniverse();
-    }
+    if (isOpen) fetchFundUniverse();
   }, [isOpen]);
 
   const fetchFundUniverse = async () => {
     setLoadingFunds(true);
     try {
-      // Derive fund universe from option_b trade recommendations in full-analysis cache
-      const response = await fetch(`http://localhost:8000/api/action/rebalancing/${clientId}`);
-      const data = await response.json();
-      if (data.success) {
-        const optionBTrades = data.data?.options?.option_b?.trade_recommendations || [];
+      const cached = clientDataService._sliceFromFull(clientId, 'rebalancing_action');
+      if (cached.success) {
+        const optionBTrades = cached.data?.data?.options?.option_b?.trade_recommendations || [];
         const buyTrades = optionBTrades.filter(t => t.action === 'Buy' || t.action === 'buy');
-        const funds = buyTrades.map(t => ({
-          fund_id: t.ticker,
-          name: t.fund,
-          category: t.type || 'ETF',
-          expense_ratio: t.expense_ratio || null,
-        }));
-        setFundList(funds);
+        if (buyTrades.length > 0) {
+          setFundList(buyTrades.map(t => ({
+            fund_id: t.ticker,
+            name: t.fund || t.ticker,
+            category: t.type || 'ETF',
+            expense_ratio: t.expense_ratio || null,
+          })));
+          return;
+        }
+      }
+      const universeData = await clientDataService.getFundUniverse();
+      if (universeData?.data?.length > 0) {
+        setFundList(universeData.data.map(f => ({
+          fund_id: f.fund_id,
+          name: f.name || f.fund_id,
+          category: f.asset_class || f.category || 'N/A',
+          expense_ratio: f.expense_ratio || null,
+        })));
       }
     } catch (error) {
-      console.error('Error fetching fund universe:', error);
+      console.error('[RerunModal] Error fetching fund universe:', error);
       setFundList([]);
     } finally {
       setLoadingFunds(false);
@@ -42,10 +50,8 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
   };
 
   const handleFundToggle = (fundId) => {
-    setExcludedFunds(prev => 
-      prev.includes(fundId) 
-        ? prev.filter(id => id !== fundId)
-        : [...prev, fundId]
+    setExcludedFunds(prev =>
+      prev.includes(fundId) ? prev.filter(id => id !== fundId) : [...prev, fundId]
     );
   };
 
@@ -54,8 +60,9 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
     try {
       await onSubmit({
         include_sentiment: includeSentiment,
+        include_fund_universe: true,
+        user_prompt: advisorPrompt.trim(),
         excluded_funds: excludedFunds,
-        advisor_prompt: advisorPrompt.trim()
       });
     } finally {
       setLoading(false);
@@ -99,9 +106,7 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
                 />
                 <span className="rerun-toggle-slider"></span>
               </label>
-              <span className="rerun-toggle-label">
-                {includeSentiment ? 'Enabled' : 'Disabled'}
-              </span>
+              <span className="rerun-toggle-label">{includeSentiment ? 'Enabled' : 'Disabled'}</span>
             </div>
           </div>
 

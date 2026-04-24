@@ -3,8 +3,8 @@ import AgentTrace from '../components/AgentTrace';
 import SectionResult from '../components/SectionResult';
 import MeetingPrepSection from '../components/sections/MeetingPrepSection';
 import SuggestedPrompts from './SuggestedPrompts';
-import { Send, Sparkles, CheckCircle2, XCircle, FileText, TrendingUp, Mail, Users } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Send, Sparkles, CheckCircle2, XCircle, FileText, TrendingUp, Mail, Users, ArrowUp, ArrowDown } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getApiUrl } from '../config/api';
 import { getSuggestedPromptsForMode } from '../utils/suggestedPromptsHelper';
@@ -79,72 +79,59 @@ const BackendChatInterface = ({ onClose }) => {
   };
 
   const sendMeetingPrepDirectly = async (query) => {
-    const userMsg = {
-      id: Date.now(),
-      sender: 'user',
-      text: query,
-      timestamp: Date.now()
-    };
+    const userMsg = { id: Date.now(), sender: 'user', text: query, timestamp: Date.now() };
     setLocalMessages(prev => [...prev, userMsg]);
     setResearchLoading(true);
-    
+
     try {
-      // Extract client ID from query
-      let clientId = null;
+      // Step 1: resolve client name → ID via /api/clients (fuzzy match on backend)
+      const clientsRes = await fetch(getApiUrl('/api/clients'));
+      if (!clientsRes.ok) throw new Error('Could not load client list');
+      const clientsData = await clientsRes.json();
+
       const lowerQuery = query.toLowerCase();
-      if (lowerQuery.includes('mary') || lowerQuery.includes('hargrave')) {
-        clientId = 'C002';
-      } else if (lowerQuery.includes('sam') || lowerQuery.includes('pai')) {
-        clientId = 'C001';
-      }
-      
-      if (!clientId) {
-        const errorMsg = {
+      const matched = (clientsData.clients || []).find(c =>
+        lowerQuery.includes(c.name.toLowerCase()) ||
+        c.name.toLowerCase().split(' ').some(part => lowerQuery.includes(part))
+      );
+
+      if (!matched) {
+        setLocalMessages(prev => [...prev, {
           id: Date.now() + 1,
           sender: 'assistant',
-          text: 'Please specify a client name (e.g., Mary Hargrave or Sam Pai)',
+          text: 'Please specify a client name from your book (e.g. "Robert Anderson" or "Sarah Mitchell").',
           timestamp: Date.now()
-        };
-        setLocalMessages(prev => [...prev, errorMsg]);
-        setResearchLoading(false);
+        }]);
         return;
       }
-      
-      const response = await fetch(getApiUrl(`/api/client/${clientId}/meeting-prep`), {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
+
+      // Step 2: fetch meeting prep for resolved client ID
+      const response = await fetch(getApiUrl(`/api/client/${matched.client_id}/meeting-prep`));
+
       if (response.ok) {
         const result = await response.json();
-        const data = result.data;
-        console.log('[MEETING] Response:', data);
-        
-        const aiMsg = {
+        setLocalMessages(prev => [...prev, {
           id: Date.now() + 1,
           sender: 'assistant',
-          meetingPrepData: data,
+          meetingPrepData: result.data,
           timestamp: Date.now()
-        };
-        setLocalMessages(prev => [...prev, aiMsg]);
+        }]);
       } else {
-        const errorMsg = {
+        setLocalMessages(prev => [...prev, {
           id: Date.now() + 1,
           sender: 'assistant',
-          text: 'Meeting prep data not available for this client.',
+          text: `Meeting prep not available for ${matched.name}.`,
           timestamp: Date.now()
-        };
-        setLocalMessages(prev => [...prev, errorMsg]);
+        }]);
       }
     } catch (error) {
       console.error('[MEETING] Call failed:', error);
-      const errorMsg = {
+      setLocalMessages(prev => [...prev, {
         id: Date.now() + 1,
         sender: 'assistant',
         text: 'Failed to load meeting prep data.',
         timestamp: Date.now()
-      };
-      setLocalMessages(prev => [...prev, errorMsg]);
+      }]);
     } finally {
       setResearchLoading(false);
     }
@@ -427,94 +414,144 @@ const BackendChatInterface = ({ onClose }) => {
   // Combine messages based on mode
   const displayMessages = (chatMode === 'research' || chatMode === 'meeting') ? localMessages : chatMessages;
 
+  const messagesRef = useRef(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showScrollBottom, setShowScrollBottom] = useState(false);
+
+  const handleMessagesScroll = useCallback(() => {
+    const el = messagesRef.current;
+    if (!el) return;
+    setShowScrollTop(el.scrollTop > 100);
+    setShowScrollBottom(el.scrollHeight - el.scrollTop - el.clientHeight > 100);
+  }, []);
+
+  const scrollToTop = () => messagesRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  const scrollToBottom = () => messagesRef.current?.scrollTo({ top: messagesRef.current.scrollHeight, behavior: 'smooth' });
+
+  // Auto-scroll to bottom on new messages
+  useEffect(() => {
+    if (displayMessages.length > 0) scrollToBottom();
+  }, [displayMessages.length]);
+
   return (
-    <div className={chatMode === 'research' ? 'research-mode' : ''}>
-      <div className="chat-expanded__messages">
-        {displayMessages.length === 0 && (
-          <div className="welcome-state">
-            <Sparkles size={48} className="welcome-icon" />
+    <div className={`bci-root ${chatMode}-mode`}>
+
+      {/* Messages — scrollable, fills available space */}
+      <div className="bci-messages" ref={messagesRef} onScroll={handleMessagesScroll}>
+        <div className="bci-messages-inner">
+        {displayMessages.length === 0 ? (
+          <div className="bci-welcome">
+            <Sparkles size={40} className="welcome-icon" />
             <h3>Client Relationship Assist</h3>
             <p>Your intelligent assistant for client management, portfolio analysis, and relationship insights.</p>
+            <div className="bci-welcome-input">
+              <form className="bci-input-row" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="chatInput"
+                  placeholder={getPlaceholderText()}
+                  disabled={!isConnected}
+                  className="bci-input"
+                />
+                <button type="submit" className="bci-send" disabled={!isConnected}><Send size={18} /></button>
+              </form>
+              <div className="bci-modes">
+                {modes.map((mode) => {
+                  const Icon = mode.icon;
+                  return (
+                    <button
+                      key={mode.id}
+                      data-mode={mode.id}
+                      className={`bci-mode-chip${chatMode === mode.id ? ' bci-mode-chip--active' : ''}`}
+                      onClick={() => handleModeChange(mode.id)}
+                      disabled={!isConnected}
+                    >
+                      <Icon size={14} />
+                      <span>{mode.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <SuggestedPrompts
+                prompts={suggestedPrompts}
+                onPromptClick={handleSuggestedPromptClick}
+                isLoading={isProcessing || researchLoading}
+                mode={chatMode}
+              />
+            </div>
           </div>
-        )}
-
-        {displayMessages.map((message) => (
-          <div 
-            key={message.id} 
-            className={`chat-message chat-message--${message.sender}`}
-          >
-            <div className="message-bubble">
-              {message.meetingPrepData ? (
-                <MeetingPrepSection data={message.meetingPrepData} />
-              ) : !message.data && !message.sections ? (
-                chatMode === 'research' && message.sender === 'assistant' ? (
-                  <div className="research-response">{formatMessageWithIcons(message.text)}</div>
-                ) : (
-                  formatMessageWithIcons(message.text)
-                )
-              ) : null}
-              {message.data && (
-                <SectionResult section={message.section} data={message.data} />
-              )}
-              {message.sections && message.sections.length > 0 && (
-                <div className="sections-list">
-                  {message.clientName && (
-                    <div className="report-preview-header">
-                      Report Preview for {message.clientName}
+        ) : (
+          <>
+            {displayMessages.map((message) => (
+              <div key={message.id} className={`chat-message chat-message--${message.sender}`}>
+                <div className="message-bubble">
+                  {message.meetingPrepData ? (
+                    <MeetingPrepSection data={message.meetingPrepData} />
+                  ) : !message.data && !message.sections ? (
+                    chatMode === 'research' && message.sender === 'assistant'
+                      ? <div className="research-response">{formatMessageWithIcons(message.text)}</div>
+                      : formatMessageWithIcons(message.text)
+                  ) : null}
+                  {message.data && <SectionResult section={message.section} data={message.data} />}
+                  {message.sections?.length > 0 && (
+                    <div className="sections-list">
+                      {message.clientName && <div className="report-preview-header">Report Preview for {message.clientName}</div>}
+                      {message.sections.map((sec, idx) => (
+                        <div key={idx} className="section-item"><SectionResult section={sec.section} data={sec.data} /></div>
+                      ))}
                     </div>
                   )}
-                  {message.sections.map((sec, idx) => (
-                    <div key={idx} className="section-item">
-                      <SectionResult section={sec.section} data={sec.data} />
-                    </div>
-                  ))}
                 </div>
-              )}
-            </div>
-            <span className="message-timestamp">{formatTime(message.timestamp)}</span>
-          </div>
-        ))}
-
-        <AgentTrace statusHistory={statusHistory} isProcessing={isProcessing || researchLoading} researchMode={researchLoading} />
+                <span className="message-timestamp">{formatTime(message.timestamp)}</span>
+              </div>
+            ))}
+            <AgentTrace statusHistory={statusHistory} isProcessing={isProcessing || researchLoading} researchMode={researchLoading} />
+          </>
+        )}
+        </div>
       </div>
 
-      <form className="chat-expanded__input" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="chatInput"
-          placeholder={getPlaceholderText()}
-          disabled={!isConnected}
-          className={chatMode !== 'normal' ? `${chatMode}-mode-input` : ''}
-        />
-        <button type="submit" disabled={!isConnected}>
-          <Send size={20} />
-        </button>
-      </form>
+      {/* Scroll buttons */}
+      {displayMessages.length > 0 && (showScrollTop || showScrollBottom) && (
+        <div className="bci-scroll-btns">
+          {showScrollTop && <button className="bci-scroll-btn" onClick={scrollToTop}><ArrowUp size={14} /></button>}
+          {showScrollBottom && <button className="bci-scroll-btn" onClick={scrollToBottom}><ArrowDown size={14} /></button>}
+        </div>
+      )}
 
-      <div className="quick-actions-bottom">
-        {modes.map((mode) => {
-          const Icon = mode.icon;
-          return (
-            <button
-              key={mode.id}
-              className={`quick-action-chip quick-action-chip--${mode.id} ${chatMode === mode.id ? 'quick-action-chip--active' : ''}`}
-              onClick={() => handleModeChange(mode.id)}
+      {/* Bottom bar — only shown when chat has messages */}
+      {displayMessages.length > 0 && (
+        <div className="bci-bottom">
+          <form className="bci-input-row" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="chatInput"
+              placeholder={getPlaceholderText()}
               disabled={!isConnected}
-            >
-              <Icon size={16} />
-              <span>{mode.label}</span>
-            </button>
-          );
-        })}
-      </div>
+              className="bci-input"
+            />
+            <button type="submit" className="bci-send" disabled={!isConnected}><Send size={18} /></button>
+          </form>
+          <div className="bci-modes">
+            {modes.map((mode) => {
+              const Icon = mode.icon;
+              return (
+                <button
+                  key={mode.id}
+                  data-mode={mode.id}
+                  className={`bci-mode-chip${chatMode === mode.id ? ' bci-mode-chip--active' : ''}`}
+                  onClick={() => handleModeChange(mode.id)}
+                  disabled={!isConnected}
+                >
+                  <Icon size={14} />
+                  <span>{mode.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-      {/* Suggested Prompts */}
-      <SuggestedPrompts 
-        prompts={suggestedPrompts}
-        onPromptClick={handleSuggestedPromptClick}
-        isLoading={isProcessing || researchLoading}
-        mode={chatMode}
-      />
     </div>
   );
 };

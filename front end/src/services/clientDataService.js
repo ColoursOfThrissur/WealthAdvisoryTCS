@@ -10,7 +10,7 @@
  */
 
 import apiClient from './apiClient';
-import { API_BASE_URL } from '../config/api.js';
+import { API_BASE_URL, REBALANCING_API_URL } from '../config/api.js';
 
 class ClientDataService {
   constructor() {
@@ -165,7 +165,7 @@ class ClientDataService {
 
     // Build the promise synchronously and set the lock before any await,
     // eliminating the race window that existed when API_BASE_URL was dynamic-imported.
-    const url = `${API_BASE_URL}/api/client/${clientId}/full-analysis`;
+    const url = `${REBALANCING_API_URL}/api/client/${clientId}/full-analysis`;
     const body = JSON.stringify({
       include_sentiment: options.include_sentiment ?? true,
       include_fund_universe: options.include_fund_universe ?? true,
@@ -253,7 +253,7 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/client/${clientId}/detail`, { priority: 1, retryable: false });
+      const data = await fetch(`${REBALANCING_API_URL}/api/client/${clientId}/detail`).then(r => r.json());
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {
@@ -279,7 +279,7 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/client/${clientId}/risk-analysis`, { priority: 1, retryable: false });
+      const data = await fetch(`${REBALANCING_API_URL}/api/client/${clientId}/risk-analysis`).then(r => r.json());
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {
@@ -305,7 +305,7 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/client/${clientId}/investment-details`, { priority: 1, retryable: false });
+      const data = await fetch(`${REBALANCING_API_URL}/api/client/${clientId}/investment-details`).then(r => r.json());
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {
@@ -331,11 +331,29 @@ class ClientDataService {
     if (cached && this.isFresh(cached)) return cached.data;
 
     try {
-      const data = await apiClient.get(`/api/action/rebalancing/${clientId}`, { priority: 1, retryable: false });
+      const data = await fetch(`${REBALANCING_API_URL}/api/action/rebalancing/${clientId}`).then(r => r.json());
       this.setCache(cacheKey, data);
       return data;
     } catch (error) {
       console.error(`[ClientDataService] Failed to fetch rebalancing action:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get fund universe from FundMaster table
+   */
+  async getFundUniverse() {
+    const cacheKey = 'fund_universe';
+    const cached = this.getFromCache(cacheKey);
+    if (cached && this.isFresh(cached)) return cached.data;
+
+    try {
+      const data = await fetch(`${REBALANCING_API_URL}/api/fund-universe`).then(r => r.json());
+      this.setCache(cacheKey, data);
+      return data;
+    } catch (error) {
+      console.error('[ClientDataService] Failed to fetch fund universe:', error);
       throw error;
     }
   }
@@ -349,12 +367,8 @@ class ClientDataService {
       if (priority !== 'all') params.append('priority', priority);
       if (search) params.append('search', search);
 
-      const endpoint = `/api/worklist/rebalancing${params.toString() ? '?' + params.toString() : ''}`;
-      
-      const data = await apiClient.get(endpoint, {
-        priority: 2,
-        retryable: true
-      });
+      const endpoint = `${REBALANCING_API_URL}/api/worklist/rebalancing${params.toString() ? '?' + params.toString() : ''}`;
+      const data = await fetch(endpoint).then(r => r.json());
 
       return data;
     } catch (error) {

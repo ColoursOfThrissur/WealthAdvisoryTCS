@@ -33,7 +33,7 @@ encoding = encoding_for_model("gpt-4o")  # or your specific model name
 def count_tokens(text: str) -> int:
     return len(encoding.encode(text))
 
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "backend", ".env"))
 nest_asyncio.apply()
 client2 = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 

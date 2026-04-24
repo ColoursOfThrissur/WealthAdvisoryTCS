@@ -1,15 +1,15 @@
 .allocation-section {
   padding: 20px;
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
   margin-bottom: 20px;
 }
 
 .allocation-section h3 {
   font-size: 1.5em;
-  color: #002060;
+  color: var(--text-primary);
   margin-bottom: 20px;
-  border-bottom: 2px solid #4472C4;
+  border-bottom: 2px solid var(--info);
   padding-bottom: 10px;
 }
 
@@ -21,14 +21,10 @@
 }
 
 @media (max-width: 968px) {
-  .allocation-content {
-    grid-template-columns: 1fr;
-  }
+  .allocation-content { grid-template-columns: 1fr; }
 }
 
-.allocation-table-container {
-  overflow-x: auto;
-}
+.allocation-table-container { overflow-x: auto; }
 
 .allocation-table {
   width: 100%;
@@ -40,26 +36,22 @@
 .allocation-table td {
   padding: 12px;
   text-align: right;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .allocation-table th:first-child,
-.allocation-table td:first-child {
-  text-align: left;
-}
+.allocation-table td:first-child { text-align: left; }
 
 .allocation-table thead th {
-  background: #f5f5f5;
+  background: var(--bg-tertiary);
   font-weight: 600;
-  color: #002060;
+  color: var(--text-primary);
 }
 
-.allocation-table tbody tr:hover {
-  background: #f9f9f9;
-}
+.allocation-table tbody tr:hover { background: var(--glass-bg); }
 
 .chart-container {
   padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
 }

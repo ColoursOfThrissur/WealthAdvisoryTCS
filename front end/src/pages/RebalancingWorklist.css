@@ -639,6 +639,22 @@
   font-style: italic;
 }
 
+/* Mock data divider row */
+.worklist-divider-row td {
+  padding: 8px var(--space-lg);
+  background: var(--bg-tertiary);
+  border-top: 2px solid var(--glass-border);
+  border-bottom: 2px solid var(--glass-border);
+}
+
+.worklist-divider-row span {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
 /* Loading States */
 .worklist-loading {
   display: flex;

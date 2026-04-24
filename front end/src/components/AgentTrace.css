@@ -14,10 +14,10 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 0.8rem;
-  background: var(--glass-bg, rgba(99, 102, 241, 0.06));
-  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.15));
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
 }
 
 .trace-status-icon {
@@ -27,7 +27,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--success, #6366f1);
+  color: var(--success);
 }
 
 .trace-step-icon {
@@ -37,21 +37,21 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--text-secondary, #9ca3af);
+  color: var(--text-secondary);
 }
 
 .trace-step.active .trace-status-icon {
-  color: var(--success, #6366f1);
+  color: var(--success);
 }
 
 .trace-step.active .trace-step-icon {
-  color: var(--success, #6366f1);
+  color: var(--success);
 }
 
 .trace-step-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text-primary, #1f2937);
+  color: var(--text-primary);
   line-height: 1;
 }
 
@@ -59,7 +59,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--text-secondary, #9ca3af);
+  color: var(--text-secondary);
   margin-left: auto;
 }
 

@@ -38,10 +38,8 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
       
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user_name: 'john' })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_name: 'advisor' })
       });
 
       console.log('[MORNING NOTE] Response status:', response.status);
@@ -267,16 +265,18 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
         {!loading && noteData && sections.length > 0 && (
           <div className="morning-note-card__summary">
             {sections.slice(0, 3).map((section, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="summary-item"
-                onClick={() => {
-                  setSelectedSection(section);
-                  setShowPopup(true);
-                }}
+                onClick={() => { setSelectedSection(section); setShowPopup(true); }}
               >
-                <span className="summary-title">{section.title}</span>
-                <ChevronRight size={16} className="summary-icon" />
+                <div className="summary-item__content">
+                  <span className="summary-title">{section.title}</span>
+                  <p className="summary-desc">
+                    {section.content.find(l => l.trim() && !l.startsWith('#'))?.replace(/\*\*/g, '').substring(0, 120) || ''}
+                  </p>
+                </div>
+                <span className="summary-view-more">...view more</span>
               </div>
             ))}
           </div>
@@ -292,18 +292,27 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
           <div className="morning-note-card__events">
             {eventCompleted ? (
               <div className="event-item event-item--resolved">
-                <span className="event-title">✓ Event Resolved — Communications sent</span>
+                <div className="event-item__content">
+                  <span className="event-item__title">Event Resolved</span>
+                  <p className="event-item__desc">Communications sent successfully to all affected clients.</p>
+                </div>
               </div>
             ) : (
-              <div
-                className="event-item"
-                onClick={() => onEventClick?.(activeMarketEvent.id)}
-              >
-                <span className="event-title">
-                  <AlertTriangle size={14} style={{ marginRight: 6, verticalAlign: 'middle', color: 'var(--warning)' }} />
-                  {activeMarketEvent.title}
-                </span>
-                <ChevronRight size={16} className="event-chevron" />
+              <div className="event-item">
+                <div className="event-item__header">
+                  <AlertTriangle size={13} className="event-item__icon" />
+                  <span className="event-item__label">Market Alert</span>
+                </div>
+                <div className="event-item__content">
+                  <span className="event-item__title">{activeMarketEvent.title}</span>
+                  <p className="event-item__desc">{activeMarketEvent.description?.substring(0, 100)}</p>
+                </div>
+                <button
+                  className="event-item__action"
+                  onClick={() => onEventClick?.(activeMarketEvent.id)}
+                >
+                  ...view more
+                </button>
               </div>
             )}
           </div>

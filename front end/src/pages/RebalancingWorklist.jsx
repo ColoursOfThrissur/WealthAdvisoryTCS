@@ -2,9 +2,25 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, AlertCircle } from 'lucide-react';
 import { useWorklist } from '../contexts/WorklistContext';
-import { API_BASE_URL } from '../config/api';
+import { REBALANCING_API_URL } from '../config/api';
 import AIBadge from '../components/AIBadge';
+import worklistData from '../data/worklistCustomers.json';
 import './RebalancingWorklist.css';
+
+const MOCK_CLIENTS = worklistData.rebalancing.map(c => ({
+  clientId: c.CustomerID,
+  name: `${c.FirstName} ${c.Surname}`,
+  fum: `$${(c.NetAssets / 1000).toFixed(0)}K`,
+  aum: c.NetAssets,
+  riskProfile: c.RiskProfile,
+  priority: c.Priority === 'Critical' ? 1 : 3,
+  priorityComment: c.RebalanceReason,
+  trigger: c.Trigger,
+  driftScore: 0,
+  contribution: c.RiskProfile > 0.35 ? 'H' : c.RiskProfile > 0.2 ? 'M' : 'L',
+  age: c.Age,
+  isMock: true,
+}));
 
 const RebalancingWorklist = () => {
   const navigate = useNavigate();
@@ -22,7 +38,7 @@ const RebalancingWorklist = () => {
     const fetchWorklist = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/api/worklist/rebalancing?priority=all`);
+        const res = await fetch(`${REBALANCING_API_URL}/api/worklist/rebalancing?priority=all`);
         const json = await res.json();
         if (!res.ok) throw new Error(json.detail || 'Failed to fetch worklist');
         setClients(json.data.clients.map(c => ({
@@ -148,6 +164,47 @@ const RebalancingWorklist = () => {
     navigate(`/client/${clientId}/rebalancing`);
   };
 
+  const renderRow = (client) => (
+    <tr
+      key={`${client.isMock ? 'mock' : 'api'}-${client.clientId}`}
+      className={`worklist-row worklist-row--p${client.priority} ${hoveredClientId === client.clientId ? 'hovered' : ''}`}
+      onMouseEnter={() => setHoveredClientId(client.clientId)}
+      onMouseLeave={() => setHoveredClientId(null)}
+      onClick={() => handleTakeAction(client.clientId)}
+      style={{ cursor: 'pointer' }}
+    >
+      <td>{client.clientId}</td>
+      <td className="client-name">{client.name}</td>
+      <td>{client.fum}</td>
+      <td>
+        <div className="engagement-bar" title={`Engagement: ${getEngagementScore(client)}%`}>
+          <div className="engagement-fill" style={{ width: `${getEngagementScore(client)}%`, background: getEngagementColor(getEngagementScore(client)) }} />
+          <span className="engagement-score-label">{getEngagementScore(client)}</span>
+          <div style={{ position: 'absolute', top: 0, bottom: 0, left: '60%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }} />
+          <div style={{ position: 'absolute', top: 0, bottom: 0, left: '80%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }} />
+        </div>
+      </td>
+      <td>
+        <span className="priority-badge" style={{ backgroundColor: getPriorityColor(client.priority) }}>
+          {getPriorityLabel(client.priority)}
+        </span>
+      </td>
+      <td>
+        <button
+          className={`action-btn ${completedActions && completedActions[client.clientId] ? 'completed' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (setCompletedActions) setCompletedActions(prev => ({ ...prev, [client.clientId]: true }));
+            navigate(`/action/rebalancing/${client.clientId}`);
+          }}
+        >
+          {getActionPhrase(client)}
+        </button>
+      </td>
+      <td className="trigger-cell">{client.trigger}</td>
+    </tr>
+  );
+
   return (
     <div className="worklist-page">
       <div className="worklist-header">
@@ -228,55 +285,16 @@ const RebalancingWorklist = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredClients.map((client) => (
-                  <tr 
-                    key={client.clientId}
-                    className={`worklist-row worklist-row--p${client.priority} ${hoveredClientId === client.clientId ? 'hovered' : ''}`}
-                    onMouseEnter={() => setHoveredClientId(client.clientId)}
-                    onMouseLeave={() => setHoveredClientId(null)}
-                    onClick={() => handleTakeAction(client.clientId)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <td>{client.clientId}</td>
-                    <td className="client-name">{client.name}</td>
-                    <td>{client.fum}</td>
-                    <td>
-                      <div className="engagement-bar" title={`Engagement: ${getEngagementScore(client)}%`}>
-                        <div 
-                          className="engagement-fill" 
-                          style={{ 
-                            width: `${getEngagementScore(client)}%`,
-                            background: getEngagementColor(getEngagementScore(client))
-                          }}
-                        ></div>
-                        <span className="engagement-score-label">{getEngagementScore(client)}</span>
-                        <div style={{ position: 'absolute', top: 0, bottom: 0, left: '60%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }}></div>
-                        <div style={{ position: 'absolute', top: 0, bottom: 0, left: '80%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }}></div>
-                      </div>
-                    </td>
-                    <td>
-                      <span 
-                        className="priority-badge"
-                        style={{ backgroundColor: getPriorityColor(client.priority) }}
-                      >
-                        {getPriorityLabel(client.priority)}
-                      </span>
-                    </td>
-                    <td>
-                      <button 
-                        className={`action-btn ${completedActions && completedActions[client.clientId] ? 'completed' : ''}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (setCompletedActions) setCompletedActions(prev => ({ ...prev, [client.clientId]: true }));
-                          navigate(`/action/rebalancing/${client.clientId}`);
-                        }}
-                      >
-                        {getActionPhrase(client)}
-                      </button>
-                    </td>
-                    <td className="trigger-cell">{client.trigger}</td>
-                  </tr>
-                ))}
+                {filteredClients.map((client) => renderRow(client))}
+                {/* Mock data divider */}
+                <tr className="worklist-divider-row">
+                  <td colSpan={7}>
+                    <span>Mock Clients</span>
+                  </td>
+                </tr>
+                {MOCK_CLIENTS
+                  .filter(c => !searchTerm || c.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                  .map((client) => renderRow(client))}
               </tbody>
             </table>
           </div>

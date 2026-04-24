@@ -137,7 +137,7 @@ const ClientDetail = () => {
       await clientDataService.getFullAnalysis(clientId, {
         include_sentiment: config.include_sentiment !== false,
         include_fund_universe: config.include_fund_universe !== false,
-        user_prompt: config.user_prompt || "",
+        user_prompt: config.user_prompt || '',
         refresh: true
       });
 

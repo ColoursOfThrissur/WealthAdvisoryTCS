@@ -1,0 +1,24 @@
+# Caddy config for wealth-management
+# Uses sslip.io for free HTTPS - {{SSLIP_HOST}} is replaced at deploy (e.g. 13-218-33-51.sslip.io)
+{{SSLIP_HOST}} {
+    handle /api/* {
+        reverse_proxy 127.0.0.1:8001
+    }
+    handle /ws/* {
+        reverse_proxy 127.0.0.1:8001
+    }
+    handle /stockstory/* {
+        uri strip_prefix /stockstory
+        reverse_proxy 127.0.0.1:7000
+    }
+    handle /perplexity/* {
+        uri strip_prefix /perplexity
+        reverse_proxy 127.0.0.1:8000
+    }
+
+    handle {
+        root * /var/www/wealth-frontend
+        try_files {path} {path}/ /index.html
+        file_server
+    }
+}

@@ -100,7 +100,7 @@
 }
 
 .transaction-table .negative {
-  color: var(--danger);
+  color: var(--error);
   font-weight: 500;
 }
 

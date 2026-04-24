@@ -1,0 +1,13 @@
+{
+  "Changes": [
+    {
+      "Action": "CREATE",
+      "ResourceRecordSet": {
+        "Name": "wealth.agenticorc.com",
+        "Type": "A",
+        "TTL": 300,
+        "ResourceRecords": [{"Value": "13.218.33.51"}]
+      }
+    }
+  ]
+}

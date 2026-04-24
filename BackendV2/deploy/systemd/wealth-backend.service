@@ -1,0 +1,15 @@
+[Unit]
+Description=Wealth Management - WealthAdvisory Backend
+After=network.target wealth-stockstory.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/wealth-management/Backend/WealthAdvisoryBackend
+Environment=PATH=/home/ubuntu/wealth-management/venv-wealth/bin:/usr/bin:/bin
+ExecStart=/home/ubuntu/wealth-management/venv-wealth/bin/python api_v2.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

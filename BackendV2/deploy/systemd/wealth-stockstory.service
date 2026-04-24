@@ -1,0 +1,15 @@
+[Unit]
+Description=Wealth Management - StockStory Server
+After=network.target wealth-perplexity.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/wealth-management/Backend/stockStoryServer/backend
+Environment=PATH=/home/ubuntu/wealth-management/venv-mcp/bin:/usr/bin:/bin
+ExecStart=/home/ubuntu/wealth-management/venv-mcp/bin/uvicorn app:app --host 0.0.0.0 --port 7000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

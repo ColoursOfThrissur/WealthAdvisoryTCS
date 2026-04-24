@@ -1,0 +1,15 @@
+[Unit]
+Description=Wealth Management - Perplexity MCP Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/wealth-management/Backend/perplexitymcp
+Environment=PATH=/home/ubuntu/wealth-management/venv-mcp/bin:/usr/bin:/bin
+ExecStart=/home/ubuntu/wealth-management/venv-mcp/bin/python server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
