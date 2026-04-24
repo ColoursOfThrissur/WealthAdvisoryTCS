@@ -170,7 +170,7 @@ class MessageRequest(BaseModel):
 
 class FullAnalysisRequest(BaseModel):
     include_sentiment: bool = True
-    include_fund_universe: bool = True
+    selected_fund_universe: Optional[List[str]] = None
     user_prompt: str = ""
     refresh: bool = False
 
@@ -248,9 +248,15 @@ def generate_suggestions(bot_text: str) -> List[str]:
 def _apply_rebalance_config(
     skill: dict,
     sentiment: bool = True,
-    fund_universe: bool = True,
+    selected_fund_universe: Optional[List[str]] = None,
 ) -> dict:
-    """Return a modified copy of the skill dict based on rebalance toggles."""
+    """Return a modified copy of the skill dict based on rebalance toggles.
+
+    selected_fund_universe semantics:
+        None  → first run / not provided → use ALL fund universe (default)
+        []    → user deliberately unselected all → skip fund universe entirely
+        ["VOO", ...] → use only these tickers for Option B
+    """
     import copy
     patched = copy.deepcopy(skill)
     instructions = patched.get("agent_instructions", "")
@@ -259,20 +265,47 @@ def _apply_rebalance_config(
     if not sentiment:
         addendum.append(
             "\n\n--- OVERRIDE: SENTIMENT DISABLED ---\n"
-            "SKIP sentiment analysis entirely. Do NOT call `analyze_portfolio_sentiment`. "
+            "SKIP step 3 (Sentiment Analysis) entirely. Do NOT call `analyze_portfolio_sentiment`. "
             "Do NOT include a '## Sentiment & Market Context' section in your output. "
-            "Do NOT reference sentiment in trade rationales or comparative recommendations."
+            "Do NOT reference sentiment in trade rationales or comparative recommendations. "
+            "Remove the 'Sentiment review' item from the Completeness Checklist. "
+            "ALL OTHER STEPS (1, 2, 4, 5, 6) MUST STILL BE EXECUTED IN FULL."
+        )
+    else:
+        addendum.append(
+            "\n\n--- SENTIMENT ENABLED ---\n"
+            "You MUST execute step 3: call `analyze_portfolio_sentiment` and include the "
+            "'## Sentiment & Market Context' section in your output. Do NOT skip this step."
         )
 
-    if not fund_universe:
-        addendum.append(
-            "\n\n--- OVERRIDE: FUND UNIVERSE DISABLED ---\n"
-            "SKIP fund universe analysis. Do NOT call `get_universe_alternatives`, "
-            "`fetch_fund_universe_metrics`, or `get_ticker_info` for alternatives. "
-            "Do NOT generate Option B. Only produce Option A (current holdings). "
-            "Remove '## Rebalancing Strategy: Option B' and '## Comparative Recommendation' "
-            "sections from your output. The completeness checklist should NOT include Option B."
-        )
+    if selected_fund_universe is not None:
+        if len(selected_fund_universe) == 0:
+            # User deliberately unselected all → skip fund universe entirely
+            addendum.append(
+                "\n\n--- OVERRIDE: FUND UNIVERSE DISABLED ---\n"
+                "SKIP step 5 (Strategy Option B) entirely. Do NOT call `get_universe_alternatives`, "
+                "`fetch_fund_universe_metrics`, or `get_ticker_info` for alternatives. "
+                "Do NOT generate Option B. Only produce Option A (current holdings). "
+                "Remove '## Rebalancing Strategy: Option B' and '## Comparative Recommendation' "
+                "sections from your output. The completeness checklist should NOT include Option B. "
+                "ALL OTHER STEPS MUST STILL BE EXECUTED IN FULL."
+            )
+        else:
+            # User selected specific funds → restrict Option B to these only
+            ticker_list = ", ".join(selected_fund_universe)
+            addendum.append(
+                f"\n\n--- OVERRIDE: FUND UNIVERSE RESTRICTED ---\n"
+                f"You MUST still generate Option B (step 5) and the Comparative Recommendation (step 6). "
+                f"However, instead of calling `get_universe_alternatives` to discover alternatives, "
+                f"use ONLY the following pre-selected tickers: {ticker_list}. "
+                f"You MUST call `fetch_fund_universe_metrics` with tickers [{ticker_list}]. "
+                f"You MUST call `get_ticker_info` for each of: {ticker_list}. "
+                f"You MUST call `simulate_rebalance` with the Option B trades. "
+                f"You MUST include '## Rebalancing Strategy: Option B', "
+                f"'### Projected Allocation After Option B', and '## Comparative Recommendation' "
+                f"sections in your output. Do NOT skip Option B. Do NOT use any tickers outside this list."
+            )
+    # else: None → use all fund universe (no override needed)
 
     if addendum:
         instructions += "".join(addendum)
@@ -546,7 +579,7 @@ async def _run_agent_for_client(
     client_id: str,
     refresh: bool = False,
     include_sentiment: bool = True,
-    include_fund_universe: bool = True,
+    selected_fund_universe: Optional[List[str]] = None,
     user_prompt: str = "",
 ) -> dict:
     """
@@ -570,7 +603,7 @@ async def _run_agent_for_client(
     patched_skill = _apply_rebalance_config(
         matched_skill,
         sentiment=include_sentiment,
-        fund_universe=include_fund_universe,
+        selected_fund_universe=selected_fund_universe,
     )
 
     # Run the Strands agent — returns (AgentResult, tool_results dict)
@@ -581,6 +614,7 @@ async def _run_agent_for_client(
         user_instructions=user_prompt,
         canary_token=CANARY_TOKEN,
         is_suspicious=False,
+        allowed_universe_tickers=selected_fund_universe,
     )
 
     # Format tool results into structured JSON matching the API schema
@@ -604,7 +638,7 @@ async def full_analysis(client_id: str, request: FullAnalysisRequest = None):
             client_id,
             refresh=req.refresh,
             include_sentiment=req.include_sentiment,
-            include_fund_universe=req.include_fund_universe,
+            selected_fund_universe=req.selected_fund_universe,
             user_prompt=req.user_prompt,
         )
         summary = result.get("summary", {})

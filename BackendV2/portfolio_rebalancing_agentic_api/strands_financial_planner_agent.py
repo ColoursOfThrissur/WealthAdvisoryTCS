@@ -28,6 +28,7 @@ class PlannerDeps:
     todo_list: Dict[int, Dict[str, str]] = field(default_factory=dict)
     tool_calls: List[Dict[str, Any]] = field(default_factory=list)
     tool_results: Dict[str, Any] = field(default_factory=dict)
+    allowed_universe_tickers: Optional[List[str]] = None  # None=all, []=none, ["VOO",...]=restricted
 
 # We use ContextVars so tools can access dependencies in a thread-safe way under async without explicit Context injection if Strands doesn't support the Pydantic-AI RunContext natively.
 current_deps = contextvars.ContextVar('current_deps')
@@ -104,7 +105,32 @@ async def query_mcp_tool(
         if not client:
             err = f"Failed to connect to MCP server '{server_name}'."
             return {"error": err}
-            
+
+        # --- Hard enforcement: filter universe tickers ---
+        allowed = deps.allowed_universe_tickers
+        if allowed is not None and len(allowed) > 0:
+            if tool_name == "get_universe_alternatives":
+                # Intercept: return only tickers that overlap with allowed list
+                print(f"[FILTER] get_universe_alternatives intercepted — returning only allowed tickers: {allowed}")
+                import json as _json
+                filtered = [t for t in allowed]
+                result_text = _json.dumps(filtered)
+                deps.tool_results[tool_name] = filtered
+                ok = True
+                return {"result": result_text}
+            if tool_name == "fetch_fund_universe_metrics" and "tickers" in arguments:
+                original = arguments["tickers"]
+                arguments["tickers"] = [t for t in original if t in allowed]
+                print(f"[FILTER] fetch_fund_universe_metrics tickers filtered: {original} -> {arguments['tickers']}")
+                if not arguments["tickers"]:
+                    err = "All requested tickers filtered out by fund universe restriction."
+                    return {"error": err}
+            if tool_name == "get_ticker_info" and "ticker" in arguments:
+                if arguments["ticker"] not in allowed:
+                    print(f"[FILTER] get_ticker_info blocked for {arguments['ticker']} — not in allowed list")
+                    err = f"Ticker {arguments['ticker']} is not in the allowed fund universe list."
+                    return {"error": err}
+
         res = await client.call_tool(tool_name, arguments)
         
         text_chunks = []
@@ -212,7 +238,7 @@ OUTPUT FORMAT
 '''
 )
 
-async def run_planner(user_message: str, session_history: list, matched_skill: dict, enable_thinking: Optional[bool] = None, user_instructions: str = "", canary_token: str = "", is_suspicious: bool = False):
+async def run_planner(user_message: str, session_history: list, matched_skill: dict, enable_thinking: Optional[bool] = None, user_instructions: str = "", canary_token: str = "", is_suspicious: bool = False, allowed_universe_tickers: Optional[List[str]] = None):
     skill_instructions = matched_skill.get("agent_instructions", "")
     allowed_servers = matched_skill.get("required_mcp_servers", [])
     
@@ -271,7 +297,7 @@ async def run_planner(user_message: str, session_history: list, matched_skill: d
 
     context_prompt = f"{canary_block}\n--- CURRENT TIME CONTEXT ---\nThe current date and time is: {current_time}.\n\n--- CURRENT SKILL CONTEXT ---\n{skill_instructions}{thinking_instruction}{tools_context}{user_instructions_block}{suspicious_block}\n\nUSER SAID: {user_message}"
 
-    deps = PlannerDeps(active_skill=matched_skill)
+    deps = PlannerDeps(active_skill=matched_skill, allowed_universe_tickers=allowed_universe_tickers)
     token = current_deps.set(deps)
     
     try:
