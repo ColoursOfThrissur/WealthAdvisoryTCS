@@ -1,0 +1,102 @@
+{
+  "client_id": "CLT-002",
+  "client_name": "Sarah Mitchell",
+  "as_of_date": "2025-12-31",
+  "accounts": [
+    {
+      "account_id": "ACC-001",
+      "account_name": "Joint Brokerage",
+      "account_type": "Taxable",
+      "tax_status": "Taxable"
+    }
+  ],
+  "holdings": [
+    {
+      "ticker": "BND",
+      "security": "Vanguard Total Bond Market ETF",
+      "shares": 2000,
+      "cost_basis": 160000,
+      "account": "Joint Brokerage",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VGIT",
+      "security": "Vanguard Intermediate-Term Treasury ETF",
+      "shares": 1500,
+      "cost_basis": 90000,
+      "account": "Joint Brokerage",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VTI",
+      "security": "Vanguard Total Stock Market ETF",
+      "shares": 600,
+      "cost_basis": 135000,
+      "account": "Joint Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "AAPL",
+      "security": "Apple Inc.",
+      "shares": 300,
+      "cost_basis": 45000,
+      "account": "Joint Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "JNJ",
+      "security": "Johnson & Johnson",
+      "shares": 400,
+      "cost_basis": 64000,
+      "account": "Joint Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "PG",
+      "security": "Procter & Gamble",
+      "shares": 500,
+      "cost_basis": 75000,
+      "account": "Joint Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "VEA",
+      "security": "Vanguard FTSE Developed Markets ETF",
+      "shares": 800,
+      "cost_basis": 36000,
+      "account": "Joint Brokerage",
+      "asset_class": "International Equity"
+    },
+    {
+      "ticker": "VCIT",
+      "security": "Vanguard Intermediate-Term Corporate Bond ETF",
+      "shares": 1200,
+      "cost_basis": 108000,
+      "account": "Joint Brokerage",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VNQ",
+      "security": "Vanguard Real Estate ETF",
+      "shares": 300,
+      "cost_basis": 27000,
+      "account": "Joint Brokerage",
+      "asset_class": "Real Estate"
+    },
+    {
+      "ticker": "GLD",
+      "security": "SPDR Gold Trust",
+      "shares": 150,
+      "cost_basis": 27000,
+      "account": "Joint Brokerage",
+      "asset_class": "Commodities"
+    }
+  ],
+  "target_allocation": {
+    "Fixed Income": 50,
+    "US Equity": 30,
+    "International Equity": 10,
+    "Real Estate": 5,
+    "Commodities": 5
+  }
+}

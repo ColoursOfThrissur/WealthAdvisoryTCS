@@ -1,0 +1,96 @@
+{
+  "client_id": "CLT-001",
+  "client_name": "Robert Anderson",
+  "transactions": [
+    {
+      "date": "2025-10-05",
+      "type": "Buy",
+      "ticker": "AAPL",
+      "description": "Purchase Apple Inc.",
+      "shares": 100,
+      "amount": 17500,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-10-15",
+      "type": "Dividend",
+      "ticker": "MSFT",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 300,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-10-20",
+      "type": "Buy",
+      "ticker": "BND",
+      "description": "Rebalancing - Add bonds",
+      "shares": 300,
+      "amount": 24000,
+      "account": "IRA"
+    },
+    {
+      "date": "2025-11-01",
+      "type": "Dividend",
+      "ticker": "VTI",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 450,
+      "account": "IRA"
+    },
+    {
+      "date": "2025-11-10",
+      "type": "Sell",
+      "ticker": "TSLA",
+      "description": "Reduce tech exposure",
+      "shares": -50,
+      "amount": 12500,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-11-15",
+      "type": "Buy",
+      "ticker": "VEA",
+      "description": "Increase international exposure",
+      "shares": 200,
+      "amount": 9000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-12-01",
+      "type": "Dividend",
+      "ticker": "BND",
+      "description": "Monthly dividend",
+      "shares": 0,
+      "amount": 180,
+      "account": "IRA"
+    },
+    {
+      "date": "2025-12-10",
+      "type": "Contribution",
+      "ticker": "CASH",
+      "description": "IRA contribution",
+      "shares": 0,
+      "amount": 7000,
+      "account": "IRA"
+    },
+    {
+      "date": "2025-12-15",
+      "type": "Buy",
+      "ticker": "VNQ",
+      "description": "Add real estate exposure",
+      "shares": 100,
+      "amount": 9000,
+      "account": "IRA"
+    },
+    {
+      "date": "2025-12-20",
+      "type": "Dividend",
+      "ticker": "GOOGL",
+      "description": "Special dividend",
+      "shares": 0,
+      "amount": 150,
+      "account": "Individual Brokerage"
+    }
+  ]
+}

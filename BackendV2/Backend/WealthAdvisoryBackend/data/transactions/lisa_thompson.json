@@ -1,0 +1,87 @@
+{
+  "client_id": "CLT-006",
+  "client_name": "Lisa Thompson",
+  "transactions": [
+    {
+      "date": "2025-10-10",
+      "type": "Buy",
+      "ticker": "VTI",
+      "description": "SEP IRA contribution",
+      "shares": 150,
+      "amount": 33750,
+      "account": "SEP IRA"
+    },
+    {
+      "date": "2025-10-18",
+      "type": "Dividend",
+      "ticker": "AAPL",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 75,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-10-25",
+      "type": "Buy",
+      "ticker": "VNQ",
+      "description": "Add real estate",
+      "shares": 100,
+      "amount": 9000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-11-05",
+      "type": "Dividend",
+      "ticker": "VNQ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 450,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-11-15",
+      "type": "Buy",
+      "ticker": "XLV",
+      "description": "Healthcare sector exposure",
+      "shares": 80,
+      "amount": 12000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-11-28",
+      "type": "Dividend",
+      "ticker": "BND",
+      "description": "Monthly dividend",
+      "shares": 0,
+      "amount": 144,
+      "account": "SEP IRA"
+    },
+    {
+      "date": "2025-12-05",
+      "type": "Buy",
+      "ticker": "VEA",
+      "description": "International diversification",
+      "shares": 150,
+      "amount": 6750,
+      "account": "SEP IRA"
+    },
+    {
+      "date": "2025-12-15",
+      "type": "Dividend",
+      "ticker": "VTI",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 540,
+      "account": "SEP IRA"
+    },
+    {
+      "date": "2025-12-22",
+      "type": "Contribution",
+      "ticker": "CASH",
+      "description": "Year-end SEP contribution",
+      "shares": 0,
+      "amount": 30000,
+      "account": "SEP IRA"
+    }
+  ]
+}

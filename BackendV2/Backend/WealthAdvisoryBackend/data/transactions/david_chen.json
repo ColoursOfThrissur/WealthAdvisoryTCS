@@ -1,0 +1,186 @@
+{
+  "client_id": "CLT-003",
+  "client_name": "David Chen",
+  "transactions": [
+    {
+      "date": "2025-01-12",
+      "type": "Dividend",
+      "ticker": "AAPL",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 190,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-02-08",
+      "type": "Buy",
+      "ticker": "AAPL",
+      "description": "Add to position",
+      "shares": 300,
+      "amount": 52000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-03-15",
+      "type": "Dividend",
+      "ticker": "MSFT",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 420,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-04-10",
+      "type": "Buy",
+      "ticker": "GOOGL",
+      "description": "Increase tech allocation",
+      "shares": 150,
+      "amount": 22000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-05-20",
+      "type": "Sell",
+      "ticker": "TSLA",
+      "description": "Reduce volatility",
+      "shares": -100,
+      "amount": 28000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-06-12",
+      "type": "Dividend",
+      "ticker": "QQQ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 580,
+      "account": "401k"
+    },
+    {
+      "date": "2025-07-18",
+      "type": "Buy",
+      "ticker": "META",
+      "description": "Add to position",
+      "shares": 150,
+      "amount": 95000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-08-25",
+      "type": "Buy",
+      "ticker": "VEA",
+      "description": "International diversification",
+      "shares": 300,
+      "amount": 18000,
+      "account": "401k"
+    },
+    {
+      "date": "2025-09-10",
+      "type": "Dividend",
+      "ticker": "AAPL",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 210,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-10-08",
+      "type": "Buy",
+      "ticker": "NVDA",
+      "description": "Add AI exposure",
+      "shares": 100,
+      "amount": 40000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-10-15",
+      "type": "Dividend",
+      "ticker": "AAPL",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 200,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-10-22",
+      "type": "Buy",
+      "ticker": "QQQ",
+      "description": "401k contribution",
+      "shares": 50,
+      "amount": 19000,
+      "account": "401k"
+    },
+    {
+      "date": "2025-11-01",
+      "type": "Dividend",
+      "ticker": "MSFT",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 450,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-11-12",
+      "type": "Sell",
+      "ticker": "TSLA",
+      "description": "Take profits",
+      "shares": -50,
+      "amount": 12500,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-11-20",
+      "type": "Buy",
+      "ticker": "BND",
+      "description": "Rebalancing - add bonds",
+      "shares": 200,
+      "amount": 16000,
+      "account": "401k"
+    },
+    {
+      "date": "2025-12-01",
+      "type": "Dividend",
+      "ticker": "QQQ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 600,
+      "account": "401k"
+    },
+    {
+      "date": "2025-12-10",
+      "type": "Buy",
+      "ticker": "META",
+      "description": "Add social media exposure",
+      "shares": 50,
+      "amount": 15000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-12-20",
+      "type": "Contribution",
+      "ticker": "CASH",
+      "description": "Year-end 401k contribution",
+      "shares": 0,
+      "amount": 23000,
+      "account": "401k"
+    },
+    {
+      "date": "2026-01-15",
+      "type": "Dividend",
+      "ticker": "AAPL",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 220,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2026-02-10",
+      "type": "Buy",
+      "ticker": "MSFT",
+      "description": "Add to tech position",
+      "shares": 100,
+      "amount": 42000,
+      "account": "Individual Brokerage"
+    }
+  ]
+}

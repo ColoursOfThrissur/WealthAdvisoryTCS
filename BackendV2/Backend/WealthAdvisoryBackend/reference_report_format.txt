@@ -1,0 +1,197 @@
+QUARTERLY PERFORMANCE REPORT - REFERENCE FORMAT
+=================================================
+
+COVER PAGE:
+-----------
+QUARTERLY PERFORMANCE REPORT
+Q4 2025
+October 1 – December 31, 2025
+
+Prepared for: James & Sarah Mitchell
+Prepared by: Michael Chen, CFP®
+Report Date: January 15, 2026
+
+CONFIDENTIAL — Prepared for the exclusive use of the named client.
+CORNERSTONE WEALTH ADVISORS
+
+EXECUTIVE SUMMARY PAGE:
+-----------------------
+Executive Summary
+
+$1,847,325 - Total Portfolio Value (As of Dec 31, 2025)
++3.2% - QTD Return (Net) vs S&P 500: +2.4%
++18.5% - YTD Return (Net) vs S&P 500: +23.3%
++10.4% Ann. - Since Inception (Since January 2018)
+
+Quarter Highlights:
+• Strong Q4 Performance: The portfolio gained +3.2% net of fees in Q4 2025, outpacing the S&P 500 benchmark (+2.4%) by 80 basis points. Overweight positions in technology and domestically-oriented small and mid-cap equities were the primary drivers.
+• Full-Year Context: For the full year 2025, the portfolio returned +18.5%, reflecting solid absolute gains despite underperforming the S&P 500 (+23.3%) by 4.8%. The portfolio's diversified fixed income allocation was a modest drag in a year dominated by large-cap US growth equities.
+• Tax-Loss Harvesting: In December, we executed a tax-loss harvesting swap in the international equity sleeve, capturing approximately $22,500 in realized losses while maintaining target exposure, potentially saving an estimated $5,000–$6,000 in taxes.
+• Roth IRA Contribution: Sarah's 2025 Roth IRA contribution of $7,000 was funded in November, fully utilizing the annual contribution limit.
+• Goal Progress: The household remains on track toward retirement at age 65. Based on current balances and return assumptions, projected assets at retirement exceed the target funding level by approximately 8%.
+
+PERFORMANCE SUMMARY PAGE:
+-------------------------
+Performance Summary
+
+Household Performance vs. S&P 500 Benchmark:
+                    QTD     YTD     1-Year  3-Yr Ann.  5-Yr Ann.  ITD Ann.
+Portfolio (Net)    +3.2%   +18.5%  +18.5%   +9.2%     +13.1%     +10.4%
+S&P 500 Index      +2.4%   +23.3%  +23.3%  +10.8%     +15.2%     +12.1%
++/- vs Benchmark   +0.8%   -4.8%   -4.8%   -1.6%      -2.1%      -1.7%
+
+Returns for periods greater than one year are annualized. Net of advisory fees. 
+Benchmark: S&P 500 Total Return Index. ITD = Inception to Date (January 2018).
+
+Performance by Account:
+Account             Type        Mkt Value    QTD     YTD     Benchmark
+Joint Taxable       Brokerage   $825,000    +3.6%   +20.1%  S&P 500
+James IRA           Traditional $612,000    +2.9%   +17.4%  S&P 500
+Sarah Roth IRA      Roth IRA    $285,000    +3.1%   +18.9%  S&P 500
+529 Education       Education   $125,325    +2.8%   +15.2%  60/40 Blend
+Total                          $1,847,325   +3.2%   +18.5%
+
+[BAR CHART: QTD Returns by Account showing Joint Taxable, James IRA, Sarah Roth, 529 Plan]
+
+ASSET ALLOCATION PAGE:
+----------------------
+Asset Allocation
+
+Asset Class          Portfolio %  Market Value  Target %  Drift
+US Equity                 55.0%    $1,016,029     50.0%   +5.0%
+International Equity      15.0%      $277,099     20.0%   -5.0%
+Fixed Income              20.0%      $369,465     25.0%   -5.0%
+Alternatives               5.0%       $92,366      0.0%   +5.0%
+Cash & Equivalents         5.0%       $92,366      5.0%      —
+Total                    100.0%    $1,847,325    100.0%      —
+
+[PIE CHART: US Equity 55%, International Equity 15%, Fixed Income 20%, Alternatives 5%, Cash 5%]
+
+Drift represents the difference between current and target allocation. Minor drift in US Equity (+5%) 
+and Alternatives (+5%) will be addressed at the next scheduled rebalance in March 2026.
+
+HOLDINGS DETAIL PAGE:
+---------------------
+Holdings Detail
+
+Security                    Ticker  Asset Class      Shares  Price    Mkt Value   % Port.  QTD Ret.
+Vanguard S&P 500 ETF        VOO     US Equity        3,850   $543.20  $2,091,320  32.1%    +3.8%
+iShares MSCI EAFE ETF       EFA     Intl Equity      4,200    $76.45    $321,090  17.4%    +1.2%
+SPDR S&P MidCap 400 ETF     MDY     US Equity        1,200   $580.20    $696,240  10.7%    +4.1%
+iShares Core US Agg Bond    AGG     Fixed Income     3,100    $96.80    $300,080  16.2%    -0.4%
+Vanguard Intl Bond ETF      BNDX    Fixed Income     1,850    $37.20     $68,820   3.7%    -0.6%
+iShares iBoxx HY Bond ETF   HYG     Fixed Income       850    $74.40     $63,240   3.4%    +1.3%
+Invesco QQQ Trust           QQQ     US Equity          420   $518.60    $217,812  11.8%    +5.1%
+BlackRock Alternatives      BLAIX   Alternatives         —    $98.40     $92,366   5.0%    +2.1%
+Money Market / Cash         Cash    Cash                 —         —     $92,366   5.0%    +1.3%
+
+Prices as of December 31, 2025. QTD Return represents Q4 2025 total return including dividends. 
+Holdings are consolidated across all accounts.
+
+MARKET COMMENTARY PAGE:
+-----------------------
+Market Commentary
+
+Q4 2025 Market Review:
+Global equity markets posted positive returns in the fourth quarter of 2025, with US large-cap stocks advancing 
+modestly as investors balanced resilient corporate earnings against concerns about the Federal Reserve's path 
+toward interest rate normalization. The S&P 500 gained +2.4% for the quarter, capping a strong full-year gain 
+of +23.3%.
+
+Technology and consumer discretionary sectors led equity performance during Q4, while utilities and real estate 
+lagged as longer-duration assets faced headwinds from still-elevated interest rates. International developed 
+markets (as measured by MSCI EAFE) gained +1.2% for the quarter, modestly underperforming US equities, partly 
+due to dollar strength and slower economic momentum in Europe and Japan.
+
+Portfolio Impact:
+The portfolio's overweight position in domestic mid-cap equities (MDY +4.1%) and technology via the Invesco QQQ 
+Trust (QQQ +5.1%) were the primary contributors to outperformance relative to the benchmark during the quarter. 
+The fixed income sleeve was a modest drag — investment-grade bonds (AGG -0.4%) and international bonds (BNDX -0.6%) 
+both posted small declines as yields drifted higher.
+
+Outlook & Positioning:
+Looking into 2026, we remain constructively positioned in US equities while being mindful of elevated valuations 
+in large-cap growth. The Federal Reserve is expected to maintain a cautious approach to rate cuts, which we believe 
+supports quality-oriented, shorter-duration fixed income and selective exposure to real assets. We will conduct a 
+formal rebalance in March 2026 to bring the portfolio back in line with target weights.
+
+We continue to recommend holding 5% in cash and short-term equivalents, which provides both a liquidity buffer and 
+optionality to redeploy capital should volatility create more attractive entry points in either equities or fixed income.
+
+ACTIVITY SUMMARY PAGE:
+----------------------
+Activity Summary — Q4 2025
+
+Date            Type        Description                              Quantity      Amount
+Oct 15, 2025    Buy         Invesco QQQ Trust (QQQ)                 85 shares     $44,081
+Oct 22, 2025    Dividend    Vanguard S&P 500 ETF (VOO)              —             $3,210
+Nov 4, 2025     Rebalance   Sell iShares MSCI EAFE ETF (EFA)        200 shares    $15,042
+Nov 4, 2025     Rebalance   Buy iShares Core US Agg (AGG)           155 shares    $15,028
+Nov 28, 2025    Contribution Sarah Roth IRA                         —             +$7,000
+Dec 12, 2025    Dividend    iShares Core US Agg Bond (AGG)          —             $1,842
+Dec 18, 2025    Tax-Loss    Sell iShares MSCI EAFE ETF (EFA)        300 shares    $22,563
+Dec 18, 2025    Tax-Loss    Buy Vanguard Intl Bond ETF (BNDX)       600 shares    $22,512
+Dec 31, 2025    Advisory Fee Q4 2025 Management Fee                 —             -$4,618
+
+SUMMARY BOXES:
++$7,000 - Net Contributions (Sarah Roth IRA 2025 max contribution)
++$5,052 - Dividends & Income (Across taxable and IRA accounts)
+-$22,500 - Realized Gains/Losses (TLH swap, offset by new position gains)
+-$4,618 - Advisory Fees Paid (Q4 management fee 0.25% quarterly)
+
+FINANCIAL PLANNING NOTES PAGE:
+-------------------------------
+Financial Planning Notes
+
+Retirement Goal Progress:
+Based on current portfolio value of $1,847,325 and projected contributions of $25,000/year through age 65, 
+the household is projected to accumulate approximately $4.2M–$4.8M at retirement (assuming 7–8% nominal returns). 
+This exceeds the target retirement funding level of ~$3.9M by 8–23%, providing a comfortable margin of safety.
+
+Education Planning (529 Plan):
+The 529 plan balance of $125,325 is ahead of the projected glide path for the eldest child's education funding goal. 
+No additional contributions are required in 2026 to meet the target balance; however, we recommend revisiting if 
+college costs continue rising above CPI.
+
+2026 Action Items:
+• Fund 2026 Roth IRA contributions for both James and Sarah (up to $7,000 each) as early as possible in January 
+  to maximize tax-free compounding.
+• Schedule formal portfolio rebalance in March 2026 to reduce US equity overweight and rebuild target allocation 
+  in international equities and fixed income.
+• Review beneficiary designations on all retirement accounts and life insurance policies.
+• Confirm withholding elections are appropriate following the 2025 tax return.
+
+Next Review:
+Your next scheduled quarterly review meeting is tentatively set for mid-April 2026 to coincide with Q1 results 
+and early tax season wrap-up. Please contact our office to confirm a date that works for you.
+
+DISCLOSURES PAGE:
+-----------------
+Important Disclosures
+
+Past Performance: Past performance is not indicative of future results. All investments involve risk, including 
+the possible loss of principal. Investment return and principal value will fluctuate so that an investor's account, 
+when liquidated, may be worth more or less than originally invested.
+
+Performance Reporting: Performance is presented net of advisory fees and is calculated using a time-weighted return 
+methodology. Returns for periods greater than one year are annualized. Benchmark returns are for the S&P 500 Total 
+Return Index, which is unmanaged, does not incur fees, and is not available for direct investment.
+
+Benchmark: The S&P 500 Index is a market capitalization-weighted index of 500 widely held US equities. It is provided 
+for general comparative purposes only and may not represent the specific investment objectives, risks, or fees 
+associated with the client's portfolio.
+
+Advisory Fees: Cornerstone Wealth Advisors charges an annual advisory fee of 1.00% on assets under management, 
+billed quarterly at 0.25% of account value. Fees are debited directly from client accounts and are reflected in 
+the net-of-fee performance figures presented in this report.
+
+Not a Tax Document: This report is not a tax document. Clients should rely on their official custodian account 
+statements and IRS Form 1099 for tax reporting purposes. Please consult your tax advisor regarding tax implications 
+of any investment activity described herein.
+
+Data Sources: Market values, prices, and performance data are sourced from the account custodian and are believed 
+to be accurate as of December 31, 2025, but are not guaranteed. Minor discrepancies may exist due to rounding.
+
+FOOTER:
+Cornerstone Wealth Advisors | Registered Investment Advisor | Report prepared by Michael Chen, CFP® | 
+January 15, 2026 | For questions, contact us at (555) 800-1234 or advisor@cornerstonewm.com

@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report.cover_page.report_title }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #2d3748;
+            line-height: 1.6;
+            background: #ffffff;
+        }
+        
+        /* Cover Page */
+        .cover-page {
+            height: 100vh;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            page-break-after: always;
+            position: relative;
+        }
+        
+        .cover-content {
+            text-align: center;
+            color: white;
+            z-index: 1;
+            padding: 60px;
+        }
+        
+        .firm-logo {
+            margin-bottom: 60px;
+        }
+        
+        .firm-name {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.95;
+        }
+        
+        .report-title {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 80px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+        }
+        
+        .client-info-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 60px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .client-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 18px;
+        }
+        
+        .client-info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .client-info-label {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .client-info-value {
+            font-weight: 600;
+        }
+        
+        /* Content Pages */
+        .content-page {
+            background: #ffffff;
+            padding: 60px 80px;
+            page-break-after: always;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Colored backgrounds for specific pages */
+        .content-page.bg-light {
+            background: #f8f9fa;
+        }
+        
+        .content-page.bg-blue {
+            background: #f0f4ff;
+        }
+        
+        .content-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #3b82f6;
+        }
+        
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
+        
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #475569;
+            margin: 35px 0 20px 0;
+            letter-spacing: -0.3px;
+        }
+        
+        /* Metrics Box */
+        .metrics-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .metric-row {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .metric-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            display: block;
+            font-size: 32px;
+            font-weight: 700;
+            color: #3b82f6;
+            letter-spacing: -1px;
+        }
+        
+        /* Value Box */
+        .value-box {
+            background: #3b82f6;
+            padding: 40px;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+        }
+        
+        .value-box-label {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.95;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .value-box-amount {
+            font-size: 48px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* Highlights */
+        .highlights {
+            background: #eff6ff;
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+            margin: 20px 0;
+        }
+        
+        .highlight-item {
+            padding: 12px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #2d3748;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        
+        .highlight-item::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-size: 16px;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        thead {
+            background: #1e293b;
+            color: white;
+        }
+        
+        th {
+            padding: 16px 20px;
+            font-weight: 600;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #475569;
+            font-size: 14px;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        
+        tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        td.positive, .positive {
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        td.negative, .negative {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        
+        .difference-row {
+            background: #dbeafe;
+            font-weight: 600;
+        }
+        
+        /* Commentary Text */
+        .commentary-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #475569;
+            margin: 20px 0;
+            text-align: justify;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 3px solid #3b82f6;
+        }
+        
+        /* Disclosures */
+        .disclosures {
+            background: #f8f9fa;
+            padding: 60px 80px;
+            page-break-before: always;
+        }
+        
+        .disclosures h1 {
+            color: #495057;
+            margin-bottom: 35px;
+        }
+        
+        .disclosure-item {
+            background: white;
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #64748b;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .disclosure-title {
+            font-weight: 600;
+            color: #212529;
+        }
+        
+        /* Utility Classes */
+        .mb-2 { margin-bottom: 20px; }
+        .mb-3 { margin-bottom: 30px; }
+        .mt-2 { margin-top: 20px; }
+        
+        /* Section Separator */
+        .section-separator {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 30px 0;
+        }
+        
+        /* Print Optimization */
+        @media print {
+            body { background: white; }
+            .content-page { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="cover-content">
+            <div class="firm-logo">
+                <div class="firm-name">{{ report.cover_page.firm_name }}</div>
+            </div>
+            <div class="report-title">{{ report.cover_page.report_title }}</div>
+            <div class="client-info-box">
+                <div class="client-info-row">
+                    <span class="client-info-label">Prepared for:</span>
+                    <span class="client-info-value">{{ report.cover_page.client_name }}</span>
+                </div>
+                <div class="client-info-row">
+                    <span class="client-info-label">Report Date:</span>
+                    <span class="client-info-value">{{ report.cover_page.generation_date }}</span>
+                </div>
+                <div class="client-info-row">
+                    <span class="client-info-label">Period:</span>
+                    <span class="client-info-value">{{ report.cover_page.period }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executive Summary -->
+    {% set perf = report.sections.performance_summary %}
+    {% set activity = report.sections.activity_summary %}
+    {% set planning = report.sections.planning_notes %}
+    {% if perf %}
+    <div class="content-page bg-light">
+        <h1>Executive Summary</h1>
+        
+        <div class="metrics-box">
+            <div class="metric-row">
+                <span class="metric-label">Portfolio Value</span>
+                <span class="metric-value">${{ "{:,.0f}".format(perf.portfolio_value) }}</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Quarter Return</span>
+                <span class="metric-value">{{ "{:.2f}".format(perf.metrics.portfolio_return) }}%</span>
+            </div>
+            {% if perf.performance_table.portfolio|length > 1 %}
+            <div class="metric-row">
+                <span class="metric-label">Year-to-Date</span>
+                <span class="metric-value">{{ "{:.2f}".format(perf.performance_table.portfolio[1]) }}%</span>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if perf.executive_highlights %}
+        <div class="highlights">
+            {% for highlight in perf.executive_highlights %}
+            <div class="highlight-item">{{ highlight|format_text|safe }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Performance Summary -->
+    {% if perf %}
+    <div class="content-page">
+        <h1>Performance Summary</h1>
+        
+        <div class="value-box mb-3">
+            <div class="value-box-label">Total Portfolio Value</div>
+            <div class="value-box-amount">${{ "{:,.2f}".format(perf.portfolio_value) }}</div>
+        </div>
+
+        {% if perf.performance_table %}
+        <h2>Performance by Period</h2>
+        <div class="section-separator"></div>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    {% for period in perf.performance_table.periods %}
+                    <th class="text-center">{{ period }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Portfolio</strong></td>
+                    {% for val in perf.performance_table.portfolio %}
+                    <td class="text-right {% if val and val > 0 %}positive{% elif val and val < 0 %}negative{% endif %}">
+                        {{ "{:+.2f}".format(val) if val else "N/A" }}%
+                    </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td><strong>Benchmark</strong></td>
+                    {% for val in perf.performance_table.benchmark %}
+                    <td class="text-right">{{ "{:.2f}".format(val) if val else "N/A" }}%</td>
+                    {% endfor %}
+                </tr>
+                <tr class="difference-row">
+                    <td><strong>Difference</strong></td>
+                    {% for val in perf.performance_table.difference %}
+                    <td class="text-right {% if val and val > 0 %}positive{% elif val and val < 0 %}negative{% endif %}">
+                        {{ "{:+.2f}".format(val) if val else "N/A" }}%
+                    </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if perf.account_table and perf.account_table.accounts %}
+        <h2>By Account</h2>
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <th>Account</th>
+                    <th>Type</th>
+                    <th class="text-right">Value</th>
+                    <th class="text-right">QTD</th>
+                    <th class="text-right">YTD</th>
+                    <th>Benchmark</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acc in perf.account_table.accounts %}
+                <tr>
+                    <td>{{ acc.name }}</td>
+                    <td>{{ acc.type }}</td>
+                    <td class="text-right">${{ "{:,.0f}".format(acc.value) }}</td>
+                    <td class="text-right {% if acc.qtd > 0 %}positive{% elif acc.qtd < 0 %}negative{% endif %}">{{ "{:+.2f}".format(acc.qtd) }}%</td>
+                    <td class="text-right {% if acc.ytd > 0 %}positive{% elif acc.ytd < 0 %}negative{% endif %}">{{ "{:+.2f}".format(acc.ytd) }}%</td>
+                    <td>{{ acc.benchmark }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if perf.risk_metrics %}
+        <h2>Risk Metrics</h2>
+        <table class="risk-table">
+            <tbody>
+                {% if perf.risk_metrics.sharpe_ratio is defined %}
+                <tr>
+                    <td>Sharpe Ratio</td>
+                    <td class="text-right">{{ "{:.2f}".format(perf.risk_metrics.sharpe_ratio) }}</td>
+                </tr>
+                {% endif %}
+                {% if perf.risk_metrics.volatility is defined %}
+                <tr>
+                    <td>Volatility</td>
+                    <td class="text-right">{{ "{:.2f}".format(perf.risk_metrics.volatility) }}%</td>
+                </tr>
+                {% endif %}
+                {% if perf.risk_metrics.max_drawdown is defined %}
+                <tr>
+                    <td>Max Drawdown</td>
+                    <td class="text-right">{{ "{:.2f}".format(perf.risk_metrics.max_drawdown) }}%</td>
+                </tr>
+                {% endif %}
+                {% if perf.metrics and perf.metrics.alpha is defined %}
+                <tr>
+                    <td>Alpha</td>
+                    <td class="text-right">{{ "{:+.2f}".format(perf.metrics.alpha) }}%</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if perf.narrative %}
+        <div class="commentary-text">{{ perf.narrative|format_text|safe }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Allocation Overview -->
+    {% set alloc = report.sections.allocation_overview %}
+    {% if alloc %}
+    <div class="content-page">
+        <h1>Allocation Overview</h1>
+        
+        {% if alloc.drift_analysis %}
+        <table class="allocation-table">
+            <thead>
+                <tr>
+                    <th>Asset Class</th>
+                    <th class="text-right">Portfolio %</th>
+                    <th class="text-right">Target %</th>
+                    <th class="text-right">Drift</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in alloc.drift_analysis %}
+                <tr>
+                    <td>{{ item.asset_class }}</td>
+                    <td class="text-right">{{ "{:.2f}".format(item.current_pct) }}%</td>
+                    <td class="text-right">{{ "{:.2f}".format(item.target_pct) }}%</td>
+                    <td class="text-right">{{ "{:+.2f}".format(item.drift) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% elif alloc.allocation_table %}
+        <table class="allocation-table">
+            <thead>
+                <tr>
+                    <th>Asset Class</th>
+                    <th class="text-right">% of Portfolio</th>
+                    <th class="text-right">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in alloc.allocation_table %}
+                <tr>
+                    <td>{{ item.asset_class }}</td>
+                    <td class="text-right">{{ "{:.2f}".format(item.percentage) }}%</td>
+                    <td class="text-right">${{ "{:,.0f}".format(item.value) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Holdings Detail -->
+    {% set holdings = report.sections.holdings_detail %}
+    {% if holdings and holdings.holdings_table %}
+    <div class="content-page">
+        <h1>Holdings Detail</h1>
+        
+        <table class="holdings-table">
+            <thead>
+                <tr>
+                    <th>Security</th>
+                    <th class="text-right">Shares</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Value</th>
+                    <th class="text-right">% Port</th>
+                    <th class="text-right">QTD</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in holdings.holdings_table %}
+                <tr>
+                    <td>{{ h.security }}</td>
+                    <td class="text-right">{{ "{:.0f}".format(h.shares) }}</td>
+                    <td class="text-right">${{ "{:.2f}".format(h.price) }}</td>
+                    <td class="text-right">${{ "{:,.0f}".format(h.value) }}</td>
+                    <td class="text-right">{{ "{:.2f}".format(h.percentage if h.percentage is defined else h.percent) }}%</td>
+                    <td class="text-right {% if h.qtd_return >= 0 %}positive{% else %}negative{% endif %}">
+                    {{ "{:+.2f}".format(h.qtd_return) }}%
+                  </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Market Commentary -->
+    {% set commentary = report.sections.market_commentary %}
+    {% if commentary %}
+    <div class="content-page bg-blue">
+        <h1>Market Commentary</h1>
+        
+        {% if commentary.market_summary %}
+        <h2>{{ report.cover_page.period }} Market Review</h2>
+        <div class="commentary-text">{{ commentary.market_summary|format_text|safe }}</div>
+        {% endif %}
+
+        {% if commentary.portfolio_impact %}
+        <h2>Portfolio Impact</h2>
+        <div class="commentary-text">{{ commentary.portfolio_impact|format_text|safe }}</div>
+        {% endif %}
+
+        {% if commentary.outlook %}
+        <h2>Outlook & Positioning</h2>
+        <div class="commentary-text">{{ commentary.outlook|format_text|safe }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Activity Summary -->
+    {% if activity %}
+    <div class="content-page">
+        <h1>Activity Summary</h1>
+        
+        {% if activity.summary %}
+        <p class="mb-2">{{ activity.summary }}</p>
+        {% endif %}
+
+        <h2>Summary Metrics</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <td><strong>Trades Executed</strong></td>
+                    <td class="text-right">{{ activity.total_trades|default(0) }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Dividends Received</strong></td>
+                    <td class="text-right">${{ "{:,.2f}".format(activity.total_dividends|default(0)) }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Fees Charged</strong></td>
+                    <td class="text-right">${{ "{:,.2f}".format(activity.total_fees|default(0)) }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Net Cash Flow</strong></td>
+                    <td class="text-right">${{ "{:,.2f}".format(activity.net_cashflow|default(0)) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {% if activity.transaction_table and activity.transaction_table|length > 0 %}
+        <h2>Transaction Detail</h2>
+        <table class="transaction-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th class="text-right">Quantity</th>
+                    <th class="text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for txn in activity.transaction_table %}
+                <tr>
+                    <td>{{ txn.date }}</td>
+                    <td>{{ txn.type }}</td>
+                    <td>{{ txn.description }}</td>
+                    <td class="text-right">{{ "{:,.0f}".format(txn.quantity) if txn.quantity else "—" }}</td>
+                    <td class="text-right {% if txn.amount < 0 %}negative{% elif txn.amount > 0 %}positive{% endif %}">
+                        ${{ "{:,.2f}".format(txn.amount|abs) }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if activity.note %}
+        <p class="mt-2"><em>Note: {{ activity.note }}</em></p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Planning Notes -->
+    {% if planning %}
+    <div class="content-page bg-light">
+        <h1>Financial Planning Notes</h1>
+        
+        {% if planning.recommendations %}
+        <h2>Planning Recommendations</h2>
+        <div class="commentary-text">{{ planning.recommendations|format_text|safe }}</div>
+        {% endif %}
+
+        {% if planning.action_items %}
+        <h2>2026 Action Items</h2>
+        <div class="highlights">
+            {% for item in planning.action_items %}
+            <div class="highlight-item">{{ item|format_text|safe }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if planning.next_review %}
+        <h2>Next Review</h2>
+        <div class="commentary-text">{{ planning.next_review|format_text|safe }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Disclosures -->
+    <div class="disclosures">
+        <h1>Important Disclosures</h1>
+        
+        <div class="disclosure-item">
+            <span class="disclosure-title">Past Performance.</span> Past performance is not indicative of future results. All investments involve risk, including the possible loss of principal. Investment return and principal value will fluctuate so that an investor's account, when liquidated, may be worth more or less than originally invested.
+        </div>
+
+        <div class="disclosure-item">
+            <span class="disclosure-title">Performance Reporting.</span> Performance is presented net of advisory fees and is calculated using a time-weighted return methodology. Returns for periods greater than one year are annualized. Benchmark returns are for the {{ perf.benchmark_name|default('S&P 500') }} Total Return Index, which is unmanaged, does not incur fees, and is not available for direct investment.
+        </div>
+
+        <div class="disclosure-item">
+            <span class="disclosure-title">Benchmark.</span> The {{ perf.benchmark_name|default('S&P 500') }} is provided for general comparative purposes only and may not represent the specific investment objectives, risks, or fees associated with the client's portfolio.
+        </div>
+
+        <div class="disclosure-item">
+            <span class="disclosure-title">Advisory Fees.</span> {{ report.cover_page.firm_name }} charges an annual advisory fee on assets under management, billed quarterly. Fees are debited directly from client accounts and are reflected in the net-of-fee performance figures presented in this report.
+        </div>
+
+        <div class="disclosure-item">
+            <span class="disclosure-title">Not a Tax Document.</span> This report is not a tax document. Clients should rely on their official custodian account statements and IRS Form 1099 for tax reporting purposes. Please consult your tax advisor regarding tax implications of any investment activity described herein.
+        </div>
+
+        <div class="disclosure-item">
+            <span class="disclosure-title">Data Sources.</span> Market values, prices, and performance data are sourced from the account custodian and are believed to be accurate as of the report date, but are not guaranteed. Minor discrepancies may exist due to rounding.
+        </div>
+    </div>
+</body>
+</html>

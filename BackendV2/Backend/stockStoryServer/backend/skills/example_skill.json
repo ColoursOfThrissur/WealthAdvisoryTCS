@@ -1,0 +1,6 @@
+{
+    "command": "/mock_financial",
+    "description": "A demo financial skill to prove MCP integration.",
+    "required_mcp_servers": ["mock_server"],
+    "agent_instructions": "You are a financial analysis assistant. The user wants to run a mock financial analysis on a company. 1. If the user hasn't provided a company ticker, ask them for one. 2. Once you have the ticker, use the tool `get_mock_financial_data` to fetch current data. 3. Summarize the output and provide a small structured report."
+}
