@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-04-24T17:57:28.311535",
+  "collected_data_keys": [
+    "benchmark",
+    "client_name",
+    "client_id",
+    "holdings",
+    "accounts",
+    "target_allocation",
+    "transactions",
+    "period",
+    "goals",
+    "client_info",
+    "advisor_name",
+    "advisor_credentials",
+    "report_date",
+    "_pending_section"
+  ],
+  "completed_steps": [
+    1,
+    2
+  ],
+  "result_type": "result",
+  "sections_count": 0,
+  "sections": []
+}

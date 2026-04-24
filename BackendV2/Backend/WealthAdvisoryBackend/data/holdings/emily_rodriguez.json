@@ -1,0 +1,101 @@
+{
+  "client_id": "CLT-004",
+  "client_name": "Emily Rodriguez",
+  "as_of_date": "2025-12-31",
+  "accounts": [
+    {
+      "account_id": "ACC-001",
+      "account_name": "Individual Brokerage",
+      "account_type": "Taxable",
+      "tax_status": "Taxable"
+    },
+    {
+      "account_id": "ACC-002",
+      "account_name": "Roth IRA",
+      "account_type": "Retirement",
+      "tax_status": "Tax-Free"
+    }
+  ],
+  "holdings": [
+    {
+      "ticker": "VTI",
+      "security": "Vanguard Total Stock Market ETF",
+      "shares": 1200,
+      "cost_basis": 270000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "VEA",
+      "security": "Vanguard FTSE Developed Markets ETF",
+      "shares": 800,
+      "cost_basis": 36000,
+      "account": "Individual Brokerage",
+      "asset_class": "International Equity"
+    },
+    {
+      "ticker": "BND",
+      "security": "Vanguard Total Bond Market ETF",
+      "shares": 1500,
+      "cost_basis": 120000,
+      "account": "Roth IRA",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VNQ",
+      "security": "Vanguard Real Estate ETF",
+      "shares": 600,
+      "cost_basis": 54000,
+      "account": "Individual Brokerage",
+      "asset_class": "Real Estate"
+    },
+    {
+      "ticker": "VWO",
+      "security": "Vanguard FTSE Emerging Markets ETF",
+      "shares": 500,
+      "cost_basis": 22500,
+      "account": "Individual Brokerage",
+      "asset_class": "Emerging Markets"
+    },
+    {
+      "ticker": "XLK",
+      "security": "Technology Select Sector SPDR Fund",
+      "shares": 400,
+      "cost_basis": 72000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "XLV",
+      "security": "Health Care Select Sector SPDR Fund",
+      "shares": 500,
+      "cost_basis": 75000,
+      "account": "Roth IRA",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "GLD",
+      "security": "SPDR Gold Trust",
+      "shares": 250,
+      "cost_basis": 45000,
+      "account": "Individual Brokerage",
+      "asset_class": "Commodities"
+    },
+    {
+      "ticker": "VCIT",
+      "security": "Vanguard Intermediate-Term Corporate Bond ETF",
+      "shares": 800,
+      "cost_basis": 72000,
+      "account": "Roth IRA",
+      "asset_class": "Fixed Income"
+    }
+  ],
+  "target_allocation": {
+    "US Equity": 45,
+    "Fixed Income": 30,
+    "International Equity": 12,
+    "Real Estate": 8,
+    "Emerging Markets": 3,
+    "Commodities": 2
+  }
+}

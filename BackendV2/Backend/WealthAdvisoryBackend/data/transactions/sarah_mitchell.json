@@ -1,0 +1,159 @@
+{
+  "client_id": "CLT-002",
+  "client_name": "Sarah Mitchell",
+  "transactions": [
+    {
+      "date": "2025-01-15",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 460,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-02-20",
+      "type": "Buy",
+      "ticker": "VTI",
+      "description": "Add equity exposure",
+      "shares": 200,
+      "amount": 48000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-03-10",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 530,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-04-18",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 470,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-05-25",
+      "type": "Buy",
+      "ticker": "BND",
+      "description": "Add bond allocation",
+      "shares": 300,
+      "amount": 24000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-06-12",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 540,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-07-20",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 475,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-08-15",
+      "type": "Buy",
+      "ticker": "VGIT",
+      "description": "Add treasury exposure",
+      "shares": 200,
+      "amount": 12000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-09-10",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 545,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-10-10",
+      "type": "Buy",
+      "ticker": "BND",
+      "description": "Increase bond allocation",
+      "shares": 500,
+      "amount": 40000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-10-25",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 480,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-11-05",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 550,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-11-20",
+      "type": "Buy",
+      "ticker": "VGIT",
+      "description": "Add treasury bonds",
+      "shares": 300,
+      "amount": 18000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-12-01",
+      "type": "Dividend",
+      "ticker": "BND",
+      "description": "Monthly dividend",
+      "shares": 0,
+      "amount": 240,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-12-15",
+      "type": "Contribution",
+      "ticker": "CASH",
+      "description": "Year-end contribution",
+      "shares": 0,
+      "amount": 25000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2026-01-18",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 485,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2026-02-08",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 555,
+      "account": "Joint Brokerage"
+    }
+  ]
+}

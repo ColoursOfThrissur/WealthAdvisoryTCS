@@ -1,0 +1,140 @@
+Stock Story Writer – Evaluation Plan
+
+1. NON-BUSINESS (TECHNICAL) EVALUATIONS
+
+1.1 Development-time evaluations
+
+- Task success & correctness (final output)
+  - Define a small benchmark of (company, date_range, expected key events).
+  - Use human reviewers or an LLM-judge to rate:
+    - Task completion: did it produce a coherent stock story for that company and period?
+    - Factual correctness vs. known news events.
+    - Style adherence: no explicit numbers, investor-oriented, Reuters/WSJ-like tone.
+
+- Trajectory / tool-use evaluation
+  - Log full traces of tool calls (get_weekly_stock_data, find_weeks_with_significant_change, summarize_date_ranges_sequentially, scrapers, generate_stock_story).
+  - For a sample of traces, evaluate:
+    - Efficiency: unnecessary or looping tool calls, redundant scrapes.
+    - Validity: arguments to tools (ticker, dates, URLs) are sensible.
+    - Robustness: how the agent responds when tools return empty/partial results.
+
+- Robustness to bad data and tool failures
+  - Synthetic test scenarios:
+    - Empty or partial yfinance data.
+    - Scraper errors or very short article content.
+    - SerpAPI returning irrelevant results.
+  - Check:
+    - The agent degrades gracefully (clear explanation instead of crash).
+    - It chooses reasonable fallbacks (fewer weeks, shorter story, or explicit "insufficient data" messaging).
+
+- Retrieval & grounding (news + KB)
+  - For a labeled subset of (company, week), identify "ground truth" important news URLs and key facts.
+  - Evaluate:
+    - URL selection: precision/recall of chosen URLs vs. labeled set.
+    - Groundedness: sampled stories and KB answers are supported by their sources (no major hallucinations).
+
+- Unit / functional checks
+  - Deterministic tests without LLM calls for:
+    - get_weekly_stock_data (date handling, weekly resampling, error cases).
+    - find_weeks_with_significant_change (on synthetic data).
+    - build_date_ranges_from_weeks (Monday–Friday ranges).
+    - strip_urls (URL sections fully removed, text preserved).
+
+1.2 Production-time evaluations
+
+- Live quality sampling
+  - Periodically sample real user conversations and run:
+    - Lightweight LLM-judge checks for:
+      - Factuality.
+      - Style adherence.
+      - Task completion.
+  - Compare with internal benchmarks to detect regressions.
+
+- Latency and efficiency monitoring
+  - Track:
+    - Time from user request to first bot response.
+    - Time from request to final stock story.
+    - Number of tool calls per completed story.
+  - Alert on latency spikes or unusually long traces.
+
+- Runtime robustness metrics
+  - Log and monitor:
+    - Error rates per tool (scrapers, SerpAPI, LLM calls).
+    - Rate of requests that end in an explicit failure / "cannot generate story" message.
+    - Distribution of "shortened" or "low-data" stories.
+
+- Retrieval/grounding spot-checks in production
+  - For a small number of live stories per week:
+    - Manually verify that key claims are supported by the retrieved articles or KB docs.
+    - Track proportion of stories passing this check.
+
+2. BUSINESS EVALUATIONS
+
+2.1 Development-time evaluations (pilot / internal testing)
+
+- User outcome success (pilot users)
+  - With internal PMs/analysts or a pilot group:
+    - "Did this story help you clarify or form an investment view?" (Yes/No).
+    - "Would you use this as an input to your memo or discussion?" (1–5 scale).
+
+- Per-story quality rubric
+  - Human ratings on a small evaluation set:
+    - Clarity (1–5): easy to understand, well structured.
+    - Insightfulness (1–5): connects events to stock behavior meaningfully.
+    - Perceived accuracy (1–5): seems factually trustworthy and grounded.
+  - Use averages per dimension to validate readiness before wider launch.
+
+- Coverage and relevance (pilot)
+  - For a set of "priority" companies and periods:
+    - % of cases where the system can produce a story at all.
+    - % where pilot users mark the story as "good enough to be useful".
+
+- Productivity uplift (internal use case)
+  - Have analysts time:
+    - Traditional manual write-up vs. write-up using the tool.
+  - Measure:
+    - Time saved per stock.
+    - Change in perceived effort/mental load (self-reported).
+
+2.2 Production-time evaluations
+
+- User satisfaction
+  - Per-story feedback:
+    - "How satisfied are you with this stock story?" (0–10).
+    - Optional free-text: "What was most useful / what was missing?"
+  - Track:
+    - Average satisfaction score.
+    - Distribution across user segments (e.g., pro vs. casual users).
+
+- Engagement and retention
+  - Metrics to track:
+    - Stories per session and per user per week.
+    - % of sessions where users request follow-up stories or ask clarifying questions.
+    - Return rate: weekly/monthly active users, cohort retention after first use.
+
+- Coverage & success at scale
+  - At production volume:
+    - % of user requests that lead to a completed story.
+    - % of completed stories with satisfaction ≥ some threshold (e.g., 7/10).
+
+- Unit economics
+  - For each completed story:
+    - Total variable cost (LLM tokens + external APIs).
+  - Monitor:
+    - Cost per active user.
+    - Cost per "highly satisfied" story.
+
+- Error / incident rates
+  - Track and periodically review:
+    - Rate of stories flagged by users as "incorrect" or "misleading".
+    - Any compliance / policy incidents (if applicable).
+    - Time to triage and remediate issues (e.g., prompt/logic adjustments).
+
+- Business-specific KPIs
+  - If internal:
+    - Overall reduction in time-to-first-draft for equity notes or commentaries.
+    - Adoption rate within target teams.
+  - If external/SaaS:
+    - Trial → paid conversion linked to product usage.
+    - Churn reasons, especially those citing "story quality" or "trust".
+

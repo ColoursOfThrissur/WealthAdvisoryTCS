@@ -1,0 +1,350 @@
+/* Main Stylesheet for PDF Reports */
+
+@page {
+    size: letter;
+    margin: 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    color: #0f172a;
+    line-height: 1.6;
+}
+
+/* Cover Page */
+.cover-page {
+    height: 11in;
+    width: 8.5in;
+    position: relative;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    page-break-after: always;
+}
+
+.cover-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.cover-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    padding: 2in;
+}
+
+.firm-logo {
+    background: white;
+    padding: 30px 60px;
+    border-radius: 12px;
+    margin-bottom: 60px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.firm-name {
+    font-size: 36pt;
+    font-weight: bold;
+    color: #1e40af;
+    letter-spacing: -0.5px;
+}
+
+.report-title {
+    font-size: 28pt;
+    font-weight: 300;
+    margin-bottom: 40px;
+    letter-spacing: 0.5px;
+}
+
+.client-info-box {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px 60px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    margin-top: 40px;
+}
+
+.client-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.client-info-row:last-child {
+    border-bottom: none;
+}
+
+.client-info-label {
+    color: #64748b;
+    font-size: 12pt;
+    font-weight: normal;
+}
+
+.client-info-value {
+    color: #0f172a;
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+/* Content Pages */
+.content-page {
+    page-break-after: always;
+    padding: 0.75in;
+}
+
+h1 {
+    font-size: 24pt;
+    color: #1e293b;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #2563eb;
+}
+
+h2 {
+    font-size: 16pt;
+    color: #334155;
+    margin: 24px 0 12px 0;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 13pt;
+    color: #475569;
+    margin: 16px 0 10px 0;
+    font-weight: bold;
+}
+
+p {
+    font-size: 11pt;
+    color: #1e293b;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.commentary-text {
+    font-size: 11pt;
+    color: #1e293b;
+    margin-bottom: 16px;
+    line-height: 1.7;
+    text-align: justify;
+}
+
+/* Metrics Box */
+.metrics-box {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 2px solid #2563eb;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 20px 0;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 2px solid #3b82f6;
+}
+
+.metric-row:last-child {
+    border-bottom: none;
+}
+
+.metric-label {
+    font-size: 14pt;
+    color: #1e40af;
+    font-weight: bold;
+}
+
+.metric-value {
+    font-size: 16pt;
+    color: #1e3a8a;
+    font-weight: bold;
+}
+
+/* Highlights */
+.highlights {
+    margin: 20px 0;
+}
+
+.highlight-item {
+    padding: 10px 0 10px 20px;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.highlight-item::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #2563eb;
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 10pt;
+}
+
+thead {
+    background: #1e40af;
+    color: white;
+}
+
+thead th {
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 10pt;
+}
+
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #cbd5e1;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+tbody tr:nth-child(odd) {
+    background: white;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Value Box */
+.value-box {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 2px solid #2563eb;
+    border-left: 6px solid #2563eb;
+    padding: 20px 30px;
+    margin: 20px 0;
+    border-radius: 6px;
+}
+
+.value-box-label {
+    font-size: 13pt;
+    color: #1e40af;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.value-box-amount {
+    font-size: 22pt;
+    color: #1e3a8a;
+    font-weight: bold;
+}
+
+/* Performance Table Specific */
+.performance-table thead {
+    background: #1e40af;
+}
+
+.performance-table .difference-row {
+    background: #dbeafe !important;
+    font-weight: bold;
+}
+
+/* Allocation Table */
+.allocation-table thead {
+    background: #059669;
+}
+
+.allocation-table tbody tr:nth-child(even) {
+    background: #f0fdf4;
+}
+
+/* Holdings Table */
+.holdings-table thead {
+    background: #7c3aed;
+}
+
+.holdings-table tbody tr:nth-child(even) {
+    background: #faf5ff;
+}
+
+/* Account Table */
+.account-table thead {
+    background: #334155;
+}
+
+/* Activity Table */
+.activity-table {
+    font-size: 9pt;
+}
+
+.activity-table thead {
+    background: #0891b2;
+}
+
+/* Risk Metrics Table */
+.risk-table {
+    width: 60%;
+}
+
+.risk-table tbody td:first-child {
+    background: #f1f5f9;
+    font-weight: bold;
+}
+
+/* Disclosures */
+.disclosures {
+    page-break-before: always;
+    padding: 0.75in;
+}
+
+.disclosure-item {
+    margin-bottom: 16px;
+    font-size: 9pt;
+    color: #64748b;
+    line-height: 1.5;
+    text-align: justify;
+}
+
+.disclosure-title {
+    font-weight: bold;
+    color: #475569;
+}
+
+/* Positive/Negative Values */
+.positive {
+    color: #059669;
+}
+
+.negative {
+    color: #dc2626;
+}
+
+/* Spacing Utilities */
+.mb-1 { margin-bottom: 10px; }
+.mb-2 { margin-bottom: 20px; }
+.mb-3 { margin-bottom: 30px; }
+.mt-1 { margin-top: 10px; }
+.mt-2 { margin-top: 20px; }
+.mt-3 { margin-top: 30px; }

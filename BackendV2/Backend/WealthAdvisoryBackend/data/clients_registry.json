@@ -1,0 +1,216 @@
+{
+  "clients": [
+    {
+      "client_id": "CLT-001",
+      "name": "Robert Anderson",
+      "name_variations": ["robert", "anderson", "robert anderson", "r anderson", "bob anderson"],
+      "email": "robert.anderson@email.com",
+      "phone": "+1-555-0101",
+      "age": 36,
+      "gender": "Male",
+      "country": "Spain",
+      "married": true,
+      "dependents": 2,
+      "risk_profile": "Moderate-Aggressive",
+      "risk_score": 0.31,
+      "inception_date": "2020-03-15",
+      "advisor": "Jane Smith",
+      "benchmark": "^GSPC",
+      "status": "active",
+      "aum": 1250000,
+      "estimated_salary": 177384,
+      "credit_score": 688,
+      "has_mortgage": true,
+      "business_owner": true,
+      "data_files": {
+        "holdings": "data/holdings/robert_anderson.json",
+        "transactions": "data/transactions/robert_anderson.json"
+      },
+      "metadata": {
+        "last_report": "2025-12-31",
+        "last_updated": "2026-01-15",
+        "tags": ["high_net_worth", "churn_risk_recovered", "business_owner"],
+        "portfolio_return": 0.116,
+        "diversification": 0.4124
+      }
+    },
+    {
+      "client_id": "CLT-002",
+      "name": "Sarah Mitchell",
+      "name_variations": ["sarah", "mitchell", "sarah mitchell", "s mitchell"],
+      "email": "sarah.mitchell@email.com",
+      "phone": "+1-555-0102",
+      "age": 28,
+      "gender": "Female",
+      "country": "France",
+      "married": true,
+      "dependents": 5,
+      "risk_profile": "Conservative",
+      "risk_score": 0.25,
+      "inception_date": "2021-06-20",
+      "advisor": "Jane Smith",
+      "benchmark": "^GSPC",
+      "status": "active",
+      "aum": 850000,
+      "estimated_salary": 185821,
+      "credit_score": 850,
+      "has_mortgage": false,
+      "business_owner": true,
+      "data_files": {
+        "holdings": "data/holdings/sarah_mitchell.json",
+        "transactions": "data/transactions/sarah_mitchell.json"
+      },
+      "metadata": {
+        "last_report": "2025-12-31",
+        "last_updated": "2026-01-15",
+        "tags": ["high_net_worth", "churn_risk_critical", "business_owner"],
+        "portfolio_return": 0.1772,
+        "diversification": 0.2448
+      }
+    },
+    {
+      "client_id": "CLT-003",
+      "name": "David Chen",
+      "name_variations": ["david", "chen", "david chen", "d chen"],
+      "email": "david.chen@email.com",
+      "phone": "+1-555-0103",
+      "age": 42,
+      "gender": "Male",
+      "country": "Germany",
+      "married": true,
+      "dependents": 2,
+      "risk_profile": "Moderate",
+      "risk_score": 0.28,
+      "inception_date": "2019-09-10",
+      "advisor": "Jane Smith",
+      "benchmark": "^GSPC",
+      "status": "active",
+      "aum": 1450000,
+      "estimated_salary": 195000,
+      "credit_score": 720,
+      "has_mortgage": true,
+      "business_owner": false,
+      "data_files": {
+        "holdings": "data/holdings/david_chen.json",
+        "transactions": "data/transactions/david_chen.json"
+      },
+      "metadata": {
+        "last_report": "2025-12-31",
+        "last_updated": "2026-01-15",
+        "tags": ["high_net_worth", "churn_risk_critical", "tech_heavy"],
+        "portfolio_return": 0.1462,
+        "diversification": 0.1837
+      }
+    },
+    {
+      "client_id": "CLT-004",
+      "name": "Emily Rodriguez",
+      "name_variations": ["emily", "rodriguez", "emily rodriguez", "e rodriguez"],
+      "email": "emily.rodriguez@email.com",
+      "phone": "+1-555-0104",
+      "age": 45,
+      "gender": "Female",
+      "country": "Spain",
+      "married": true,
+      "dependents": 3,
+      "risk_profile": "Moderate",
+      "risk_score": 0.28,
+      "inception_date": "2018-11-05",
+      "advisor": "Jane Smith",
+      "benchmark": "^GSPC",
+      "status": "active",
+      "aum": 980000,
+      "estimated_salary": 148517,
+      "credit_score": 603,
+      "has_mortgage": false,
+      "business_owner": false,
+      "data_files": {
+        "holdings": "data/holdings/emily_rodriguez.json",
+        "transactions": "data/transactions/emily_rodriguez.json"
+      },
+      "metadata": {
+        "last_report": "2025-12-31",
+        "last_updated": "2026-01-15",
+        "tags": ["high_net_worth", "churn_risk_medium"],
+        "portfolio_return": 0.1462,
+        "diversification": 0.1837
+      }
+    },
+    {
+      "client_id": "CLT-005",
+      "name": "James Patterson",
+      "name_variations": ["james", "patterson", "james patterson", "j patterson", "jim patterson"],
+      "email": "james.patterson@email.com",
+      "phone": "+1-555-0105",
+      "age": 52,
+      "gender": "Male",
+      "country": "France",
+      "married": true,
+      "dependents": 1,
+      "risk_profile": "Conservative",
+      "risk_score": 0.12,
+      "inception_date": "2017-04-12",
+      "advisor": "Jane Smith",
+      "benchmark": "^GSPC",
+      "status": "active",
+      "aum": 2100000,
+      "estimated_salary": 210000,
+      "credit_score": 780,
+      "has_mortgage": true,
+      "business_owner": false,
+      "data_files": {
+        "holdings": "data/holdings/james_patterson.json",
+        "transactions": "data/transactions/james_patterson.json"
+      },
+      "metadata": {
+        "last_report": "2025-12-31",
+        "last_updated": "2026-01-15",
+        "tags": ["high_net_worth", "churn_risk_low", "conservative"],
+        "portfolio_return": 0.0986,
+        "diversification": 0.2203
+      }
+    },
+    {
+      "client_id": "CLT-006",
+      "name": "Lisa Thompson",
+      "name_variations": ["lisa", "thompson", "lisa thompson", "l thompson"],
+      "email": "lisa.thompson@email.com",
+      "phone": "+1-555-0106",
+      "age": 38,
+      "gender": "Female",
+      "country": "France",
+      "married": true,
+      "dependents": 2,
+      "risk_profile": "Moderate",
+      "risk_score": 0.20,
+      "inception_date": "2020-08-22",
+      "advisor": "Jane Smith",
+      "benchmark": "^GSPC",
+      "status": "active",
+      "aum": 750000,
+      "estimated_salary": 134901,
+      "credit_score": 673,
+      "has_mortgage": true,
+      "business_owner": true,
+      "data_files": {
+        "holdings": "data/holdings/lisa_thompson.json",
+        "transactions": "data/transactions/lisa_thompson.json"
+      },
+      "metadata": {
+        "last_report": "2025-12-31",
+        "last_updated": "2026-01-15",
+        "tags": ["high_net_worth", "churn_risk_low", "business_owner"],
+        "portfolio_return": 0.1262,
+        "diversification": 0.3473
+      }
+    }
+  ],
+  "metadata": {
+    "total_clients": 6,
+    "total_aum": 7380000,
+    "last_updated": "2026-01-15T10:30:00Z",
+    "version": "1.0",
+    "advisor": "Jane Smith",
+    "firm": "Wealth Management Firm"
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "client_id": "CLT-001",
+  "client_name": "Robert Anderson",
+  "as_of_date": "2025-12-31",
+  "accounts": [
+    {
+      "account_id": "ACC-001",
+      "account_name": "Individual Brokerage",
+      "account_type": "Taxable",
+      "tax_status": "Taxable"
+    },
+    {
+      "account_id": "ACC-002",
+      "account_name": "IRA",
+      "account_type": "Retirement",
+      "tax_status": "Tax-Deferred"
+    }
+  ],
+  "holdings": [
+    {
+      "ticker": "AAPL",
+      "security": "Apple Inc.",
+      "shares": 500,
+      "cost_basis": 75000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "MSFT",
+      "security": "Microsoft Corporation",
+      "shares": 400,
+      "cost_basis": 120000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "GOOGL",
+      "security": "Alphabet Inc.",
+      "shares": 300,
+      "cost_basis": 42000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "AMZN",
+      "security": "Amazon.com Inc.",
+      "shares": 250,
+      "cost_basis": 45000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "VTI",
+      "security": "Vanguard Total Stock Market ETF",
+      "shares": 800,
+      "cost_basis": 180000,
+      "account": "IRA",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "BND",
+      "security": "Vanguard Total Bond Market ETF",
+      "shares": 1500,
+      "cost_basis": 120000,
+      "account": "IRA",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VEA",
+      "security": "Vanguard FTSE Developed Markets ETF",
+      "shares": 600,
+      "cost_basis": 27000,
+      "account": "Individual Brokerage",
+      "asset_class": "International Equity"
+    },
+    {
+      "ticker": "VWO",
+      "security": "Vanguard FTSE Emerging Markets ETF",
+      "shares": 400,
+      "cost_basis": 18000,
+      "account": "Individual Brokerage",
+      "asset_class": "Emerging Markets"
+    },
+    {
+      "ticker": "GLD",
+      "security": "SPDR Gold Trust",
+      "shares": 200,
+      "cost_basis": 36000,
+      "account": "Individual Brokerage",
+      "asset_class": "Commodities"
+    },
+    {
+      "ticker": "VNQ",
+      "security": "Vanguard Real Estate ETF",
+      "shares": 500,
+      "cost_basis": 45000,
+      "account": "IRA",
+      "asset_class": "Real Estate"
+    },
+    {
+      "ticker": "CORP",
+      "security": "PIMCO Investment Grade Corporate Bond ETF",
+      "shares": 800,
+      "cost_basis": 80000,
+      "account": "IRA",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "TSLA",
+      "security": "Tesla Inc.",
+      "shares": 150,
+      "cost_basis": 37500,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    }
+  ],
+  "target_allocation": {
+    "US Equity": 55,
+    "Fixed Income": 25,
+    "International Equity": 10,
+    "Emerging Markets": 5,
+    "Real Estate": 3,
+    "Commodities": 2
+  }
+}

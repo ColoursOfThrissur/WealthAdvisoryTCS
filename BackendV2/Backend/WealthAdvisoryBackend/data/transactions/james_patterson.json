@@ -1,0 +1,186 @@
+{
+  "client_id": "CLT-005",
+  "client_name": "James Patterson",
+  "transactions": [
+    {
+      "date": "2025-01-10",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 1150,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-02-15",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 850,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-03-20",
+      "type": "Buy",
+      "ticker": "VCIT",
+      "description": "Add corporate bonds",
+      "shares": 400,
+      "amount": 36000,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-04-05",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 1180,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-05-12",
+      "type": "Dividend",
+      "ticker": "KO",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 520,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-06-18",
+      "type": "Buy",
+      "ticker": "VTI",
+      "description": "Add equity exposure",
+      "shares": 200,
+      "amount": 45000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-07-10",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 870,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-08-15",
+      "type": "Dividend",
+      "ticker": "MCD",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 880,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-09-20",
+      "type": "Buy",
+      "ticker": "MUB",
+      "description": "Add muni bonds",
+      "shares": 300,
+      "amount": 33000,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-10-05",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 1200,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-10-15",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 880,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-10-20",
+      "type": "Buy",
+      "ticker": "BND",
+      "description": "Add bond allocation",
+      "shares": 500,
+      "amount": 40000,
+      "account": "Traditional IRA"
+    },
+    {
+      "date": "2025-11-01",
+      "type": "Dividend",
+      "ticker": "BND",
+      "description": "Monthly dividend",
+      "shares": 0,
+      "amount": 360,
+      "account": "Traditional IRA"
+    },
+    {
+      "date": "2025-11-10",
+      "type": "Dividend",
+      "ticker": "KO",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 540,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-11-22",
+      "type": "Dividend",
+      "ticker": "MCD",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 900,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2025-12-01",
+      "type": "Dividend",
+      "ticker": "MUB",
+      "description": "Monthly dividend",
+      "shares": 0,
+      "amount": 450,
+      "account": "Joint Brokerage"
+    },
+    {
+      "date": "2025-12-10",
+      "type": "Buy",
+      "ticker": "VGIT",
+      "description": "Add treasury exposure",
+      "shares": 300,
+      "amount": 18000,
+      "account": "Traditional IRA"
+    },
+    {
+      "date": "2025-12-20",
+      "type": "Contribution",
+      "ticker": "CASH",
+      "description": "Year-end contribution",
+      "shares": 0,
+      "amount": 50000,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2026-01-08",
+      "type": "Dividend",
+      "ticker": "JNJ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 1220,
+      "account": "Trust Account"
+    },
+    {
+      "date": "2026-02-12",
+      "type": "Dividend",
+      "ticker": "PG",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 900,
+      "account": "Trust Account"
+    }
+  ]
+}

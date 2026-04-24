@@ -1,0 +1,130 @@
+{
+  "client_id": "CLT-005",
+  "client_name": "James Patterson",
+  "as_of_date": "2025-12-31",
+  "accounts": [
+    {
+      "account_id": "ACC-001",
+      "account_name": "Joint Brokerage",
+      "account_type": "Taxable",
+      "tax_status": "Taxable"
+    },
+    {
+      "account_id": "ACC-002",
+      "account_name": "Traditional IRA",
+      "account_type": "Retirement",
+      "tax_status": "Tax-Deferred"
+    },
+    {
+      "account_id": "ACC-003",
+      "account_name": "Trust Account",
+      "account_type": "Trust",
+      "tax_status": "Taxable"
+    }
+  ],
+  "holdings": [
+    {
+      "ticker": "BND",
+      "security": "Vanguard Total Bond Market ETF",
+      "shares": 3000,
+      "cost_basis": 240000,
+      "account": "Traditional IRA",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VGIT",
+      "security": "Vanguard Intermediate-Term Treasury ETF",
+      "shares": 2500,
+      "cost_basis": 150000,
+      "account": "Traditional IRA",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VCIT",
+      "security": "Vanguard Intermediate-Term Corporate Bond ETF",
+      "shares": 2000,
+      "cost_basis": 180000,
+      "account": "Trust Account",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VTI",
+      "security": "Vanguard Total Stock Market ETF",
+      "shares": 1500,
+      "cost_basis": 337500,
+      "account": "Joint Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "VEA",
+      "security": "Vanguard FTSE Developed Markets ETF",
+      "shares": 1000,
+      "cost_basis": 45000,
+      "account": "Joint Brokerage",
+      "asset_class": "International Equity"
+    },
+    {
+      "ticker": "VNQ",
+      "security": "Vanguard Real Estate ETF",
+      "shares": 800,
+      "cost_basis": 72000,
+      "account": "Joint Brokerage",
+      "asset_class": "Real Estate"
+    },
+    {
+      "ticker": "JNJ",
+      "security": "Johnson & Johnson",
+      "shares": 1000,
+      "cost_basis": 160000,
+      "account": "Trust Account",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "PG",
+      "security": "Procter & Gamble",
+      "shares": 800,
+      "cost_basis": 120000,
+      "account": "Trust Account",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "KO",
+      "security": "Coca-Cola Company",
+      "shares": 1200,
+      "cost_basis": 72000,
+      "account": "Joint Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "MCD",
+      "security": "McDonald's Corporation",
+      "shares": 600,
+      "cost_basis": 180000,
+      "account": "Trust Account",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "GLD",
+      "security": "SPDR Gold Trust",
+      "shares": 400,
+      "cost_basis": 72000,
+      "account": "Joint Brokerage",
+      "asset_class": "Commodities"
+    },
+    {
+      "ticker": "MUB",
+      "security": "iShares National Muni Bond ETF",
+      "shares": 1500,
+      "cost_basis": 165000,
+      "account": "Joint Brokerage",
+      "asset_class": "Fixed Income"
+    }
+  ],
+  "target_allocation": {
+    "Fixed Income": 60,
+    "US Equity": 25,
+    "International Equity": 8,
+    "Real Estate": 4,
+    "Commodities": 3
+  }
+}

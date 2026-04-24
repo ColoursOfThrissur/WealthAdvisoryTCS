@@ -1,0 +1,69 @@
+{
+  "client_id": "CLT-004",
+  "client_name": "Emily Rodriguez",
+  "transactions": [
+    {
+      "date": "2025-10-12",
+      "type": "Buy",
+      "ticker": "VTI",
+      "description": "Increase equity exposure",
+      "shares": 200,
+      "amount": 45000,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-10-28",
+      "type": "Dividend",
+      "ticker": "VNQ",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 540,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-11-08",
+      "type": "Buy",
+      "ticker": "XLV",
+      "description": "Add healthcare sector",
+      "shares": 100,
+      "amount": 15000,
+      "account": "Roth IRA"
+    },
+    {
+      "date": "2025-11-15",
+      "type": "Dividend",
+      "ticker": "BND",
+      "description": "Monthly dividend",
+      "shares": 0,
+      "amount": 180,
+      "account": "Roth IRA"
+    },
+    {
+      "date": "2025-11-25",
+      "type": "Buy",
+      "ticker": "VEA",
+      "description": "Rebalancing - international",
+      "shares": 150,
+      "amount": 6750,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-12-05",
+      "type": "Dividend",
+      "ticker": "VTI",
+      "description": "Quarterly dividend",
+      "shares": 0,
+      "amount": 720,
+      "account": "Individual Brokerage"
+    },
+    {
+      "date": "2025-12-18",
+      "type": "Contribution",
+      "ticker": "CASH",
+      "description": "Roth IRA contribution",
+      "shares": 0,
+      "amount": 7000,
+      "account": "Roth IRA"
+    }
+  ]
+}

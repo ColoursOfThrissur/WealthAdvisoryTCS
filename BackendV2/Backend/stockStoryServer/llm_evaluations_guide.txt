@@ -1,0 +1,174 @@
+Stock Story Writer – LLM Evaluation Guide (Non-Technical)
+
+This document explains, in simple terms, where and how we evaluate the AI (LLM) inside the Stock Story Writer. It focuses only on the AI’s behavior, not low-level technical tests.
+
+
+1. Overview of the user flow
+
+In a typical session, a user:
+1) Tells the chatbot which company and date range they care about.
+2) The AI gathers price data and news in the background.
+3) The AI shows weekly summaries of what happened.
+4) The AI generates a final stock story.
+5) The user may ask follow-up questions or request more stories.
+
+We place LLM evaluations at key points in this journey.
+
+
+1a. Key evaluation names (at a glance)
+
+For quick reference, here are the main LLM evaluations we run and where they appear:
+- Evaluation A – Request Understanding:
+  - Checks whether the AI correctly understands the user’s company, date range, and intent, and asks for clarification when needed.
+- Evaluation B – Step Explanation:
+  - Checks whether the AI clearly explains the next step before it does anything important behind the scenes.
+- Evaluation C – Weekly Summary Quality:
+  - Checks whether each weekly summary is concise, accurate, and focused on what matters for the stock.
+- Evaluation D – Final Stock Story Quality:
+  - Checks whether the final story is coherent, insightful, and written in the right professional tone.
+- Evaluation E – Follow-up Answer Quality:
+  - Checks whether answers to extra questions are consistent with the story and genuinely helpful.
+- Evaluation F – Guardrails & Off-Scope Handling:
+  - Checks whether the AI politely refuses or redirects when a request falls outside the intended use of the system.
+
+
+2. Evaluation Point A – Understanding the user’s request
+
+Where in the flow:
+- Right after the user types their first message (for example: “Create a stock story for Infosys from Sept to Dec 2025”) and every time they change or clarify the request.
+
+What we check:
+- Clarity of interpretation:
+  - Does the AI correctly understand which company and which date range the user wants?
+  - If information is missing, does it ask for the right clarification instead of guessing?
+- Staying on-purpose:
+  - If the user asks for something unrelated to stock stories, does the AI gently steer them back to “company + date range” instead of wandering off-topic?
+
+How we evaluate:
+- We keep a small set of example user messages and look at:
+  - Whether the AI’s follow-up questions are clear and minimal.
+  - How often humans say: “Yes, it understood what I meant” vs. “No, it misunderstood.”
+
+
+3. Evaluation Point B – Explaining the next step before doing it
+
+Where in the flow:
+- Each time the AI is about to move into an important new phase:
+  - After finding significant weeks in the stock data.
+  - Before starting the news analysis for those weeks.
+  - Before generating the final story.
+
+What we check:
+- Transparency:
+  - Does the AI clearly tell the user what it is about to do next in plain language?
+  - Example: “Now I’m going to look at news articles for the weeks where the stock moved the most, and I’ll show you short summaries.”
+- User confidence:
+  - Do users feel they understand what is happening “behind the scenes” enough to trust the output?
+
+How we evaluate:
+- Review short transcripts and rate:
+  - How understandable the “next step” explanations are (e.g., 1–5 scale).
+  - Whether users say they feel in control and informed.
+
+
+4. Evaluation Point C – Quality of weekly summaries
+
+Where in the flow:
+- After the AI has gathered news for each important week and produces the short weekly summaries that show up in the carousel in the UI.
+
+What we check:
+- Usefulness:
+  - Does each weekly summary capture the core news that matters for the stock, rather than minor or cosmetic events?
+  - Can a human quickly understand “what actually happened that week” from the summary?
+- Brevity and focus:
+  - Is the summary short enough to scan quickly, without unnecessary fluff?
+  - Does it stick to business and financial impact, not general marketing language?
+- Groundedness:
+  - Is the summary clearly based on the articles it cites (no obvious made‑up facts)?
+
+How we evaluate:
+- For a sample of weeks:
+  - Humans compare the summary against the original articles and score:
+    - “Does this feel accurate?” (Yes/No or 1–5).
+    - “Does this focus on the right things for investors?” (1–5).
+  - Optionally, a second AI model can act as a reviewer, checking whether each claim appears in the provided article text.
+
+
+5. Evaluation Point D – Quality of the final stock story
+
+Where in the flow:
+- After the user has accepted the weekly summaries and the AI produces the single narrative stock story for the full period.
+
+What we check:
+- Narrative and structure:
+  - Does the story read like a coherent, chronological explanation of the quarter, not a random list of facts?
+  - Does it connect the events across weeks into a clear “story arc”?
+- Style and tone:
+  - Does it sound like a professional, neutral financial summary (Reuters/WSJ-like), not like marketing copy or casual chat?
+  - Does it avoid forbidden patterns (for example, explicit price percentages if that’s a rule)?
+- Decision support:
+  - After reading the story, could an investor or analyst say, “I have a decent high-level understanding of how this stock performed and why”?
+
+How we evaluate:
+- Keep a small benchmark set of final stories for known periods:
+  - Human evaluators (PMs, analysts, or power users) rate each story on:
+    - Clarity and coherence.
+    - Insightfulness: does it highlight the truly important drivers?
+    - Trustworthiness: does it feel grounded and unbiased?
+  - Optionally, a reviewer AI model can check if the story:
+    - Follows the requested tone.
+    - Avoids clear contradictions with the weekly summaries it is based on.
+
+
+6. Evaluation Point E – Answering follow-up questions
+
+Where in the flow:
+- After the main story is generated, when a user asks extra questions like:
+  - “Why did the stock move so sharply in November?”
+  - “How did management guidance change over this period?”
+
+What we check:
+- Consistency with the story:
+  - Do follow-up answers stay consistent with the original story and weekly summaries, instead of contradicting them?
+- Depth without overreach:
+  - Does the AI answer within what it reasonably knows from the data and summaries, instead of speculating wildly?
+- Helpfulness:
+  - Do users feel that follow-up answers actually clarify their questions, rather than restating the story in a vague way?
+
+How we evaluate:
+- Take a sample of “story + follow-up questions + answers”:
+  - Ask humans to rate whether the answers are:
+    - Consistent with the story.
+    - Specific enough to be useful.
+  - Optionally, an AI reviewer checks for contradictions between answers and the original story.
+
+
+7. Evaluation Point F – Handling off-scope or unsafe requests
+
+Where in the flow:
+- Whenever the user asks for something outside the intended use:
+  - Non-stock questions (“help me write my CV”).
+  - Requests that look like they want personal financial advice rather than descriptive stories.
+
+What we check:
+- Guardrails:
+  - Does the AI decline or redirect gracefully, using the agreed-upon wording?
+  - Does it remind the user what it can and cannot do?
+- User trust:
+  - Does this behavior increase user trust (the system knows its limits) rather than frustrate them?
+
+How we evaluate:
+- Create a set of “red flag” prompts and see:
+  - How often the AI responds with the correct refusal / redirection message.
+  - Whether the language of those refusals feels polite and clear to non-technical users.
+
+
+8. Putting it all together
+
+In practice, we do not evaluate every single interaction. Instead, we:
+- Maintain a small library of example conversations that cover key patterns (normal requests, edge cases, off-scope requests).
+- Regularly sample real conversations from production and review them with the lenses above.
+- Use a mix of:
+  - Human reviewers (product, domain experts, or pilot users).
+  - Secondary AI models acting as “judges” to quickly flag potential issues.
+

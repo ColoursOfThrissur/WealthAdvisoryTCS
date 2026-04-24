@@ -1,0 +1,106 @@
+{
+  "client_id": "CLT-003",
+  "client_name": "David Chen",
+  "as_of_date": "2025-12-31",
+  "accounts": [
+    {
+      "account_id": "ACC-001",
+      "account_name": "Individual Brokerage",
+      "account_type": "Taxable",
+      "tax_status": "Taxable"
+    },
+    {
+      "account_id": "ACC-002",
+      "account_name": "401k",
+      "account_type": "Retirement",
+      "tax_status": "Tax-Deferred"
+    }
+  ],
+  "holdings": [
+    {
+      "ticker": "AAPL",
+      "security": "Apple Inc.",
+      "shares": 800,
+      "cost_basis": 120000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "MSFT",
+      "security": "Microsoft Corporation",
+      "shares": 600,
+      "cost_basis": 180000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "NVDA",
+      "security": "NVIDIA Corporation",
+      "shares": 400,
+      "cost_basis": 160000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "GOOGL",
+      "security": "Alphabet Inc.",
+      "shares": 500,
+      "cost_basis": 70000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "META",
+      "security": "Meta Platforms Inc.",
+      "shares": 350,
+      "cost_basis": 105000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "QQQ",
+      "security": "Invesco QQQ Trust",
+      "shares": 1000,
+      "cost_basis": 380000,
+      "account": "401k",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "VTI",
+      "security": "Vanguard Total Stock Market ETF",
+      "shares": 500,
+      "cost_basis": 112500,
+      "account": "401k",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "BND",
+      "security": "Vanguard Total Bond Market ETF",
+      "shares": 800,
+      "cost_basis": 64000,
+      "account": "401k",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VEA",
+      "security": "Vanguard FTSE Developed Markets ETF",
+      "shares": 400,
+      "cost_basis": 18000,
+      "account": "Individual Brokerage",
+      "asset_class": "International Equity"
+    },
+    {
+      "ticker": "TSLA",
+      "security": "Tesla Inc.",
+      "shares": 200,
+      "cost_basis": 50000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    }
+  ],
+  "target_allocation": {
+    "US Equity": 75,
+    "Fixed Income": 15,
+    "International Equity": 10
+  }
+}

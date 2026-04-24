@@ -1,0 +1,109 @@
+{
+  "client_id": "CLT-006",
+  "client_name": "Lisa Thompson",
+  "as_of_date": "2025-12-31",
+  "accounts": [
+    {
+      "account_id": "ACC-001",
+      "account_name": "Individual Brokerage",
+      "account_type": "Taxable",
+      "tax_status": "Taxable"
+    },
+    {
+      "account_id": "ACC-002",
+      "account_name": "SEP IRA",
+      "account_type": "Retirement",
+      "tax_status": "Tax-Deferred"
+    }
+  ],
+  "holdings": [
+    {
+      "ticker": "VTI",
+      "security": "Vanguard Total Stock Market ETF",
+      "shares": 900,
+      "cost_basis": 202500,
+      "account": "SEP IRA",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "VEA",
+      "security": "Vanguard FTSE Developed Markets ETF",
+      "shares": 700,
+      "cost_basis": 31500,
+      "account": "SEP IRA",
+      "asset_class": "International Equity"
+    },
+    {
+      "ticker": "VWO",
+      "security": "Vanguard FTSE Emerging Markets ETF",
+      "shares": 400,
+      "cost_basis": 18000,
+      "account": "Individual Brokerage",
+      "asset_class": "Emerging Markets"
+    },
+    {
+      "ticker": "BND",
+      "security": "Vanguard Total Bond Market ETF",
+      "shares": 1200,
+      "cost_basis": 96000,
+      "account": "SEP IRA",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "VNQ",
+      "security": "Vanguard Real Estate ETF",
+      "shares": 500,
+      "cost_basis": 45000,
+      "account": "Individual Brokerage",
+      "asset_class": "Real Estate"
+    },
+    {
+      "ticker": "XLV",
+      "security": "Health Care Select Sector SPDR Fund",
+      "shares": 400,
+      "cost_basis": 60000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "XLF",
+      "security": "Financial Select Sector SPDR Fund",
+      "shares": 600,
+      "cost_basis": 24000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    },
+    {
+      "ticker": "VCIT",
+      "security": "Vanguard Intermediate-Term Corporate Bond ETF",
+      "shares": 800,
+      "cost_basis": 72000,
+      "account": "SEP IRA",
+      "asset_class": "Fixed Income"
+    },
+    {
+      "ticker": "GLD",
+      "security": "SPDR Gold Trust",
+      "shares": 200,
+      "cost_basis": 36000,
+      "account": "Individual Brokerage",
+      "asset_class": "Commodities"
+    },
+    {
+      "ticker": "AAPL",
+      "security": "Apple Inc.",
+      "shares": 300,
+      "cost_basis": 45000,
+      "account": "Individual Brokerage",
+      "asset_class": "US Equity"
+    }
+  ],
+  "target_allocation": {
+    "US Equity": 50,
+    "Fixed Income": 25,
+    "International Equity": 12,
+    "Real Estate": 7,
+    "Emerging Markets": 4,
+    "Commodities": 2
+  }
+}
