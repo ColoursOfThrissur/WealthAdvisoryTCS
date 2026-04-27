@@ -44,7 +44,6 @@ const InvestmentDetailsView = () => {
   if (loading) return (
     <div className="idv-page">
       <div className="idv-header">
-        <button onClick={() => navigate(-1)} className="idv-back-btn"><ArrowLeft size={18} />Back</button>
         <h1 className="idv-title">Market Sentiment & Holdings</h1>
       </div>
       <div className="idv-loading">
@@ -57,7 +56,6 @@ const InvestmentDetailsView = () => {
   if (error) return (
     <div className="idv-page">
       <div className="idv-header">
-        <button onClick={() => navigate(-1)} className="idv-back-btn"><ArrowLeft size={18} />Back</button>
         <h1 className="idv-title">Market Sentiment & Holdings</h1>
       </div>
       <div className="idv-error"><AlertTriangle size={20} /> {error}</div>
@@ -84,9 +82,6 @@ const InvestmentDetailsView = () => {
   return (
     <div className="idv-page">
       <div className="idv-header">
-        <button onClick={() => navigate(-1)} className="idv-back-btn">
-          <ArrowLeft size={18} />Back
-        </button>
         <h1 className="idv-title">Market Sentiment & Holdings</h1>
         <div className="idv-header-badge"><AIBadge size="sm" /></div>
       </div>

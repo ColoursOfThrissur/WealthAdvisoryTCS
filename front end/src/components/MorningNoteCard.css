@@ -37,6 +37,19 @@
   margin: 0;
 }
 
+.morning-note-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.morning-note-card__subtitle {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin: 0;
+  font-weight: 400;
+}
+
 .refresh-btn {
   background: transparent;
   border: 1px solid var(--glass-border);
@@ -152,7 +165,7 @@
   line-height: 1.5;
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

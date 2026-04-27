@@ -91,10 +91,6 @@ const PortfolioRebalancingNative = () => {
     return (
       <div className="pr-page">
         <div className="pr-header">
-          <button onClick={() => navigate(-1)} className="pr-back-btn">
-            <ArrowLeft size={18} />
-            Back
-          </button>
         </div>
         <div style={{ padding: '2rem', textAlign: 'center' }}>Loading rebalancing data...</div>
       </div>
@@ -105,10 +101,6 @@ const PortfolioRebalancingNative = () => {
     return (
       <div className="pr-page">
         <div className="pr-header">
-          <button onClick={() => navigate(-1)} className="pr-back-btn">
-            <ArrowLeft size={18} />
-            Back
-          </button>
         </div>
         <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--error)' }}>
           Error: {error}
@@ -124,14 +116,6 @@ const PortfolioRebalancingNative = () => {
   return (
     <div className="pr-page">
       <div className="pr-header">
-        <button onClick={() => navigate(-1)} className="pr-back-btn">
-          <ArrowLeft size={18} />
-          Back
-        </button>
-        <button onClick={() => navigate('/')} className="pr-home-btn">
-          <Home size={16} />
-          Home
-        </button>
       </div>
       <div className="pr-content">
         {/* Recommended Option Summary */}

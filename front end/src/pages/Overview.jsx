@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Sparkles, Send, X, ArrowLeft, TrendingUp, FileText,
   AlertTriangle, User, BarChart3, DollarSign, Mail, Users,
@@ -17,6 +17,7 @@ const Overview = () => {
   const [eventData, setEventData] = useState(null);
   const { handleEventAlertClick } = useOverviewContext(setIsChatExpanded, setEventData);
   const navigate = useNavigate();
+  const location = useLocation();
   const [chatInput, setChatInput] = useState('');
   const [eventChatMessages, setEventChatMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,33 +32,82 @@ const Overview = () => {
 
   const [selectedProfileId, setSelectedProfileId] = useState(null);
 
-  const priorityProfiles = worklistData.rebalancing.slice(0, 6).map(c => ({
-    id: c.CustomerID,
-    name: `${c.FirstName} ${c.Surname}`,
-    aum: c.NetAssets,
-    return: c.PortfolioReturn,
-    risk: c.RiskProfile,
-    creditScore: c.CreditScore,
-    age: c.Age,
-    priority: c.Priority || 'Medium',
-    trigger: c.Trigger,
-    rebalanceReason: c.RebalanceReason,
-    keyContext: c.KeyContext || [],
-    intro: [
-      `${c.Age}y/o`,
-      c.Married ? 'married' : 'single',
-      c.BusinessOwner ? 'business owner' : null,
-      `${c.NumProducts} product${c.NumProducts !== 1 ? 's' : ''}`,
-    ].filter(Boolean).join(' · '),
-    actions: Array.isArray(c.RecommendedActions) && c.RecommendedActions.length && typeof c.RecommendedActions[0] === 'object'
-      ? c.RecommendedActions
-      : [
-          { label: c.RebalanceReason, route: '/worklist/rebalancing' },
-          ...(c.FirstName === 'Mary' ? [{ label: 'Meeting Prep — 10:00 AM', route: `/meeting-prep/${c.CustomerID}` }] : []),
-          ...(c.Priority === 'Critical' && c.FirstName !== 'Mary' ? [{ label: 'Market Event Mailer', route: '/' }] : []),
-          ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
-        ],
-  }));
+  const priorityProfiles = [
+    ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(0, 1).map(c => ({
+      id: c.CustomerID,
+      name: `${c.FirstName} ${c.Surname}`,
+      aum: c.NetAssets,
+      return: c.PortfolioReturn,
+      risk: c.RiskProfile,
+      creditScore: c.CreditScore,
+      age: c.Age,
+      priority: c.Priority || 'Medium',
+      riskLabel: c.FirstName === 'Mary' ? 'Moderate Growth' : null,
+      trigger: c.Trigger,
+      rebalanceReason: c.RebalanceReason,
+      keyContext: c.KeyContext || [],
+      intro: [
+        `${c.Age}y/o`,
+        c.Married ? 'married' : 'single',
+        c.BusinessOwner ? 'business owner' : null,
+        `${c.NumProducts} product${c.NumProducts !== 1 ? 's' : ''}`,
+      ].filter(Boolean).join(' \u00b7 '),
+      actions: Array.isArray(c.RecommendedActions) && c.RecommendedActions.length && typeof c.RecommendedActions[0] === 'object'
+        ? c.RecommendedActions
+        : [
+            { label: c.RebalanceReason, route: `/client/${c.CustomerID}/rebalancing` },
+            ...(c.FirstName === 'Mary' ? [{ label: 'Meeting Prep \u2014 10:00 AM', route: `/meeting-prep/${c.CustomerID}` }] : []),
+            ...(c.Priority === 'Critical' && c.FirstName !== 'Mary' ? [{ label: 'Market Event Mailer', route: '/' }] : []),
+            ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
+          ],
+    })),
+    {
+      id: 15678284,
+      name: 'Sam Pai',
+      aum: 390000,
+      return: 0.087,
+      risk: 0.23,
+      creditScore: 590,
+      age: 35,
+      priority: 'Medium',
+      trigger: 'Market conditions and portfolio positioning makes this the right opportunity to advance the client\'s long-term goals with a timely proposal',
+      rebalanceReason: 'Investment Proposal Review',
+      keyContext: ['Portfolio trend: Moderate growth, business owner', 'Client Sensitivity: Family financial planning \u2191', 'Market Backdrop: Rate uncertainty'],
+      intro: '35y/o \u00b7 married \u00b7 business owner \u00b7 3 products',
+      actions: [
+        { label: 'Investment Proposal Review', route: '/action/proposal/15678284' },
+        { label: 'Engagement Letter', route: '/client/15678284/profile' },
+      ],
+    },
+    ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(1, 5).map(c => ({
+      id: c.CustomerID,
+      name: `${c.FirstName} ${c.Surname}`,
+      aum: c.NetAssets,
+      return: c.PortfolioReturn,
+      risk: c.RiskProfile,
+      creditScore: c.CreditScore,
+      age: c.Age,
+      priority: c.Priority || 'Medium',
+      riskLabel: null,
+      trigger: c.Trigger,
+      rebalanceReason: c.RebalanceReason,
+      keyContext: c.KeyContext || [],
+      intro: [
+        `${c.Age}y/o`,
+        c.Married ? 'married' : 'single',
+        c.BusinessOwner ? 'business owner' : null,
+        `${c.NumProducts} product${c.NumProducts !== 1 ? 's' : ''}`,
+      ].filter(Boolean).join(' \u00b7 '),
+      actions: Array.isArray(c.RecommendedActions) && c.RecommendedActions.length && typeof c.RecommendedActions[0] === 'object'
+        ? c.RecommendedActions
+        : [
+            { label: c.RebalanceReason, route: `/client/${c.CustomerID}/rebalancing` },
+            ...(c.FirstName === 'Mary' ? [{ label: 'Meeting Prep \u2014 10:00 AM', route: `/meeting-prep/${c.CustomerID}` }] : []),
+            ...(c.Priority === 'Critical' && c.FirstName !== 'Mary' ? [{ label: 'Market Event Mailer', route: '/' }] : []),
+            ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
+          ],
+    })),
+  ];
 
   const selectedProfile = priorityProfiles.find(p => p.id === selectedProfileId) || priorityProfiles[0];
 
@@ -65,16 +115,19 @@ const Overview = () => {
     { name: 'Portfolio Rebalancing', count: 12, critical: 3, icon: <TrendingUp size={16} />, onClick: () => navigate('/worklist/rebalancing') },
     { name: 'Investment Proposals',  count: 8,  critical: 2, icon: <FileText size={16} />,   onClick: () => navigate('/worklist/proposals') },
     { name: 'Tax Analysis',          count: 3,  critical: 0, icon: <TrendingUp size={16} />, onClick: () => navigate('/worklist/rebalancing') },
-    { name: 'Market Event Mailers',  count: 2,  critical: 2, icon: <AlertTriangle size={16} />, onClick: handleEventAlertClick },
     { name: 'Invest Idle Cash',      count: 5,  critical: 1, icon: <DollarSign size={16} />,  onClick: () => {} },
     { name: 'KYC Expiring',          count: 1,  critical: 1, icon: <User size={16} />,        onClick: () => {} },
     { name: 'Portfolio Review',      count: 12, critical: 0, icon: <BarChart3 size={16} />,   onClick: () => navigate('/worklist/rebalancing') },
   ];
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    if (window.location.pathname === '/chat' || searchParams.get('mode')) setIsChatExpanded(true);
-  }, []);
+    const searchParams = new URLSearchParams(location.search);
+    if (location.pathname === '/chat' || searchParams.get('mode')) setIsChatExpanded(true);
+    if (searchParams.get('event') === 'mailer') {
+      handleEventAlertClick('market-event');
+      navigate('/', { replace: true });
+    }
+  }, [location.search]);
 
   const handleScroll = (e) => setShowScrollTop(e.target.scrollTop > 300);
 
@@ -419,7 +472,7 @@ const Overview = () => {
                   <div className="ov-profile-detail__metrics">
                     {[['AUM', fmt(selectedProfile.aum), false],
                       ['Return', `+${(selectedProfile.return*100).toFixed(1)}%`, true],
-                      ['Risk', `${(selectedProfile.risk*100).toFixed(0)}%`, false],
+                      ['Risk', selectedProfile.riskLabel || `${(selectedProfile.risk*100).toFixed(0)}%`, false],
                       ['Credit', selectedProfile.creditScore, false],
                       ['Age', selectedProfile.age, false]
                     ].map(([label, val, green]) => (
@@ -442,16 +495,6 @@ const Overview = () => {
                     </p>
                   </div>
 
-                  {selectedProfile.keyContext?.length > 0 && (
-                    <div className="ov-profile-detail__section">
-                      <span className="ov-profile-detail__section-label">Key Context</span>
-                      <div className="ov-profile-detail__context">
-                        {selectedProfile.keyContext.map((ctx, i) => (
-                          <div key={i} className="ov-profile-detail__context-item">{ctx}</div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
 
                   <div className="ov-profile-detail__section">
                     <span className="ov-profile-detail__section-label">Recommended Actions</span>
@@ -481,16 +524,16 @@ const Overview = () => {
           {/* Today's Meetings */}
           <div className="ov-card overview__meetings">
             <div className="ov-card__head">
-              <span className="ov-card__title">Today's Meetings</span>
+              <span className="ov-card__title">Meeting Intelligence</span>
               <span className="ov-view-all" onClick={() => navigate('/prioritize')}>View More</span>
             </div>
             <div className="ov-meetings-body">
               {[
-                { time: '10:00', period: 'AM', client: 'Alex Morgan', topic: 'Quarterly Review', btn: 'Prep', clientId: null },
+                { time: '10:00', period: 'AM', client: 'Alex Morgan', topic: 'Quarterly Review', btn: 'Prep', clientId: '15600001' },
                 { time: '2:30',  period: 'PM', client: 'Jean Williams', topic: 'Investment Planning', btn: 'Prep', clientId: '15740900' },
-                { time: '4:00',  period: 'PM', client: 'Miguel Angel', topic: 'Portfolio Review', btn: 'Prep', clientId: '15710689' },
+                { time: '4:00',  period: 'PM', client: 'Marcus Thompson', topic: 'Portfolio Review', btn: 'Prep', clientId: '15623828' },
               ].map(m => (
-                <div key={m.client} className="ov-meeting-row">
+                <div key={m.client} className="ov-meeting-row" style={{ cursor: 'pointer' }} onClick={() => m.clientId && navigate(`/meeting-prep/${m.clientId}`)}>
                   <div className="ov-meeting-row__time">
                     <span>{m.time}</span>
                     <span className="ov-meeting-row__period">{m.period}</span>
@@ -506,35 +549,13 @@ const Overview = () => {
                 </div>
               ))}
 
-              {/* Market Event Alert — below meetings, same row structure */}
-              {!hideCompletedEvent && (
-                <div
-                  className="ov-meeting-row ov-meeting-row--event"
-                  onClick={!eventCompleted ? handleEventAlertClick : undefined}
-                  style={{ cursor: eventCompleted ? 'default' : 'pointer' }}
-                >
-                  <div className="ov-meeting-row__time">
-                    {eventCompleted
-                      ? <span style={{ color: 'var(--success)', fontSize: '1rem' }}>✓</span>
-                      : <AlertTriangle size={16} style={{ color: 'var(--warning)' }} />
-                    }
-                  </div>
-                  <div className="ov-meeting-row__info">
-                    <span className="ov-meeting-row__client" style={{ color: eventCompleted ? 'var(--success)' : undefined }}>
-                      {eventCompleted ? 'Event Resolved — Communications sent' : activeMarketEvent.title}
-                    </span>
-                    {!eventCompleted && <span className="ov-meeting-row__topic">{activeMarketEvent.impactSummary.totalAffected} clients affected</span>}
-                  </div>
-                  {!eventCompleted && <ChevronRight size={14} style={{ color: 'var(--warning)', flexShrink: 0 }} />}
-                </div>
-              )}
             </div>
           </div>
 
           {/* AI Agentic Actions */}
           <div className="ov-card overview__actions">
             <div className="ov-card__head">
-              <span className="ov-card__title">AI Agentic Actions</span>
+              <span className="ov-card__title">Portfolio Monitor</span>
               <span className="ov-ai-badge"><Sparkles size={10} /> AI</span>
             </div>
             <div className="ov-actions-list">

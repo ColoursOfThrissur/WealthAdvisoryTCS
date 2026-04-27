@@ -74,10 +74,6 @@ const ClientProfileView = () => {
     return (
       <div className="cpv-page">
         <div className="cpv-header">
-          <button onClick={() => navigate(-1)} className="cpv-back-btn">
-            <ArrowLeft size={18} />
-            Back
-          </button>
           <h1 className="cpv-title">Client Portfolio</h1>
         </div>
         <div className="cpv-loading">
@@ -93,10 +89,6 @@ const ClientProfileView = () => {
     return (
       <div className="cpv-page">
         <div className="cpv-header">
-          <button onClick={() => navigate(-1)} className="cpv-back-btn">
-            <ArrowLeft size={18} />
-            Back
-          </button>
           <h1 className="cpv-title">Client Portfolio</h1>
         </div>
         <div className="cpv-error">
@@ -133,10 +125,6 @@ const ClientProfileView = () => {
   return (
     <div className="cpv-page">
       <div className="cpv-header">
-        <button onClick={() => navigate(-1)} className="cpv-back-btn">
-          <ArrowLeft size={18} />
-          Back
-        </button>
         <h1 className="cpv-title">Client Portfolio — {data.client_name}</h1>
       </div>
 

@@ -214,7 +214,6 @@
 }
 
 .mp-section__head svg {
-  color: var(--success);
   flex-shrink: 0;
 }
 
@@ -230,6 +229,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.mp-section__num svg {
+  color: var(--bg-primary);
 }
 
 .mp-section__title {
@@ -761,5 +764,208 @@
 
   .mp-bottomline {
     flex-direction: column;
+  }
+}
+
+/* ── Metrics Grid ── */
+.mp-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.mp-metric-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.mp-metric-card__value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mp-metric-card__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.mp-metric-card__note {
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+}
+
+/* ── Two Column Layout ── */
+.mp-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+/* ── Lists ── */
+.mp-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.mp-list li {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: var(--space-md);
+  position: relative;
+}
+
+.mp-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+
+.mp-list--risk li::before { background: var(--error); }
+.mp-list--opp li::before { background: var(--success); }
+.mp-list--action li::before { background: var(--info); }
+
+/* ── Timeline ── */
+.mp-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.mp-timeline-item {
+  padding: var(--space-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--success);
+  border-radius: var(--radius-md);
+}
+
+.mp-timeline-item__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.mp-timeline-item__label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.mp-timeline-item__date {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+}
+
+.mp-timeline-item__obj {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-sm) 0;
+  line-height: 1.5;
+}
+
+.mp-timeline-item__meta {
+  display: flex;
+  gap: var(--space-xl);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+}
+
+.mp-timeline-item__meta strong {
+  color: var(--text-primary);
+}
+
+.mp-timeline-item__obs {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  font-style: italic;
+  margin: var(--space-sm) 0 0 0;
+}
+
+/* ── Agenda ── */
+.mp-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.mp-agenda-item {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+}
+
+.mp-agenda-item__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.mp-agenda-item__num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--success);
+  color: var(--bg-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mp-agenda-item__title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.mp-agenda-item__time {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+}
+
+@media (max-width: 1024px) {
+  .mp-two-col {
+    grid-template-columns: 1fr;
+  }
+  .mp-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .mp-metrics-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -153,10 +153,6 @@ const ClientDetail = () => {
     return (
       <div className="client-detail-page">
         <div className="client-detail-header">
-          <button className="back-button" onClick={() => navigate(-1)}>
-            <ArrowLeft size={18} />
-            Back
-          </button>
           <div className="client-detail-title-group">
             <h1 className="client-detail-title">Client Detail</h1>
           </div>
@@ -175,10 +171,6 @@ const ClientDetail = () => {
     return (
       <div className="client-detail-page">
         <div className="client-detail-header">
-          <button className="back-button" onClick={() => navigate(-1)}>
-            <ArrowLeft size={18} />
-            Back
-          </button>
           <div className="client-detail-title-group">
             <h1 className="client-detail-title">Client Detail</h1>
           </div>
@@ -268,10 +260,6 @@ const ClientDetail = () => {
   return (
     <div className="client-detail-page">
       <div className="client-detail-header">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          <ArrowLeft size={18} />
-          Back
-        </button>
         <div className="client-detail-title-group">
           <h1 className="client-detail-title">{client.client_name || 'Client'}</h1>
         </div>

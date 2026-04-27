@@ -88,10 +88,6 @@ const ProposalsWorklist = () => {
   return (
     <div className="worklist-page">
       <div className="worklist-header">
-        <button className="back-button" onClick={() => navigate('/')}>
-          <ArrowLeft size={18} />
-          Back
-        </button>
         <div className="worklist-title">
           <FileText size={24} />
           <h1>Investment Proposals</h1>

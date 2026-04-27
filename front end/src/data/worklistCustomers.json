@@ -283,49 +283,6 @@
   ],
   "rebalancing": [
     {
-      "CustomerID": 15600001,
-      "Surname": "Morgan",
-      "FirstName": "Alex",
-      "CreditScore": 590,
-      "Country": "France",
-      "Gender": "Male",
-      "Married": false,
-      "Age": 42,
-      "Dependents": 0,
-      "NumBankAccts": 2,
-      "HasCrCard": true,
-      "EstimatedSalary": 145000,
-      "Mortgage": false,
-      "RiskProfile": 0.55,
-      "Debt": 0,
-      "NetAssets": 500000,
-      "PortfolioReturn": 0.123,
-      "Diversification": 0.42,
-      "BusinessOwner": false,
-      "Revenue": 80000,
-      "CashInHand": 12000,
-      "Margin": 0.10,
-      "LifeInsurance": false,
-      "NumTransactions": 6,
-      "LastTransactionDate": "2024-03-10",
-      "LastTransactionAmt": 5000,
-      "ForeignAssets": 0.15,
-      "NumProducts": 3,
-      "Priority": "Critical",
-      "RebalanceReason": "Meeting Prep Summary Review",
-      "Trigger": "Strong 12-month equity-led gains — volatility awareness elevated",
-      "KeyContext": [
-        "Portfolio trend: Strong 12-month equity-led gains",
-        "Client Sensitivity: Volatility awareness ↑",
-        "Market Backdrop: Geopolitical Volatility, Rate cuts delayed"
-      ],
-      "RecommendedActions": [
-        { "label": "Meeting Prep Summary Review", "route": "/meeting-prep/15600001" },
-        { "label": "Align on Rebalancing Plan", "route": "/worklist/rebalancing" },
-        { "label": "Follow-up for Approval & Execution", "route": "/worklist/rebalancing" }
-      ]
-    },
-    {
       "CustomerID": 15634602,
       "Surname": "Hargrave",
       "FirstName": "Mary",
@@ -356,16 +313,15 @@
       "NumProducts": 4,
       "Priority": "Critical",
       "RebalanceReason": "Rebalancing Options Review",
-      "Trigger": "Portfolio Drift Detected - Action Required",
+      "Trigger": "Consistent portfolio growth has increased equity concentration risk, coinciding with an upcoming goal milestone",
       "KeyContext": [
         "Portfolio trend: Growth in successive quarters, equity concentration risk",
         "Client Sensitivity: Goal-milestone ↑",
         "Market Backdrop: Earnings dispersion, Inflationary Trends"
       ],
       "RecommendedActions": [
-        { "label": "Rebalancing Options Review", "route": "/worklist/rebalancing" },
-        { "label": "Scenario Tests", "route": "/client/15634602/risk-analysis" },
-        { "label": "Schedule Meeting for Approval", "route": "/meeting-prep/15634602" }
+        { "label": "Rebalancing Options Review", "route": "/client/15634602/rebalancing" },
+        { "label": "KYC Check", "route": "/client/15634602/profile" }
       ]
     },
     {

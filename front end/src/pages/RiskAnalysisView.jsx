@@ -84,7 +84,6 @@ const RiskAnalysisView = () => {
   if (loading) return (
     <div className="rav-page">
       <div className="rav-header">
-        <button onClick={() => navigate(-1)} className="rav-back-btn"><ArrowLeft size={18} />Back</button>
         <h1 className="rav-title">Drift Analysis</h1>
       </div>
       <div className="rav-loading">
@@ -97,7 +96,6 @@ const RiskAnalysisView = () => {
   if (error) return (
     <div className="rav-page">
       <div className="rav-header">
-        <button onClick={() => navigate(-1)} className="rav-back-btn"><ArrowLeft size={18} />Back</button>
         <h1 className="rav-title">Drift Analysis</h1>
       </div>
       <div className="rav-error"><AlertTriangle size={20} style={{ display: 'inline', marginRight: '8px' }} />{error}</div>
@@ -112,9 +110,6 @@ const RiskAnalysisView = () => {
   return (
     <div className="rav-page">
       <div className="rav-header">
-        <button onClick={() => navigate(-1)} className="rav-back-btn">
-          <ArrowLeft size={18} />Back
-        </button>
         <h1 className="rav-title">Drift Analysis</h1>
         <div className="rav-header-badge"><AIBadge size="sm" /></div>
       </div>

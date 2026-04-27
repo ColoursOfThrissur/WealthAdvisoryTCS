@@ -123,10 +123,7 @@ const InvestmentProposalSimple = () => {
     ) : (
     <div className="ip-simple-page">
       <div className="ip-simple-header">
-        <button onClick={() => navigate('/worklist/proposals')} className="ip-back-btn">
-          <ArrowLeft size={18} />
-          Back to Worklist
-        </button>
+        <h1 className="ip-title">Investment Proposal</h1>
         <button onClick={() => navigate('/')} className="ip-home-btn">
           <Home size={16} />
           Home

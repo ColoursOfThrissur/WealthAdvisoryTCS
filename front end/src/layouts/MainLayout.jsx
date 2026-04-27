@@ -1,10 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft, Home } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import MorningNoteBanner from '../components/MorningNoteBanner';
 import './MainLayout.css';
 
 const MainLayout = ({ children, activeTab, onTabChange }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   return (
     <div className="main-layout">
@@ -26,6 +29,7 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
             <div className="brand-logo-text">
               <span>Agentic</span>
               <span>Wealth Advisor</span>
+              <span className="brand-powered-by">powered by TCS</span>
             </div>
           </div>
         </div>
@@ -39,10 +43,16 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
             Cockpit
           </button>
           <button
-            className={`main-layout__tab${activeTab === 'client-engine' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => onTabChange('client-engine')}
+            className={`main-layout__tab${activeTab === 'advisor-assist' ? ' main-layout__tab--active' : ''}`}
+            onClick={() => onTabChange('advisor-assist')}
           >
-            Client Engine
+            Advisor Assist
+          </button>
+          <button
+            className={`main-layout__tab${activeTab === 'meeting-assist' ? ' main-layout__tab--active' : ''}`}
+            onClick={() => onTabChange('meeting-assist')}
+          >
+            Meeting Assist
           </button>
         </div>
 
@@ -64,8 +74,8 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
               <span className="ticker-value">250</span>
             </div>
           </div>
-          <ThemeToggle />
           <div className="main-layout__user-profile">
+            <ThemeToggle />
             <div className="user-profile-avatar">
               <img src="/wealthmanager.png" alt="Profile" />
             </div>
@@ -74,7 +84,18 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
         </div>
       </header>
 
-      <MorningNoteBanner />
+      {isHome ? (
+        <MorningNoteBanner />
+      ) : (
+        <div className="mnb-root mnb-nav">
+          <button className="mnb-nav-btn" onClick={() => navigate(-1)}>
+            <ArrowLeft size={14} /> Back
+          </button>
+          <button className="mnb-nav-btn" onClick={() => navigate('/')}>
+            <Home size={14} /> Home
+          </button>
+        </div>
+      )}
 
       <main className="main-layout__content">
         {children}

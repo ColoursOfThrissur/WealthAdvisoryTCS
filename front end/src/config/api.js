@@ -1,34 +1,44 @@
 /**
- * API base URL - empty means same-origin (production behind nginx proxy)
- * Set VITE_API_BASE_URL in .env for custom backend URL
+ * API Configuration
+ * 
+ * Priority: VITE env var → localhost fallback (dev) → same-origin (prod)
+ * 
+ * In dev:  falls back to localhost ports
+ * In prod: reads from .env.production or Vercel env vars
  */
+
+const DEV = import.meta.env.DEV;
+
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ??
-  (import.meta.env.DEV ? 'http://localhost:8001' : '');
+  import.meta.env.VITE_API_BASE_URL ||
+  (DEV ? 'http://localhost:8001' : '');
 
 export const REBALANCING_API_URL =
-  import.meta.env.VITE_REBALANCING_API_URL ??
-  (import.meta.env.DEV ? 'http://localhost:8003' : '');
+  import.meta.env.VITE_REBALANCING_API_URL ||
+  (DEV ? 'http://localhost:8003' : '');
 
-/** Full URL for an API path (e.g. /api/health -> http://localhost:8000/api/health or /api/health) */
+/** Full URL for an API path (e.g. /api/health) */
 export const getApiUrl = (path) => {
   const base = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
   return `${base}${path.startsWith('/') ? path : '/' + path}`;
 };
 
 /**
- * WebSocket base URL - same-origin in production, localhost in dev
+ * WebSocket base URL
+ * Dev: ws://localhost:8001
+ * Prod: wss:// derived from API_BASE_URL or same-origin
  */
 export const getWsBaseUrl = () => {
   if (import.meta.env.VITE_WS_BASE_URL) {
     return import.meta.env.VITE_WS_BASE_URL;
   }
-  if (import.meta.env.DEV) {
-    return 'ws://localhost:8000';
+  if (DEV) {
+    return 'ws://localhost:8001';
   }
-  if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    return `${protocol}//${window.location.host}`;
+  // Production: derive from API_BASE_URL or window origin
+  const base = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+  if (base) {
+    return base.replace(/^http/, 'ws');
   }
-  return 'ws://localhost:8000';
+  return 'wss://wealth-advisory.107-21-43-216.sslip.io';
 };

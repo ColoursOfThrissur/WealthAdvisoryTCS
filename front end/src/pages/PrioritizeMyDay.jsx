@@ -18,10 +18,6 @@ const PrioritizeMyDay = () => {
   return (
     <div className="worklist-page">
       <div className="worklist-header">
-        <button className="back-button" onClick={() => navigate('/')}>
-          <ArrowLeft size={18} />
-          Back
-        </button>
         <div className="worklist-title">
           <Calendar size={24} />
           <h1>Prioritize My Day</h1>

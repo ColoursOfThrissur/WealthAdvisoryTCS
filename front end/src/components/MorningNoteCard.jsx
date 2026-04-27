@@ -245,7 +245,10 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
         <div className="morning-note-card__header">
           <div className="header-left">
             <FileText size={20} />
-            <h3>Morning Notes</h3>
+            <div className="morning-note-card__titles">
+              <h3>Morning Notes</h3>
+              <p className="morning-note-card__subtitle">Today's market insights & key updates</p>
+            </div>
           </div>
           <button 
             className={`refresh-btn ${refreshing ? 'spinning' : ''}`}
@@ -276,7 +279,7 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
                     {section.content.find(l => l.trim() && !l.startsWith('#'))?.replace(/\*\*/g, '').substring(0, 120) || ''}
                   </p>
                 </div>
-                <span className="summary-view-more">...view more</span>
+                <span className="summary-view-more">View More</span>
               </div>
             ))}
           </div>

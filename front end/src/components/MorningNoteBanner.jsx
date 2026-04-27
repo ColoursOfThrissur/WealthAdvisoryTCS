@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { TrendingUp, RefreshCw, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { TrendingUp, RefreshCw, ChevronDown, AlertTriangle } from 'lucide-react';
 import useMorningNotes from '../hooks/useMorningNotes';
+import { activeMarketEvent } from '../data/marketEventData';
 import './MorningNoteBanner.css';
 
 const MorningNoteBanner = () => {
@@ -10,6 +12,8 @@ const MorningNoteBanner = () => {
   const [popupSection, setPopupSection] = useState(null);
   const timeoutRef = useRef(null);
   const pillRefs = useRef([]);
+  const pillsRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleMouseEnter = (idx) => {
     clearTimeout(timeoutRef.current);
@@ -25,7 +29,20 @@ const MorningNoteBanner = () => {
     timeoutRef.current = setTimeout(() => setActiveIdx(null), 150);
   };
 
-  // Close on scroll
+  // Convert vertical mouse wheel to horizontal scroll on pills
+  useEffect(() => {
+    const el = pillsRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaY) > 0) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [sections]);
+
   useEffect(() => {
     const close = () => setActiveIdx(null);
     window.addEventListener('scroll', close, true);
@@ -63,7 +80,7 @@ const MorningNoteBanner = () => {
 
         <div className="mnb-divider" />
 
-        <div className="mnb-pills">
+        <div className="mnb-pills" ref={pillsRef}>
           {sections.map((section, idx) => (
             <div
               key={idx}
@@ -72,10 +89,27 @@ const MorningNoteBanner = () => {
               onMouseEnter={() => handleMouseEnter(idx)}
               onMouseLeave={handleMouseLeave}
             >
-              <span className="mnb-pill__title">{section.title}</span>
+              <div className="mnb-pill__text">
+                <span className="mnb-pill__title">{section.title}</span>
+                <span className="mnb-pill__subtitle">
+                  {section.content.find(l => l.trim() && !l.startsWith('#'))?.replace(/\*\*/g, '').substring(0, 120) || ''}
+                </span>
+              </div>
               <ChevronDown size={11} className="mnb-pill__chevron" />
             </div>
           ))}
+
+          {/* Market event pill */}
+          <div
+            className="mnb-pill mnb-pill--event"
+            onClick={() => navigate('/?event=mailer')}
+          >
+            <AlertTriangle size={11} className="mnb-pill__event-icon" />
+            <div className="mnb-pill__text">
+              <span className="mnb-pill__title">{activeMarketEvent.title}</span>
+              <span className="mnb-pill__subtitle">{activeMarketEvent.subtitle}</span>
+            </div>
+          </div>
         </div>
 
         <button
@@ -95,13 +129,12 @@ const MorningNoteBanner = () => {
           onMouseEnter={() => { clearTimeout(timeoutRef.current); }}
           onMouseLeave={handleMouseLeave}
         >
-          <p className="mnb-dropdown__title">{activeSection.title}</p>
           <p className="mnb-dropdown__preview">{getPreview(activeSection)}</p>
           <button
             className="mnb-dropdown__more"
             onClick={() => { setPopupSection(activeSection); setActiveIdx(null); }}
           >
-            View full note →
+            View More
           </button>
         </div>
       )}

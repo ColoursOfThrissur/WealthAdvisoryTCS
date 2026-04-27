@@ -85,26 +85,24 @@ export const parseSections = (output = '') => {
  */
 const HARDCODED_SECTIONS = [
   {
-    title: 'Middle East Volatility',
+    title: 'Fed Rate Cuts Delayed',
     content: [
-      'Middle East Geopolitical Risks driving Volatility & Inflation',
-      '45 Portfolios exposed to energy & commodities, 12 clients sensitive',
-      'Diversification and income assets focus recommended',
+      'Elevated inflation and geopolitical climate will push cuts to 2026 end',
+      'As bond yields become more attractive and intermediate duration bonds regain relevance as stabilizers, this will impact 45 bond heavy portfolios and 12 clients sensitive to income stability',
     ],
   },
   {
-    title: 'Fed Rate Cuts Delayed',
+    title: 'Dispersed Q1 Tech Results',
     content: [
-      'Fed Rate Cuts delayed and bond yields gain relevance',
-      '34 Portfolios bond heavy, 8 clients reliant on income stability',
-      'Bond repositioning as strategic investment prudent',
+      'Semiconductor & AI companies earn high, Software & services weak',
+      '34 portfolios heavily exposed to big tech and software services will face sharp drawdowns on earnings data; 8 clients are particularly sensitive to headlines based volatility',
     ],
   },
   {
     title: 'Key Events Today',
     content: [
-      'Microsoft Q1 Tech & AI Earnings',
-      'Inflation & Q1 GDP growth data',
+      'MSFT, GOOGL, META earnings',
+      'Q1 GDP, PCE inflation data',
     ],
   },
 ];

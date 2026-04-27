@@ -76,7 +76,6 @@ const IPSView = () => {
     return (
       <div className="ips-page">
         <div className="ips-header">
-          <button onClick={() => navigate(-1)} className="ips-back-btn"><ArrowLeft size={18} /> Back</button>
           <h1 className="ips-title">IPS</h1>
         </div>
         <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-tertiary)' }}>Loading IPS data...</div>
@@ -87,10 +86,6 @@ const IPSView = () => {
   return (
     <div className="ips-page">
       <div className="ips-header">
-        <button onClick={() => navigate(-1)} className="ips-back-btn">
-          <ArrowLeft size={18} />
-          Back
-        </button>
         <h1 className="ips-title">IPS</h1>
       </div>
 

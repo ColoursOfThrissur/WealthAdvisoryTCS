@@ -66,7 +66,7 @@
   color: var(--text-tertiary);
 }
 
-.brand-logo-text span:last-child {
+.brand-logo-text span:nth-child(2) {
   font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -75,6 +75,17 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   white-space: nowrap;
+}
+
+.brand-powered-by {
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  -webkit-text-fill-color: var(--text-tertiary);
+  background: none;
+  opacity: 0.5;
+  margin-top: 1px;
 }
 
 /* Center: Tabs — flex:1 so they fill the space between equal left/right */
@@ -166,9 +177,7 @@
   flex-shrink: 0;
 }
 
-.main-layout__right .theme-toggle {
-  flex-shrink: 0;
-}
+
 
 .main-layout__user-profile {
   display: flex;

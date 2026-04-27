@@ -108,10 +108,6 @@ const RebalancingWorklist = () => {
     return (
       <div className="worklist-page">
         <div className="worklist-header">
-          <button className="back-button" onClick={() => navigate('/')}>
-            <ArrowLeft size={18} />
-            Back
-          </button>
           <div className="worklist-title">
             <TrendingUp size={24} />
             <h1>Rebalancing Portfolio List</h1>
@@ -130,10 +126,6 @@ const RebalancingWorklist = () => {
     return (
       <div className="worklist-page">
         <div className="worklist-header">
-          <button className="back-button" onClick={() => navigate('/')}>
-            <ArrowLeft size={18} />
-            Back
-          </button>
           <div className="worklist-title">
             <TrendingUp size={24} />
             <h1>Rebalancing Portfolio List</h1>
@@ -207,10 +199,6 @@ const RebalancingWorklist = () => {
   return (
     <div className="worklist-page">
       <div className="worklist-header">
-        <button className="back-button" onClick={() => navigate('/')}>
-          <ArrowLeft size={18} />
-          Back
-        </button>
         <div className="worklist-title">
           <TrendingUp size={24} />
           <h1>Rebalancing Portfolio List</h1>
@@ -287,6 +275,7 @@ const RebalancingWorklist = () => {
                 {filteredClients.map((client) => renderRow(client))}
                 {MOCK_CLIENTS
                   .filter(c => !searchTerm || c.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                  .filter(c => !clients.some(api => api.name === c.name))
                   .map((client) => renderRow(client))}
               </tbody>
             </table>
