@@ -7,7 +7,6 @@ import {
   Search, Compass, Brain, ArrowUpDown, MinusCircle, PlusCircle,
   Map, Activity
 } from 'lucide-react';
-import { portfolioRebalancingData, riskAnalysisData } from '../data/mockData';
 import AIBadge from '../components/AIBadge';
 import './MeetingPrep.css';
 
@@ -33,16 +32,15 @@ const PORTFOLIO_SNAPSHOT = [
 ];
 
 const RECOMMENDED_TRADES = [
-  { action: 'TRIM', ticker: 'FSPGX', name: 'Fidelity Large Cap Growth Index', rationale: 'Reduce equity overweight & IT concentration', amount: '$25,000', type: 'sell' },
-  { action: 'TRIM', ticker: 'AEPGX', name: 'American Funds EuroPacific Growth', rationale: 'Reduce international overweight', amount: '$15,000', type: 'sell' },
-  { action: 'ADD', ticker: 'ABNDX', name: 'American Funds Bond Fund of America', rationale: 'Increase fixed income to target', amount: '$20,000', type: 'buy' },
-  { action: 'ADD', ticker: 'CWBFX', name: 'American Funds Capital World Bond', rationale: 'Restore bond allocation to IPS target', amount: '$20,000', type: 'buy' },
+  { action: 'TRIM', ticker: 'ABNDX', name: 'American Funds Bond Fund of America', rationale: 'Bond overweight', clientBrainRationale: 'Reduces rate sensitivity that historically triggers client anxiety', amount: '$20,000', type: 'sell' },
+  { action: 'TRIM', ticker: 'CWBFX', name: 'American Funds Capital World Bond', rationale: 'Diversification trim', clientBrainRationale: 'High macro complexity relative to client confidence', amount: '$20,000', type: 'sell' },
+  { action: 'ADD', ticker: 'AMECX', name: 'American Funds Investment Co. of America', rationale: 'Income stability', clientBrainRationale: 'Reinforces income narrative aligned with client\'s comfort anchor', amount: '$20,000', type: 'buy' },
+  { action: 'ADD', ticker: 'AEPGX', name: 'American Funds EuroPacific Growth', rationale: 'Intl diversification', clientBrainRationale: 'Proven psychological tolerance historically > US growth volatility', amount: '$20,000', type: 'buy' },
 ];
 
 const ADVISORY_ACTIONS = [
   { icon: Search, label: 'Cost Efficiency', detail: 'Review portfolio expense ratios — CWBFX at 0.98% is highest; consider lower-cost alternatives.' },
   { icon: Compass, label: 'Objective Alignment', detail: 'Reinforce long-term investment strategy and IPS objectives with client.' },
-  { icon: Brain, label: 'Client Psychology', detail: 'Monitor market sentiment — client flagged as anxious. Implement changes gradually.' },
 ];
 
 const DISCUSSION_ANGLES = [
@@ -50,25 +48,37 @@ const DISCUSSION_ANGLES = [
     icon: BarChart3,
     label: 'Portfolio Perspective',
     color: 'info',
-    text: '"Mary, your portfolio is currently over-allocated to equities relative to our long-term target. We want to correct this drift to ensure your risk stays within the agreed IPS boundaries."'
+    original: 'Equity underallocation',
+    originalDetail: '"Mary, your portfolio is currently over-allocated to equities relative to our long-term target. We want to correct this drift to ensure your risk stays within the agreed IPS boundaries."',
+    clientBrain: 'Gap relative to client\'s behavioral tolerance',
+    clientBrainDetail: '"Mary, based on how you\'ve responded to past market swings, we\'re adjusting your equity exposure to sit within the range where you\'ve historically felt most comfortable — not just what the model says."',
   },
   {
     icon: Brain,
     label: 'Behavioural Perspective',
     color: 'warning',
-    text: '"I know market headlines have been stressful. That\'s why we are implementing these changes gradually, rather than all at once, to reduce volatility and keep things smooth."'
+    original: 'Gradual changes',
+    originalDetail: '"I know market headlines have been stressful. That\'s why we are implementing these changes gradually, rather than all at once, to reduce volatility and keep things smooth."',
+    clientBrain: 'Matched to historical approval delays',
+    clientBrainDetail: '"We\'re pacing these changes in line with how you\'ve approved adjustments before — smaller, deliberate steps that align with your decision-making style."',
   },
   {
     icon: Activity,
     label: 'Fund-Level Perspective',
     color: 'success',
-    text: '"We are trimming FSPGX and AEPGX which have drifted above target, and adding back to ABNDX and CWBFX to restore your bond allocation and reduce overall portfolio beta."'
+    original: 'Tactical adjustment',
+    originalDetail: '"We are trimming ABNDX and CWBFX which have drifted above target, and adding back to AMECX and AEPGX to restore your allocation and reduce overall portfolio beta."',
+    clientBrain: 'Validated as optimal move with future scenarios',
+    clientBrainDetail: '"We ran this adjustment through multiple future scenarios — including the ones that have worried you most — and this rebalance holds up well across all of them."',
   },
   {
     icon: Map,
     label: 'Strategic Perspective',
     color: 'primary',
-    text: '"Think of this as a routine tune-up. This is a realignment to your existing, proven strategy — not a change in our overall game plan. Your long-term objectives remain unchanged."'
+    original: 'Statement',
+    originalDetail: '"Think of this as a routine tune-up. This is a realignment to your existing, proven strategy — not a change in our overall game plan. Your long-term objectives remain unchanged."',
+    clientBrain: 'Validated as optimal move with future scenarios',
+    clientBrainDetail: '"Your long-term plan remains intact. This is a precision adjustment — not a course change — and it\'s been validated against the scenarios most relevant to your goals."',
   },
 ];
 
@@ -76,6 +86,7 @@ const MeetingPrep = () => {
   const { clientId } = useParams();
   const navigate = useNavigate();
   const [expandedAngle, setExpandedAngle] = useState(null);
+  const [clientBrainEnabled, setClientBrainEnabled] = useState(false);
 
   const client = CLIENT_DATA[clientId] || CLIENT_DATA['15634602'];
 
@@ -103,6 +114,16 @@ const MeetingPrep = () => {
           <p className="mp-header__subtitle">{client.name}</p>
         </div>
         <div className="mp-header__right">
+          <div
+            className={`mp-brain-toggle ${clientBrainEnabled ? 'mp-brain-toggle--on' : ''}`}
+            onClick={() => setClientBrainEnabled(p => !p)}
+          >
+            <Brain size={15} />
+            <span>Client Brain</span>
+            <div className="mp-brain-toggle__switch">
+              <div className="mp-brain-toggle__knob" />
+            </div>
+          </div>
           <button className="mp-action-btn mp-action-btn--ghost">
             <Download size={15} /> Export PDF
           </button>
@@ -203,15 +224,17 @@ const MeetingPrep = () => {
           </div>
 
           <div className="mp-subsection">
-            <h3 className="mp-subsection__title">A. Recommended Trades — Rebalance ~$40,000 from Equities to Fixed Income</h3>
+            <h3 className="mp-subsection__title">A. Recommended Trades — Rebalance ~$40,000</h3>
             <div className="mp-table-wrap">
               <table className="mp-table">
                 <thead>
                   <tr>
                     <th>Action</th>
-                    <th>Ticker</th>
-                    <th>Fund Name</th>
-                    <th>Rationale</th>
+                    <th>Fund</th>
+                    <th>Original Rationale</th>
+                    {clientBrainEnabled && (
+                      <th className="mp-th--brain"><Brain size={12} /> Rationale with Client Brain</th>
+                    )}
                     <th>Est. Amount</th>
                   </tr>
                 </thead>
@@ -220,16 +243,15 @@ const MeetingPrep = () => {
                     <tr key={i}>
                       <td>
                         <span className={`mp-trade-badge mp-trade-badge--${t.type}`}>
-                          {t.type === 'sell'
-                            ? <MinusCircle size={12} />
-                            : <PlusCircle size={12} />
-                          }
+                          {t.type === 'sell' ? <MinusCircle size={12} /> : <PlusCircle size={12} />}
                           {t.action}
                         </span>
                       </td>
                       <td className="mp-td--ticker">{t.ticker}</td>
-                      <td>{t.name}</td>
                       <td className="mp-td--muted">{t.rationale}</td>
+                      {clientBrainEnabled && (
+                        <td className="mp-td--brain">{t.clientBrainRationale}</td>
+                      )}
                       <td className="mp-td--bold">{t.amount}</td>
                     </tr>
                   ))}
@@ -262,23 +284,31 @@ const MeetingPrep = () => {
             <h2 className="mp-section__title">Discussion Angles for Client Interaction</h2>
           </div>
           <p className="mp-section__desc">Use these talking points to guide the conversation with confidence and clarity.</p>
-          <div className="mp-angles-grid">
-            {DISCUSSION_ANGLES.map((a, i) => (
-              <div
-                key={i}
-                className={`mp-angle-card mp-angle-card--${a.color} ${expandedAngle === i ? 'mp-angle-card--open' : ''}`}
-                onClick={() => setExpandedAngle(expandedAngle === i ? null : i)}
-              >
-                <div className="mp-angle-card__head">
-                  <span className="mp-angle-icon"><a.icon size={16} /></span>
-                  <span className="mp-angle-label">{a.label}</span>
-                  {expandedAngle === i ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </div>
-                {expandedAngle === i && (
-                  <p className="mp-angle-text">{a.text}</p>
-                )}
-              </div>
-            ))}
+
+          <div className="mp-table-wrap">
+            <table className="mp-table">
+              <thead>
+                <tr>
+                  <th>Angle</th>
+                  <th>Original</th>
+                  {clientBrainEnabled && <th className="mp-th--brain"><Brain size={12} /> With Client Brain</th>}
+                </tr>
+              </thead>
+              <tbody>
+                {DISCUSSION_ANGLES.map((a, i) => (
+                  <tr key={i}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span className="mp-angle-icon" style={{ width: 28, height: 28 }}><a.icon size={14} /></span>
+                        <span className="mp-td--bold">{a.label}</span>
+                      </div>
+                    </td>
+                    <td className="mp-td--muted">{a.original}</td>
+                    {clientBrainEnabled && <td className="mp-td--brain">{a.clientBrain}</td>}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -318,6 +348,27 @@ const MeetingPrep = () => {
                   <span className="mp-bl-metric__val mp-bl-metric__val--green">~$40K</span>
                   <span className="mp-bl-metric__label">Rebalance Amount</span>
                 </div>
+                {clientBrainEnabled && (
+                  <div className="mp-bl-metric mp-bl-metric--brain">
+                    <div className="mp-acceptance-wrap">
+                      <div className="mp-acceptance-row">
+                        <span className="mp-acceptance-tag mp-acceptance-tag--orig">Original</span>
+                        <div className="mp-acceptance-bar">
+                          <div className="mp-acceptance-bar__fill mp-acceptance-bar__fill--orig" style={{ width: '40%' }} />
+                        </div>
+                        <span className="mp-acceptance-val">0.4</span>
+                      </div>
+                      <div className="mp-acceptance-row">
+                        <span className="mp-acceptance-tag mp-acceptance-tag--brain">Client Brain</span>
+                        <div className="mp-acceptance-bar">
+                          <div className="mp-acceptance-bar__fill mp-acceptance-bar__fill--brain" style={{ width: '80%' }} />
+                        </div>
+                        <span className="mp-acceptance-val mp-acceptance-val--brain">0.8</span>
+                      </div>
+                    </div>
+                    <span className="mp-bl-metric__label">Acceptance Probability</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

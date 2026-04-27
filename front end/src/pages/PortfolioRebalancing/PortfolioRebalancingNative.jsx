@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, TrendingUp, Newspaper, Target, FileText, ChevronDown, ChevronUp, ArrowRightLeft, AlertTriangle, BarChart3, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Home, TrendingUp, Newspaper, Target, FileText, ChevronDown, ChevronUp, ArrowRightLeft, AlertTriangle, BarChart3, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import clientDataService from '../../services/clientDataService';
 import './PortfolioRebalancingNative.css';
@@ -127,6 +127,10 @@ const PortfolioRebalancingNative = () => {
         <button onClick={() => navigate(-1)} className="pr-back-btn">
           <ArrowLeft size={18} />
           Back
+        </button>
+        <button onClick={() => navigate('/')} className="pr-home-btn">
+          <Home size={16} />
+          Home
         </button>
       </div>
       <div className="pr-content">

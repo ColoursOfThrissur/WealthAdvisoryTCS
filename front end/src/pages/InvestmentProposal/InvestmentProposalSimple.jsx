@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Target, TrendingUp, PieChart, ChevronDown, ChevronUp, FileText } from 'lucide-react';
+import { ArrowLeft, Home, Target, TrendingUp, PieChart, ChevronDown, ChevronUp, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -126,6 +126,10 @@ const InvestmentProposalSimple = () => {
         <button onClick={() => navigate('/worklist/proposals')} className="ip-back-btn">
           <ArrowLeft size={18} />
           Back to Worklist
+        </button>
+        <button onClick={() => navigate('/')} className="ip-home-btn">
+          <Home size={16} />
+          Home
         </button>
       </div>
 

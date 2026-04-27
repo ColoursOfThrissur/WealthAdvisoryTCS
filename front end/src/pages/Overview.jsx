@@ -42,18 +42,21 @@ const Overview = () => {
     priority: c.Priority || 'Medium',
     trigger: c.Trigger,
     rebalanceReason: c.RebalanceReason,
+    keyContext: c.KeyContext || [],
     intro: [
       `${c.Age}y/o`,
       c.Married ? 'married' : 'single',
       c.BusinessOwner ? 'business owner' : null,
       `${c.NumProducts} product${c.NumProducts !== 1 ? 's' : ''}`,
     ].filter(Boolean).join(' · '),
-    actions: [
-      { label: c.RebalanceReason, route: '/worklist/rebalancing' },
-      ...(c.FirstName === 'Mary' ? [{ label: 'Meeting Prep — 10:00 AM', route: `/meeting-prep/${c.CustomerID}` }] : []),
-      ...(c.Priority === 'Critical' && c.FirstName !== 'Mary' ? [{ label: 'Market Event Mailer', route: '/' }] : []),
-      ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
-    ],
+    actions: Array.isArray(c.RecommendedActions) && c.RecommendedActions.length && typeof c.RecommendedActions[0] === 'object'
+      ? c.RecommendedActions
+      : [
+          { label: c.RebalanceReason, route: '/worklist/rebalancing' },
+          ...(c.FirstName === 'Mary' ? [{ label: 'Meeting Prep — 10:00 AM', route: `/meeting-prep/${c.CustomerID}` }] : []),
+          ...(c.Priority === 'Critical' && c.FirstName !== 'Mary' ? [{ label: 'Market Event Mailer', route: '/' }] : []),
+          ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
+        ],
   }));
 
   const selectedProfile = priorityProfiles.find(p => p.id === selectedProfileId) || priorityProfiles[0];
@@ -439,6 +442,17 @@ const Overview = () => {
                     </p>
                   </div>
 
+                  {selectedProfile.keyContext?.length > 0 && (
+                    <div className="ov-profile-detail__section">
+                      <span className="ov-profile-detail__section-label">Key Context</span>
+                      <div className="ov-profile-detail__context">
+                        {selectedProfile.keyContext.map((ctx, i) => (
+                          <div key={i} className="ov-profile-detail__context-item">{ctx}</div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="ov-profile-detail__section">
                     <span className="ov-profile-detail__section-label">Recommended Actions</span>
                     <div className="ov-profile-detail__actions">
@@ -472,9 +486,9 @@ const Overview = () => {
             </div>
             <div className="ov-meetings-body">
               {[
-                { time: '10:00', period: 'AM', client: 'Mary Hargrave', topic: 'Portfolio Review', btn: 'Prep', clientId: '15634602' },
-                { time: '11:00', period: 'AM', client: 'Sam Pai', topic: 'Investment Strategy', btn: 'Join', live: true },
-                { time: '2:30',  period: 'PM', client: 'Alex Morgan', topic: 'Quarterly Review', btn: 'Prep', clientId: null },
+                { time: '10:00', period: 'AM', client: 'Alex Morgan', topic: 'Quarterly Review', btn: 'Prep', clientId: null },
+                { time: '2:30',  period: 'PM', client: 'Jean Williams', topic: 'Investment Planning', btn: 'Prep', clientId: '15740900' },
+                { time: '4:00',  period: 'PM', client: 'Miguel Angel', topic: 'Portfolio Review', btn: 'Prep', clientId: '15710689' },
               ].map(m => (
                 <div key={m.client} className="ov-meeting-row">
                   <div className="ov-meeting-row__time">

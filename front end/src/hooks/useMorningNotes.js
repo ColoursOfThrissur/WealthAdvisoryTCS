@@ -83,13 +83,39 @@ export const parseSections = (output = '') => {
  * useMorningNotes — fetches, caches (localStorage, daily), and exposes
  * parsed morning note sections. Safe for concurrent renders (ref guard).
  */
+const HARDCODED_SECTIONS = [
+  {
+    title: 'Middle East Volatility',
+    content: [
+      'Middle East Geopolitical Risks driving Volatility & Inflation',
+      '45 Portfolios exposed to energy & commodities, 12 clients sensitive',
+      'Diversification and income assets focus recommended',
+    ],
+  },
+  {
+    title: 'Fed Rate Cuts Delayed',
+    content: [
+      'Fed Rate Cuts delayed and bond yields gain relevance',
+      '34 Portfolios bond heavy, 8 clients reliant on income stability',
+      'Bond repositioning as strategic investment prudent',
+    ],
+  },
+  {
+    title: 'Key Events Today',
+    content: [
+      'Microsoft Q1 Tech & AI Earnings',
+      'Inflation & Q1 GDP growth data',
+    ],
+  },
+];
+
 const useMorningNotes = () => {
-  const [sections, setSections] = useState([]);
+  const [sections, setSections] = useState(HARDCODED_SECTIONS);
   const [rawOutput, setRawOutput] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(new Date().toISOString());
   const fetchingRef = useRef(false);
 
   const loadFromCache = () => {
@@ -187,7 +213,8 @@ const useMorningNotes = () => {
   }, []);
 
   useEffect(() => {
-    fetchMorningNote(false);
+    // endpoint preserved — skipped while hardcoded sections are active
+    // fetchMorningNote(false);
   }, [fetchMorningNote]);
 
   const refresh = useCallback(() => {

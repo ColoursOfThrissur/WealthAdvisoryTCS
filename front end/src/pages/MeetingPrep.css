@@ -593,6 +593,142 @@
   color: var(--success);
 }
 
+/* ── Client Brain Toggle ── */
+.mp-brain-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all var(--transition-base);
+  user-select: none;
+}
+
+.mp-brain-toggle svg {
+  color: var(--text-tertiary);
+  transition: color var(--transition-base);
+}
+
+.mp-brain-toggle--on {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(139, 92, 246, 0.08);
+  color: #a78bfa;
+}
+
+.mp-brain-toggle--on svg {
+  color: #a78bfa;
+}
+
+.mp-brain-toggle__switch {
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--glass-border);
+  position: relative;
+  transition: background var(--transition-base);
+  flex-shrink: 0;
+}
+
+.mp-brain-toggle--on .mp-brain-toggle__switch {
+  background: #8b5cf6;
+}
+
+.mp-brain-toggle__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform var(--transition-base);
+}
+
+.mp-brain-toggle--on .mp-brain-toggle__knob {
+  transform: translateX(14px);
+}
+
+/* ── Client Brain table column ── */
+.mp-th--brain {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #a78bfa !important;
+  white-space: nowrap;
+}
+
+.mp-td--brain {
+  color: #a78bfa;
+  font-size: 0.8125rem;
+  font-style: italic;
+}
+
+/* ── Acceptance Probability ── */
+.mp-bl-metric--brain {
+  min-width: 200px;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.mp-acceptance-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.mp-acceptance-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.mp-acceptance-tag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  white-space: nowrap;
+  width: 68px;
+  flex-shrink: 0;
+}
+
+.mp-acceptance-tag--orig { color: var(--text-tertiary); }
+.mp-acceptance-tag--brain { color: #a78bfa; }
+
+.mp-acceptance-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--glass-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mp-acceptance-bar__fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.mp-acceptance-bar__fill--orig { background: var(--text-tertiary); }
+.mp-acceptance-bar__fill--brain { background: #8b5cf6; }
+
+.mp-acceptance-val {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.mp-acceptance-val--brain { color: #a78bfa; }
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .mp-angles-grid {

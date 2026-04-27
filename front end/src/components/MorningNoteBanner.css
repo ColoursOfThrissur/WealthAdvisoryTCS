@@ -129,6 +129,35 @@
   margin: 0 0 12px 0;
 }
 
+.mnb-dropdown__events {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mnb-dropdown__event {
+  padding: 8px 10px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+}
+
+.mnb-dropdown__event-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.mnb-dropdown__event-line {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin: 0;
+  line-height: 1.5;
+}
+
 .mnb-dropdown__more {
   background: none;
   border: none;
