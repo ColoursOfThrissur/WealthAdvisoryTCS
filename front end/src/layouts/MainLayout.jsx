@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import MorningNoteBanner from '../components/MorningNoteBanner';
 import './MainLayout.css';
 
 const MainLayout = ({ children, activeTab, onTabChange }) => {
+  const navigate = useNavigate();
 
   return (
     <div className="main-layout">
@@ -10,10 +12,21 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
       {/* Top Navigation Bar */}
       <header className="main-layout__header">
 
-        {/* Left: Brand */}
+        {/* Left: Brand — clicking goes home */}
         <div className="main-layout__left">
-          <div className="brand-logo">
-            <span className="brand-logo-text">Agentic Wealth Advisor</span>
+          <div className="brand-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <div className="brand-logo-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="8" width="3" height="6" rx="0.75" fill="white" opacity="0.7"/>
+                <rect x="4" y="5" width="3" height="9" rx="0.75" fill="white" opacity="0.85"/>
+                <rect x="8" y="2" width="3" height="12" rx="0.75" fill="white"/>
+                <rect x="12" y="0" width="2" height="14" rx="0.75" fill="white" opacity="0.5"/>
+              </svg>
+            </div>
+            <div className="brand-logo-text">
+              <span>Agentic</span>
+              <span>Wealth Advisor</span>
+            </div>
           </div>
         </div>
 

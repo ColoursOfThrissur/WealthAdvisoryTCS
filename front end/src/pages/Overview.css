@@ -449,6 +449,11 @@
   margin: -18px -20px 0;
 }
 
+.ov-profile-detail__head .ov-profile__status {
+  margin-left: auto;
+  align-self: center;
+}
+
 .ov-profile-detail__head .ov-profile-detail__name,
 .ov-profile-detail__head .ov-profile-detail__id {
   color: var(--text-primary);
@@ -457,6 +462,11 @@
 .ov-profile-detail__head--critical {
   background: rgba(239,68,68,0.15);
   border-bottom-color: var(--error);
+}
+
+.ov-profile-detail__head--critical .ov-profile-detail__avatar {
+  background: linear-gradient(135deg, var(--error), #b91c1c);
+  box-shadow: 0 4px 10px rgba(239,68,68,0.25);
 }
 
 .ov-profile-detail__avatar {
@@ -557,6 +567,22 @@
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
+}
+
+.ov-profile-detail__context {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ov-profile-detail__context-item {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  background: var(--bg-primary);
+  border-left: 2px solid var(--success);
+  border-radius: 0 6px 6px 0;
+  line-height: 1.4;
 }
 
 /* Actions */

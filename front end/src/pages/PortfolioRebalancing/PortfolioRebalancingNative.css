@@ -12,6 +12,30 @@
   padding: 0.5rem var(--space-xl);
   background: transparent;
   border-bottom: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.pr-home-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.pr-home-btn:hover {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
 }
 
 .pr-back-btn {

@@ -283,6 +283,49 @@
   ],
   "rebalancing": [
     {
+      "CustomerID": 15600001,
+      "Surname": "Morgan",
+      "FirstName": "Alex",
+      "CreditScore": 590,
+      "Country": "France",
+      "Gender": "Male",
+      "Married": false,
+      "Age": 42,
+      "Dependents": 0,
+      "NumBankAccts": 2,
+      "HasCrCard": true,
+      "EstimatedSalary": 145000,
+      "Mortgage": false,
+      "RiskProfile": 0.55,
+      "Debt": 0,
+      "NetAssets": 500000,
+      "PortfolioReturn": 0.123,
+      "Diversification": 0.42,
+      "BusinessOwner": false,
+      "Revenue": 80000,
+      "CashInHand": 12000,
+      "Margin": 0.10,
+      "LifeInsurance": false,
+      "NumTransactions": 6,
+      "LastTransactionDate": "2024-03-10",
+      "LastTransactionAmt": 5000,
+      "ForeignAssets": 0.15,
+      "NumProducts": 3,
+      "Priority": "Critical",
+      "RebalanceReason": "Meeting Prep Summary Review",
+      "Trigger": "Strong 12-month equity-led gains — volatility awareness elevated",
+      "KeyContext": [
+        "Portfolio trend: Strong 12-month equity-led gains",
+        "Client Sensitivity: Volatility awareness ↑",
+        "Market Backdrop: Geopolitical Volatility, Rate cuts delayed"
+      ],
+      "RecommendedActions": [
+        { "label": "Meeting Prep Summary Review", "route": "/meeting-prep/15600001" },
+        { "label": "Align on Rebalancing Plan", "route": "/worklist/rebalancing" },
+        { "label": "Follow-up for Approval & Execution", "route": "/worklist/rebalancing" }
+      ]
+    },
+    {
       "CustomerID": 15634602,
       "Surname": "Hargrave",
       "FirstName": "Mary",
@@ -312,12 +355,17 @@
       "ForeignAssets": 0.39,
       "NumProducts": 4,
       "Priority": "Critical",
-      "RebalanceReason": "Portfolio Rebalancing",
+      "RebalanceReason": "Rebalancing Options Review",
       "Trigger": "Portfolio Drift Detected - Action Required",
+      "KeyContext": [
+        "Portfolio trend: Growth in successive quarters, equity concentration risk",
+        "Client Sensitivity: Goal-milestone ↑",
+        "Market Backdrop: Earnings dispersion, Inflationary Trends"
+      ],
       "RecommendedActions": [
-        "Reduce equity exposure by 5%",
-        "Increase bond allocation by 5%",
-        "Review international holdings"
+        { "label": "Rebalancing Options Review", "route": "/worklist/rebalancing" },
+        { "label": "Scenario Tests", "route": "/client/15634602/risk-analysis" },
+        { "label": "Schedule Meeting for Approval", "route": "/meeting-prep/15634602" }
       ]
     },
     {
@@ -351,6 +399,11 @@
       "NumProducts": 4,
       "RebalanceReason": "Allocation Adjustment",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Steady growth, low risk tolerance flagged",
+        "Client Sensitivity: Capital preservation ↑",
+        "Market Backdrop: Rate uncertainty, bond yield shifts"
+      ],
       "RecommendedActions": [
         "Rebalance to target allocation",
         "Consider tax-loss harvesting",
@@ -388,6 +441,11 @@
       "NumProducts": 5,
       "RebalanceReason": "View Risk Analysis",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Low diversification, concentrated domestic exposure",
+        "Client Sensitivity: Business cash flow dependency ↑",
+        "Market Backdrop: Sector rotation, international underweight"
+      ],
       "RecommendedActions": [
         "Increase diversification",
         "Add international exposure",
@@ -425,6 +483,11 @@
       "NumProducts": 4,
       "RebalanceReason": "Client Mailer",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: High return, conservative risk profile mismatch",
+        "Client Sensitivity: Income stability ↑",
+        "Market Backdrop: Rate cuts delayed, fixed income repricing"
+      ],
       "RecommendedActions": [
         "Shift to conservative allocation",
         "Increase fixed income",
@@ -462,6 +525,11 @@
       "NumProducts": 1,
       "RebalanceReason": "Client Mailer",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Near-retirement, equity overweight risk",
+        "Client Sensitivity: Retirement income ↑",
+        "Market Backdrop: Inflationary pressure, bond opportunity"
+      ],
       "RecommendedActions": [
         "Shift to retirement-focused portfolio",
         "Increase bond allocation",
@@ -499,6 +567,11 @@
       "NumProducts": 6,
       "RebalanceReason": "View Risk Analysis",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Approaching retirement, risk reduction needed",
+        "Client Sensitivity: Withdrawal planning ↑",
+        "Market Backdrop: Volatility elevated, defensive positioning advised"
+      ],
       "RecommendedActions": [
         "Reduce risk exposure",
         "Increase cash reserves",
@@ -536,6 +609,11 @@
       "NumProducts": 1,
       "RebalanceReason": "Portfolio Rebalancing",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Early accumulation, high debt relative to assets",
+        "Client Sensitivity: Family financial security ↑",
+        "Market Backdrop: Rising rates impacting leveraged positions"
+      ],
       "RecommendedActions": [
         "Reduce leverage",
         "Build emergency fund",
@@ -573,6 +651,11 @@
       "NumProducts": 3,
       "RebalanceReason": "Allocation Adjustment",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Pre-retirement, aggressive positions flagged",
+        "Client Sensitivity: Stable income ↑",
+        "Market Backdrop: Geopolitical risk, defensive assets preferred"
+      ],
       "RecommendedActions": [
         "Reduce aggressive positions",
         "Increase stable income assets",
@@ -610,6 +693,11 @@
       "NumProducts": 5,
       "RebalanceReason": "View Risk Analysis",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Sector concentration risk identified",
+        "Client Sensitivity: Long-term growth ↑",
+        "Market Backdrop: Sector rotation, alternatives gaining traction"
+      ],
       "RecommendedActions": [
         "Increase asset class diversity",
         "Add alternative investments",
@@ -647,6 +735,11 @@
       "NumProducts": 3,
       "RebalanceReason": "Client Mailer",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Capital preservation phase, liquidity needed",
+        "Client Sensitivity: Estate & legacy planning ↑",
+        "Market Backdrop: Equity volatility, cash flow prioritisation"
+      ],
       "RecommendedActions": [
         "Shift to capital preservation",
         "Increase liquidity",
@@ -684,6 +777,11 @@
       "NumProducts": 3,
       "RebalanceReason": "Client Mailer",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Ultra-conservative profile, high debt burden",
+        "Client Sensitivity: Capital safety ↑",
+        "Market Backdrop: Credit tightening, defensive positioning required"
+      ],
       "RecommendedActions": [
         "Align with ultra-conservative strategy",
         "Increase cash and bonds",
@@ -721,6 +819,11 @@
       "NumProducts": 5,
       "RebalanceReason": "View Risk Analysis",
       "Trigger": "Drift Detected - No Action Required",
+      "KeyContext": [
+        "Portfolio trend: Young family, risk exposure above comfort level",
+        "Client Sensitivity: Family protection ↑",
+        "Market Backdrop: Geopolitical uncertainty, insurance gap identified"
+      ],
       "RecommendedActions": [
         "Reduce risk for family security",
         "Add life insurance",

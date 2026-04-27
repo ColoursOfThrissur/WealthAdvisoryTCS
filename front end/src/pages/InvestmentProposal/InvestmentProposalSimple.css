@@ -9,7 +9,7 @@
 .ip-simple-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
   padding: 0.5rem 2rem;
   background: transparent;
   border-bottom: none;
@@ -32,6 +32,28 @@
 
 .ip-back-btn:hover {
   opacity: 0.9;
+}
+
+.ip-home-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ip-home-btn:hover {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
 }
 
 .ip-breadcrumb {
