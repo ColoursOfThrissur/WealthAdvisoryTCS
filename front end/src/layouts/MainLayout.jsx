@@ -1,5 +1,3 @@
-import { Settings } from 'lucide-react';
-import { getGreeting } from '../utils/helpers';
 import ThemeToggle from '../components/ThemeToggle';
 import MorningNoteBanner from '../components/MorningNoteBanner';
 import './MainLayout.css';
@@ -53,16 +51,12 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
               <span className="ticker-value">250</span>
             </div>
           </div>
-          <button className="main-layout__icon-btn"><Settings size={18} /></button>
           <ThemeToggle />
           <div className="main-layout__user-profile">
             <div className="user-profile-avatar">
               <img src="/wealthmanager.png" alt="Profile" />
             </div>
-            <div className="user-profile-info">
-              <span className="user-profile-greeting">{getGreeting()}</span>
-              <span className="user-profile-name">John Doe</span>
-            </div>
+            <span className="user-profile-name">John Doe</span>
           </div>
         </div>
       </header>

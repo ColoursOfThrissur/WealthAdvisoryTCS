@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 60px var(--space-2xl) var(--space-2xl) var(--space-2xl);
+  padding: 24px var(--space-lg) var(--space-lg) var(--space-lg);
   position: relative;
 }
 
@@ -19,7 +19,7 @@
 /* ── Grid ── */
 .overview__content {
   display: grid;
-  grid-template-columns: 1fr 28%;
+  grid-template-columns: 1fr 22%;
   gap: 24px;
   align-items: start;
   width: 100%;
@@ -250,10 +250,8 @@
 /* ── Priority Profiles split layout ── */
 .ov-profiles-split {
   display: grid;
-  grid-template-columns: 30% 1fr;
-  height: 520px;
+  grid-template-columns: 38% 1fr;
   border-top: 1px solid var(--glass-border);
-  overflow: hidden;
 }
 
 /* Left list */
@@ -287,8 +285,7 @@
 
 /* Scrollable list items */
 .ov-profiles-list__items {
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: visible;
   flex: 1;
 }
 
@@ -439,8 +436,6 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  overflow-y: auto;
-  height: 100%;
   background: var(--bg-secondary);
 }
 
@@ -1034,6 +1029,30 @@
 
 .ov-meeting-row__btn--live {
   animation: pulse-live 2s ease-in-out infinite;
+}
+
+.ov-meeting-row--event {
+  background: rgba(245, 158, 11, 0.04);
+  border-top: 1px dashed rgba(245, 158, 11, 0.3);
+  margin-top: 2px;
+}
+
+.ov-meeting-row--event:hover {
+  background: rgba(245, 158, 11, 0.09);
+}
+
+.ov-meeting-row--event .ov-meeting-row__client {
+  color: var(--warning);
+}
+
+.ov-meeting-row--event .ov-meeting-row__topic {
+  color: rgba(245, 158, 11, 0.7);
+}
+
+/* Resolved state */
+.ov-meeting-row--event:has(.ov-meeting-row__client[style*='success']) {
+  background: rgba(16, 185, 129, 0.04);
+  border-top-color: rgba(16, 185, 129, 0.3);
 }
 
 .ov-meetings-divider {
@@ -2171,6 +2190,9 @@
   flex-direction: column;
   gap: var(--space-lg);
   width: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+  padding-right: 4px;
 }
 
 .chat-expanded__message {
@@ -2187,6 +2209,7 @@
   margin-left: auto;
 }
 
+/* Standard AI bubble */
 .chat-expanded__message--ai {
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -2195,11 +2218,21 @@
   max-width: 90%;
 }
 
+/* Card-style AI message — no bubble wrapper, full width */
+.chat-expanded__message--ai.chat-expanded__message--card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
 .chat-expanded__input {
   display: flex;
   gap: var(--space-md);
   width: 100%;
   margin-top: var(--space-lg);
+  flex-shrink: 0;
 }
 
 .chat-expanded__input input {
@@ -2390,7 +2423,7 @@
 }
 
 .event-overview-card__stats {
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .impact-negative {
@@ -2948,11 +2981,7 @@
   box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
 }
 
-.chat-expanded__input {
-  padding-bottom: 40px;
-}
 
-/* Churn Analysis Styles */
 
 
 /* Mode Selector */

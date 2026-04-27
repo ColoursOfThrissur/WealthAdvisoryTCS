@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, RefreshCw, FileText, ExternalLink } from 'lucide-react';
 import useMorningNotes from '../hooks/useMorningNotes';
-import './MorningNoteTicker.css';
 
 const CYCLE_INTERVAL_MS = 6000;
 

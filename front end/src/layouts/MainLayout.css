@@ -7,25 +7,50 @@
   overflow: hidden;
 }
 
-
+/* ── Header ──
+   Left and right are equal fixed width so tabs sit naturally centered.
+   No absolute positioning needed — tabs just fill the remaining space. */
 .main-layout__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: var(--space-md) var(--space-2xl);
+  padding: var(--space-md) var(--space-lg);
   background: transparent;
   border-bottom: none;
   z-index: 1001;
   position: relative;
+  height: 60px;
 }
 
-/* Center tabs */
-.main-layout__tabs {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+/* Left: Brand — fixed width matching right side */
+.main-layout__left {
+  width: 380px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo-text {
+  font-weight: 700;
+  font-size: 1.125rem;
+  background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* Center: Tabs — flex:1 so they fill the space between equal left/right */
+.main-layout__tabs {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0;
 }
 
@@ -51,14 +76,18 @@
   color: var(--text-primary);
   font-weight: 700;
   border-bottom-color: var(--success);
-  box-shadow: none;
 }
 
-.main-layout__tab--active:hover {
-  color: var(--text-primary);
+/* Right: Metrics + Controls — same fixed width as left */
+.main-layout__right {
+  width: 380px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
 }
 
-/* Right side metrics + controls */
 .main-layout__metrics {
   display: flex;
   align-items: center;
@@ -67,49 +96,7 @@
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 8px;
-  margin-right: var(--space-md);
-}
-
-/* Left: Brand Logo */
-.main-layout__left {
-  flex: 0 0 auto;
-}
-
-.main-layout__brand {
-  display: flex;
-  align-items: center;
-}
-
-.brand-logo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.brand-logo-text {
-  font-weight: 700;
-  font-size: 1.25rem;
-  background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.02em;
-}
-
-/* Center: Ticker Stats */
-.main-layout__center-ticker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-lg);
-  padding: var(--space-sm) var(--space-xl);
-  background: var(--glass-bg);
-  border: var(--border-thin) solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(var(--blur-md));
-  flex: 1;
-  max-width: 800px;
-  margin: 0 var(--space-xl);
+  white-space: nowrap;
 }
 
 .ticker-item {
@@ -117,7 +104,7 @@
   flex-direction: column;
   gap: 2px;
   align-items: center;
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .ticker-label {
@@ -130,77 +117,44 @@
 }
 
 .ticker-value {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
   white-space: nowrap;
 }
 
-.ticker-value--positive {
-  color: var(--success);
-}
-
-.ticker-value--negative {
-  color: var(--error);
-}
-
-.ticker-value--warning {
-  color: var(--warning);
-}
+.ticker-value--positive { color: var(--success); }
+.ticker-value--negative { color: var(--error); }
+.ticker-value--warning  { color: var(--warning); }
 
 .ticker-divider {
   width: 1px;
-  height: 32px;
+  height: 28px;
   background: var(--glass-border);
   flex-shrink: 0;
 }
 
-/* Right: User Profile */
-.main-layout__right {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  flex: 0 0 auto;
-}
-
 .main-layout__right .theme-toggle {
-  position: relative;
-  z-index: auto;
-}
-
-.main-layout__icon-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-tertiary);
-  cursor: pointer;
-  padding: var(--space-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-base);
-  border-radius: var(--radius-md);
-}
-
-.main-layout__icon-btn:hover {
-  color: var(--text-primary);
-  background: var(--glass-bg);
+  flex-shrink: 0;
 }
 
 .main-layout__user-profile {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding-left: var(--space-md);
-  margin-left: var(--space-md);
+  gap: var(--space-sm);
+  padding-left: var(--space-sm);
+  margin-left: var(--space-sm);
   border-left: var(--border-thin) solid var(--glass-border);
+  flex-shrink: 0;
 }
 
 .user-profile-avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
   border: var(--border-medium) solid var(--glass-border);
+  flex-shrink: 0;
 }
 
 .user-profile-avatar img {
@@ -210,29 +164,45 @@
   object-position: center 0;
 }
 
-.user-profile-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.user-profile-greeting {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
 .user-profile-name {
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text-secondary);
-  line-height: 1.2;
+  white-space: nowrap;
 }
 
+/* ── Content ── */
 .main-layout__content {
   flex: 1;
   overflow: hidden;
   position: relative;
 }
 
+/* ── Responsive ──
+   At 1100px: left(380) + tabs(180) + right(380) + padding(48) = 988px — still fits.
+   At 900px things get tight — shrink side widths and hide metrics. */
+@media (max-width: 1050px) {
+  .main-layout__left,
+  .main-layout__right {
+    width: 260px;
+  }
+
+  .main-layout__metrics {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .main-layout__left,
+  .main-layout__right {
+    width: auto;
+  }
+
+  .user-profile-name {
+    display: none;
+  }
+
+  .brand-logo-text {
+    font-size: 1rem;
+  }
+}

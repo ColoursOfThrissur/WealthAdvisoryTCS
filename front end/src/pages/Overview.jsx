@@ -101,22 +101,115 @@ const Overview = () => {
   return (
     <div className="overview">
 
-      {/* Mail Modal */}
+      {/* Mail Preview Modal */}
       {selectedMailClient && (
-        <div className="ov-modal-overlay" onClick={() => setSelectedMailClient(null)}>
-          <div className="ov-modal" onClick={e => e.stopPropagation()}>
-            <div className="ov-modal__head">
-              <span>Email Preview — {selectedMailClient.clientName}</span>
-              <button onClick={() => setSelectedMailClient(null)}><X size={18} /></button>
+        <div className="mail-preview-modal-overlay" onClick={() => setSelectedMailClient(null)}>
+          <div className="mail-preview-modal" onClick={e => e.stopPropagation()}>
+            <div className="mail-preview-modal__header">
+              <h3>Email Preview — {selectedMailClient.clientName}</h3>
+              <button className="mail-preview-modal__close" onClick={() => setSelectedMailClient(null)}><X size={20} /></button>
             </div>
-            <div className="ov-modal__body">
-              <p><strong>Subject:</strong> {generateMailPreview(selectedMailClient).subject}</p>
-              <p><strong>To:</strong> {selectedMailClient.clientName}</p>
-              <p>{generateMailPreview(selectedMailClient).greeting}</p>
+            <div className="mail-preview-modal__content">
+              <div className="mail-preview-field"><strong>Subject:</strong> {generateMailPreview(selectedMailClient).subject}</div>
+              <div className="mail-preview-field"><strong>To:</strong> {selectedMailClient.clientName}</div>
+              <div className="mail-preview-body">
+                <p>{generateMailPreview(selectedMailClient).greeting}</p>
+                <p>I wanted to reach out regarding a recent market development that affects your portfolio.</p>
+                <p>{activeMarketEvent.description}</p>
+
+                <div className="mail-impact-card">
+                  <h4>Your Portfolio Impact</h4>
+                  <div className="mail-impact-stats">
+                    <div className="mail-impact-stat">
+                      <span className="mail-impact-label">Energy Exposure</span>
+                      <span className="mail-impact-value">{(selectedMailClient.energyExposure * 100).toFixed(0)}%</span>
+                    </div>
+                    <div className="mail-impact-stat">
+                      <span className="mail-impact-label">Industrial Exposure</span>
+                      <span className="mail-impact-value">{(selectedMailClient.industrialExposure * 100).toFixed(0)}%</span>
+                    </div>
+                    <div className="mail-impact-stat">
+                      <span className="mail-impact-label">Portfolio Value</span>
+                      <span className="mail-impact-value">${selectedMailClient.currentValue.toLocaleString()}</span>
+                    </div>
+                    <div className="mail-impact-stat">
+                      <span className="mail-impact-label">Estimated Impact</span>
+                      <span className="mail-impact-value impact-negative">-${selectedMailClient.projectedLoss.toLocaleString()} ({selectedMailClient.lossPercentage}%)</span>
+                    </div>
+                  </div>
+                  <div className="mail-impact-bar">
+                    <div className="mail-impact-bar-fill" style={{ width: `${selectedMailClient.lossPercentage * 10}%` }} />
+                  </div>
+                </div>
+
+                <div className="mail-holdings-card">
+                  <h4>Most Affected Holdings</h4>
+                  {selectedMailClient.portfolioDetails.topHoldings.map((h, i) => (
+                    <div key={i} className="mail-holding-item">
+                      <div className="mail-holding-info">
+                        <strong>{h.name}</strong>
+                        <span className="mail-holding-ticker">{h.ticker}</span>
+                      </div>
+                      <span className={h.impact < 0 ? 'impact-negative' : ''}>
+                        {h.impact < 0 ? '-' : ''}${Math.abs(h.impact).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mail-action-card">
+                  <h4>Recommended Action</h4>
+                  <p>{selectedMailClient.recommendedAction}</p>
+                </div>
+
+                <div className="mail-allocation-card">
+                  <h4>Proposed Allocation Adjustment</h4>
+                  <div className="mail-allocation-comparison">
+                    <div className="mail-allocation-col">
+                      <span className="mail-allocation-label">Current</span>
+                      <div className="mail-allocation-bars">
+                        {[['Bonds', selectedMailClient.portfolioDetails.currentAllocation.bonds, 'var(--info)'],
+                          ['Stocks', selectedMailClient.portfolioDetails.currentAllocation.stocks, 'var(--success)'],
+                          ['Energy', selectedMailClient.portfolioDetails.currentAllocation.energy, 'var(--warning)']]
+                          .map(([label, pct, color]) => (
+                            <div key={label} className="mail-allocation-bar">
+                              <span>{label}</span>
+                              <div className="mail-allocation-bar-bg">
+                                <div className="mail-allocation-bar-fill" style={{ width: `${pct}%`, background: color }} />
+                              </div>
+                              <span>{pct}%</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                    <div className="mail-allocation-arrow">→</div>
+                    <div className="mail-allocation-col">
+                      <span className="mail-allocation-label">Proposed</span>
+                      <div className="mail-allocation-bars">
+                        {[['Bonds', selectedMailClient.portfolioDetails.proposedAllocation.bonds, 'var(--info)'],
+                          ['Stocks', selectedMailClient.portfolioDetails.proposedAllocation.stocks, 'var(--success)'],
+                          ['Energy', selectedMailClient.portfolioDetails.proposedAllocation.energy, 'var(--warning)']]
+                          .map(([label, pct, color]) => (
+                            <div key={label} className="mail-allocation-bar">
+                              <span>{label}</span>
+                              <div className="mail-allocation-bar-bg">
+                                <div className="mail-allocation-bar-fill" style={{ width: `${pct}%`, background: color }} />
+                              </div>
+                              <span>{pct}%</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p>I'd like to schedule a brief call to discuss how we can protect your portfolio and ensure you stay on track with your financial goals.</p>
+                <p>Best regards,<br/>Your Wealth Advisor</p>
+              </div>
             </div>
-            <div className="ov-modal__foot">
-              <button className="ov-btn ov-btn--ghost" onClick={() => setSelectedMailClient(null)}>Cancel</button>
-              <button className="ov-btn ov-btn--primary" onClick={handleConfirmMail}>Confirm</button>
+            <div className="mail-preview-modal__footer">
+              <button className="mail-preview-btn mail-preview-btn--cancel" onClick={() => setSelectedMailClient(null)}>Cancel</button>
+              <button className="mail-preview-btn mail-preview-btn--confirm" onClick={handleConfirmMail}>Confirm</button>
             </div>
           </div>
         </div>
@@ -135,7 +228,7 @@ const Overview = () => {
               {eventData ? (
                 <>
                   <div className="chat-expanded__messages" onScroll={handleScroll}>
-                    <div className="chat-expanded__message chat-expanded__message--ai">
+                    <div className="chat-expanded__message chat-expanded__message--ai chat-expanded__message--card">
                       <div className="event-overview-card">
                         <div className="event-overview-card__header">
                           <AlertTriangle size={24} color="var(--warning)" />
@@ -153,7 +246,7 @@ const Overview = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="chat-expanded__message chat-expanded__message--ai">
+                    <div className="chat-expanded__message chat-expanded__message--ai chat-expanded__message--card">
                       <div className="chat-suggestions">
                         <p className="chat-suggestions__label">What would you like to do?</p>
                         <div className="chat-suggestions__buttons">
@@ -163,24 +256,76 @@ const Overview = () => {
                       </div>
                     </div>
                     {eventChatMessages.map((msg, idx) => (
-                      <div key={idx} className={`chat-expanded__message chat-expanded__message--${msg.sender}`}>
+                      <div key={idx} className={`chat-expanded__message chat-expanded__message--${msg.sender}${msg.type === 'mail-generation' || msg.type === 'mail-sent' ? ' chat-expanded__message--card' : ''}`}>
                         {msg.type === 'mail-generation' ? (
                           <>
-                            <p>Prepared communications for all affected clients.</p>
+                            <p>I've analysed the {activeMarketEvent.title} impact and prepared personalised communications for all {activeMarketEvent.affectedClients.length} affected clients. Here's the summary:</p>
                             <div className="mail-clients-list">
                               {activeMarketEvent.affectedClients.map(client => (
                                 <div key={client.clientId} className="mail-client-item">
-                                  <strong>{client.clientName}</strong>
-                                  <button className={`mail-action-btn ${mailStatus[client.clientId] === 'confirmed' ? 'mail-action-btn--confirmed' : ''}`} onClick={() => handleReviewMail(client.clientId)}>
+                                  <div className="mail-client-info">
+                                    <strong>{client.clientName}</strong>
+                                    <span className={`severity-badge severity-badge--${client.severity.toLowerCase()}`}>{client.severity}</span>
+                                  </div>
+                                  <button
+                                    className={`mail-action-btn ${mailStatus[client.clientId] === 'confirmed' ? 'mail-action-btn--confirmed' : ''}`}
+                                    onClick={() => handleReviewMail(client.clientId)}
+                                  >
                                     {mailStatus[client.clientId] === 'confirmed' ? '✓ Confirmed' : 'Review Mail'}
                                   </button>
                                 </div>
                               ))}
                             </div>
-                            <button className="chat-suggestion-btn" onClick={() => handleSuggestionClick('Yes, send the emails')}>Yes, send the emails</button>
+                            <p className="mail-question">Would you like me to send these personalised emails to all affected clients?</p>
+                            <div className="chat-suggestions__buttons">
+                              <button className="chat-suggestion-btn" onClick={() => handleSuggestionClick('Yes, send the emails')}>Yes, send the emails</button>
+                              <button className="chat-suggestion-btn" onClick={() => handleSuggestionClick('No, I need to review further')}>No, I need to review further</button>
+                            </div>
                           </>
                         ) : msg.type === 'mail-sent' ? (
-                          <p className="success-message">✓ Emails sent successfully</p>
+                          <>
+                            <p className="success-message">✓ Emails sent successfully</p>
+                            <div className="completion-summary">
+                              <h4>Market Event Response — {activeMarketEvent.title}</h4>
+                              <p className="event-reason">
+                                Due to the {activeMarketEvent.title.toLowerCase()}, personalised communications have been sent to all affected clients with recommendations to increase energy hedges and reduce exposure to oil-dependent sectors.
+                              </p>
+                              <div className="sent-clients-list">
+                                {activeMarketEvent.affectedClients.map(client => (
+                                  <div key={client.clientId} className="sent-client-item">
+                                    <div className="sent-client-header">
+                                      <strong>{client.clientName}</strong>
+                                      <span className={`severity-badge severity-badge--${client.severity.toLowerCase()}`}>{client.severity}</span>
+                                    </div>
+                                    <div className="sent-client-details">
+                                      <span>Portfolio Impact: -${client.projectedLoss.toLocaleString()} ({client.lossPercentage}%)</span>
+                                      <span>Reason: {client.reason}</span>
+                                      <span>Action: {client.recommendedAction}</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              <ul>
+                                <li>Follow-up tasks created in CRM</li>
+                                <li>Client meetings scheduled for next week</li>
+                                <li>Event alert will be cleared from dashboard</li>
+                              </ul>
+                              <button
+                                className="back-to-dashboard-btn"
+                                onClick={() => {
+                                  setEventCompleted(true);
+                                  setEventData(null);
+                                  setIsChatExpanded(false);
+                                  setTimeout(() => {
+                                    setEventCompleted(false);
+                                    setHideCompletedEvent(true);
+                                  }, 5000);
+                                }}
+                              >
+                                Return to Dashboard
+                              </button>
+                            </div>
+                          </>
                         ) : msg.text}
                       </div>
                     ))}
@@ -217,7 +362,7 @@ const Overview = () => {
               <div className="ov-profiles-list">
                 <div className="ov-profiles-list__head">
                   <div className="ov-profiles-list__head-row">
-                    <span className="ov-card__title">Priority Profiles</span>
+                    <span className="ov-card__title">Priority Client Actions</span>
                     <div className="ov-profiles-list__head-actions">
                       <button className="ov-morning-refresh" onClick={() => setSelectedProfileId(null)} title="Refresh">
                         <RefreshCw size={13} />
@@ -225,7 +370,7 @@ const Overview = () => {
                       <button className="ov-view-all" onClick={() => navigate('/worklist/rebalancing')}>View all</button>
                     </div>
                   </div>
-                  <p className="ov-profiles-list__desc">AI-ranked clients requiring your attention today.</p>
+                  <p className="ov-profiles-list__desc">AI-ranked clients requiring action today.</p>
                 </div>
                 <div className="ov-profiles-list__items">
                   {priorityProfiles.map(p => (
@@ -322,7 +467,7 @@ const Overview = () => {
           {/* Today's Meetings */}
           <div className="ov-card overview__meetings">
             <div className="ov-card__head">
-              <span className="ov-card__title">Today's Scheduled Meetings</span>
+              <span className="ov-card__title">Today's Meetings</span>
               <span className="ov-view-all" onClick={() => navigate('/prioritize')}>View More</span>
             </div>
             <div className="ov-meetings-body">
@@ -346,6 +491,29 @@ const Overview = () => {
                   >{m.btn}</button>
                 </div>
               ))}
+
+              {/* Market Event Alert — below meetings, same row structure */}
+              {!hideCompletedEvent && (
+                <div
+                  className="ov-meeting-row ov-meeting-row--event"
+                  onClick={!eventCompleted ? handleEventAlertClick : undefined}
+                  style={{ cursor: eventCompleted ? 'default' : 'pointer' }}
+                >
+                  <div className="ov-meeting-row__time">
+                    {eventCompleted
+                      ? <span style={{ color: 'var(--success)', fontSize: '1rem' }}>✓</span>
+                      : <AlertTriangle size={16} style={{ color: 'var(--warning)' }} />
+                    }
+                  </div>
+                  <div className="ov-meeting-row__info">
+                    <span className="ov-meeting-row__client" style={{ color: eventCompleted ? 'var(--success)' : undefined }}>
+                      {eventCompleted ? 'Event Resolved — Communications sent' : activeMarketEvent.title}
+                    </span>
+                    {!eventCompleted && <span className="ov-meeting-row__topic">{activeMarketEvent.impactSummary.totalAffected} clients affected</span>}
+                  </div>
+                  {!eventCompleted && <ChevronRight size={14} style={{ color: 'var(--warning)', flexShrink: 0 }} />}
+                </div>
+              )}
             </div>
           </div>
 

@@ -19,7 +19,6 @@ const MOCK_CLIENTS = worklistData.rebalancing.map(c => ({
   driftScore: 0,
   contribution: c.RiskProfile > 0.35 ? 'H' : c.RiskProfile > 0.2 ? 'M' : 'L',
   age: c.Age,
-  isMock: true,
 }));
 
 const RebalancingWorklist = () => {
@@ -166,7 +165,7 @@ const RebalancingWorklist = () => {
 
   const renderRow = (client) => (
     <tr
-      key={`${client.isMock ? 'mock' : 'api'}-${client.clientId}`}
+      key={`api-${client.clientId}`}
       className={`worklist-row worklist-row--p${client.priority} ${hoveredClientId === client.clientId ? 'hovered' : ''}`}
       onMouseEnter={() => setHoveredClientId(client.clientId)}
       onMouseLeave={() => setHoveredClientId(null)}
@@ -286,12 +285,6 @@ const RebalancingWorklist = () => {
               </thead>
               <tbody>
                 {filteredClients.map((client) => renderRow(client))}
-                {/* Mock data divider */}
-                <tr className="worklist-divider-row">
-                  <td colSpan={7}>
-                    <span>Mock Clients</span>
-                  </td>
-                </tr>
                 {MOCK_CLIENTS
                   .filter(c => !searchTerm || c.name.toLowerCase().includes(searchTerm.toLowerCase()))
                   .map((client) => renderRow(client))}
