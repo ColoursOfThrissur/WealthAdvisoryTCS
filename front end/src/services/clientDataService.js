@@ -98,7 +98,7 @@ class ClientDataService {
     const {
       refresh = false,
       include_sentiment = true,
-      include_fund_universe = true,
+      selected_fund_universe = null,
       user_prompt = ''
     } = options;
 
@@ -129,7 +129,7 @@ class ClientDataService {
       if (!this.inFlight.has(lockKey)) {
         this.fetchAndCache(clientId, {
           include_sentiment,
-          include_fund_universe,
+          selected_fund_universe,
           user_prompt,
           refresh: true
         }).catch(error => {
@@ -144,7 +144,7 @@ class ClientDataService {
     console.log(`[ClientDataService] 🆕 Fetching fresh data for client ${clientId}`);
     return this.fetchAndCache(clientId, {
       include_sentiment,
-      include_fund_universe,
+      selected_fund_universe,
       user_prompt,
       refresh
     });
@@ -168,7 +168,7 @@ class ClientDataService {
     const url = `${REBALANCING_API_URL}/api/client/${clientId}/full-analysis`;
     const body = JSON.stringify({
       include_sentiment: options.include_sentiment ?? true,
-      include_fund_universe: options.include_fund_universe ?? true,
+      selected_fund_universe: options.selected_fund_universe ?? null,
       user_prompt: options.user_prompt || '',
       refresh: options.refresh || false
     });
@@ -187,9 +187,14 @@ class ClientDataService {
       return res.json();
     })
     .then(data => {
-      const cacheKey = this.getCacheKey(clientId, 'full');
-      this.setCache(cacheKey, data);
-      console.log(`[ClientDataService] ✅ Full analysis cached for ${clientId}`);
+      // Don't cache incomplete/partial data
+      if (data.client_detail?.client?.name || data.client_detail?.asset_allocation?.length) {
+        const cacheKey = this.getCacheKey(clientId, 'full');
+        this.setCache(cacheKey, data);
+        console.log(`[ClientDataService] ✅ Full analysis cached for ${clientId}`);
+      } else {
+        console.log(`[ClientDataService] ⚠️ Skipping cache — incomplete data for ${clientId}`);
+      }
       return data;
     })
     .catch(error => {

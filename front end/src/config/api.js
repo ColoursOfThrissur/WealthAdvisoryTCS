@@ -1,21 +1,21 @@
 /**
  * API Configuration
  * 
- * Priority: VITE env var → localhost fallback (dev) → same-origin (prod)
+ * Priority: VITE env var → hardcoded fallback per environment
  * 
  * In dev:  falls back to localhost ports
- * In prod: reads from .env.production or Vercel env vars
+ * In prod: falls back to deployed backend URLs
  */
 
 const DEV = import.meta.env.DEV;
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
-  (DEV ? 'http://localhost:8001' : '');
+  (DEV ? 'http://localhost:8001' : 'https://wealth-advisory.107-21-43-216.sslip.io');
 
 export const REBALANCING_API_URL =
   import.meta.env.VITE_REBALANCING_API_URL ||
-  (DEV ? 'http://localhost:8003' : '');
+  (DEV ? 'http://localhost:8003' : 'https://rebalance-api.107-21-43-216.sslip.io');
 
 /** Full URL for an API path (e.g. /api/health) */
 export const getApiUrl = (path) => {
@@ -26,7 +26,7 @@ export const getApiUrl = (path) => {
 /**
  * WebSocket base URL
  * Dev: ws://localhost:8001
- * Prod: wss:// derived from API_BASE_URL or same-origin
+ * Prod: wss:// deployed backend
  */
 export const getWsBaseUrl = () => {
   if (import.meta.env.VITE_WS_BASE_URL) {
@@ -34,11 +34,6 @@ export const getWsBaseUrl = () => {
   }
   if (DEV) {
     return 'ws://localhost:8001';
-  }
-  // Production: derive from API_BASE_URL or window origin
-  const base = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
-  if (base) {
-    return base.replace(/^http/, 'ws');
   }
   return 'wss://wealth-advisory.107-21-43-216.sslip.io';
 };

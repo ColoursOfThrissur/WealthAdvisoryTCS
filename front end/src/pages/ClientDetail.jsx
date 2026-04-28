@@ -136,11 +136,25 @@ const ClientDetail = () => {
       
       console.log(`[ClientDetail] Rerunning analysis for client ${clientId}`, config);
       
-      // Force refresh on backend — result is stored in frontend cache
-      // fetchClientData will read from that fresh cache, no second agent call
+      // Convert excluded_funds to selected_fund_universe (included tickers)
+      // null = use all funds (default), [] = skip fund universe, [...] = use only these
+      let selectedFundUniverse = null;
+      if (config.excluded_funds && config.excluded_funds.length > 0) {
+        // Get the full fund list from the rerun modal and remove excluded ones
+        const cached = clientDataService._sliceFromFull(clientId, 'rebalancing_action');
+        const optionBTrades = cached.success
+          ? (cached.data?.data?.options?.option_b?.trade_recommendations || []).filter(t => t.action === 'Buy' || t.action === 'buy')
+          : [];
+        if (optionBTrades.length > 0) {
+          selectedFundUniverse = optionBTrades
+            .map(t => t.ticker)
+            .filter(ticker => !config.excluded_funds.includes(ticker));
+        }
+      }
+
       await clientDataService.getFullAnalysis(clientId, {
         include_sentiment: config.include_sentiment !== false,
-        include_fund_universe: config.include_fund_universe !== false,
+        selected_fund_universe: selectedFundUniverse,
         user_prompt: config.user_prompt || '',
         refresh: true
       });
