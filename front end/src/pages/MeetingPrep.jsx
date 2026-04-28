@@ -207,7 +207,7 @@ const MeetingPrep = () => {
   const { clientId } = useParams();
   const navigate = useNavigate();
   const [expandedSections, setExpandedSections] = useState({
-    holdings: true, risks: true, history: false, news: false, actions: false, nba: false, agenda: true,
+    holdings: true, risks: true, history: true, news: true, actions: true, nba: true, agenda: true,
   });
 
   const client = CLIENT_DATA[clientId] || fallbackClient;
