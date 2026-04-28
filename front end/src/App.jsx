@@ -43,9 +43,13 @@ function App() {
             <ProtectedRoute>
             <MainLayout activeTab={activeTab} onTabChange={setActiveTab}>
               <CanvasLayout>
-                {activeTab === 'cockpit' && <Overview />}
-                {activeTab === 'advisor-assist' && <BackendChatInterface onClose={() => setActiveTab('cockpit')} />}
-                {activeTab === 'meeting-assist' && (
+                <div style={{ display: activeTab === 'cockpit' ? 'contents' : 'none' }}>
+                  <Overview />
+                </div>
+                <div style={{ display: activeTab === 'advisor-assist' ? 'contents' : 'none' }}>
+                  <BackendChatInterface onClose={() => setActiveTab('cockpit')} />
+                </div>
+                <div style={{ display: activeTab === 'meeting-assist' ? 'contents' : 'none' }}>
                   <div className="meeting-assist-placeholder">
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '16px', color: 'var(--text-tertiary)' }}>
                       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -58,7 +62,7 @@ function App() {
                       <span style={{ fontSize: '0.8125rem' }}>Coming soon — AI-powered meeting prep, notes & follow-ups</span>
                     </div>
                   </div>
-                )}
+                </div>
               </CanvasLayout>
             </MainLayout>
             </ProtectedRoute>

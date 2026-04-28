@@ -407,7 +407,8 @@ body {
   max-width: 55%;
 }
 
-.chat-message--ai {
+.chat-message--ai,
+.chat-message--assistant {
   align-self: flex-start;
   width: 100%;
 }
@@ -429,7 +430,8 @@ body {
 }
 
 /* AI bubble - transparent, section cards handle their own bg */
-.chat-message--ai .message-bubble {
+.chat-message--ai .message-bubble,
+.chat-message--assistant .message-bubble {
   background: transparent;
   border: none;
   box-shadow: none;
@@ -450,7 +452,8 @@ body {
   align-self: flex-end;
 }
 
-.chat-message--ai .message-timestamp {
+.chat-message--ai .message-timestamp,
+.chat-message--assistant .message-timestamp {
   align-self: flex-start;
 }
 

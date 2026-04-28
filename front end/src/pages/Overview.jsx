@@ -290,15 +290,52 @@ const Overview = () => {
                           <AlertTriangle size={24} color="var(--warning)" />
                           <div>
                             <h3>{activeMarketEvent.title}</h3>
-                            <span className="event-overview-card__meta">{activeMarketEvent.timestamp.split('T')[0]} • {activeMarketEvent.severity} Severity</span>
+                            <span className="event-overview-card__meta">{activeMarketEvent.timestamp.split('T')[0]} • {activeMarketEvent.severity} Severity • {activeMarketEvent.subtitle}</span>
                           </div>
                         </div>
-                        <p className="event-overview-card__desc">{activeMarketEvent.description}</p>
+
+                        <div className="event-overview-card__section">
+                          <h4>Market Impact Brief</h4>
+                          <p className="event-overview-card__desc">{activeMarketEvent.eventBrief}</p>
+                        </div>
+
+                        <div className="event-overview-card__section">
+                          <h4>Portfolio Impact</h4>
+                          <p className="event-overview-card__desc">{activeMarketEvent.portfolioImpactExplanation}</p>
+                        </div>
+
                         <div className="event-overview-card__stats">
-                          <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.totalAffected}</span><span className="event-stat__label">Affected</span></div>
+                          <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.totalAffected}</span><span className="event-stat__label">Clients Affected</span></div>
                           <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.criticalCount}</span><span className="event-stat__label">Critical</span></div>
-                          <div className="event-stat"><span className="event-stat__value">${(activeMarketEvent.impactSummary.totalProjectedLoss/1000).toFixed(0)}K</span><span className="event-stat__label">Loss</span></div>
-                          <div className="event-stat"><span className="event-stat__value">${(activeMarketEvent.impactSummary.totalExposure/1000000).toFixed(1)}M</span><span className="event-stat__label">Exposure</span></div>
+                          <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.highCount}</span><span className="event-stat__label">High</span></div>
+                          <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.mediumCount}</span><span className="event-stat__label">Medium</span></div>
+                          <div className="event-stat"><span className="event-stat__value">${(activeMarketEvent.impactSummary.totalProjectedLoss/1000).toFixed(0)}K</span><span className="event-stat__label">Projected Loss</span></div>
+                          <div className="event-stat"><span className="event-stat__value">${(activeMarketEvent.impactSummary.totalExposure/1000000).toFixed(1)}M</span><span className="event-stat__label">Total Exposure</span></div>
+                          <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.averageLossPercentage}%</span><span className="event-stat__label">Avg Loss</span></div>
+                        </div>
+
+                        <div className="event-overview-card__section">
+                          <h4>Priority Client Actions</h4>
+                          <div className="event-clients-list">
+                            {activeMarketEvent.affectedClients.map((client, idx) => (
+                              <div key={client.clientId} className="event-client-row">
+                                <span className="event-client-rank">{idx + 1}</span>
+                                <div className="event-client-info">
+                                  <div className="event-client-name-row">
+                                    <strong>{client.clientName}</strong>
+                                    <span className="event-client-meta">{client.age} years, {client.riskProfile}</span>
+                                    <span className={`severity-badge severity-badge--${client.severity.toLowerCase()}`}>{client.severity}</span>
+                                  </div>
+                                  <div className="event-client-stats">
+                                    <span>${(client.currentValue/1000).toFixed(0)}K</span>
+                                    <span className="event-client-return">+{client.portfolioReturn}%</span>
+                                    <span className="event-client-loss">-${client.projectedLoss.toLocaleString()} ({client.lossPercentage}%)</span>
+                                  </div>
+                                  <span className="event-client-action">{client.recommendedAction}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>

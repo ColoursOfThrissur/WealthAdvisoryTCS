@@ -106,7 +106,7 @@ const MorningNoteBanner = () => {
           >
             <AlertTriangle size={11} className="mnb-pill__event-icon" />
             <div className="mnb-pill__text">
-              <span className="mnb-pill__title">{activeMarketEvent.title}</span>
+              <span className="mnb-pill__title">{activeMarketEvent.title} — Mass Mailer</span>
               <span className="mnb-pill__subtitle">{activeMarketEvent.subtitle}</span>
             </div>
           </div>
