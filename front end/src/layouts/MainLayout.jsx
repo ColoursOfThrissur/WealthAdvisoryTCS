@@ -45,13 +45,13 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
             className={`main-layout__tab${activeTab === 'advisor-assist' ? ' main-layout__tab--active' : ''}`}
             onClick={() => onTabChange('advisor-assist')}
           >
-            Advisor Assist
+            Assist
           </button>
           <button
             className={`main-layout__tab${activeTab === 'meeting-assist' ? ' main-layout__tab--active' : ''}`}
             onClick={() => onTabChange('meeting-assist')}
           >
-            Meeting Assist
+            Live Meeting
           </button>
         </div>
 

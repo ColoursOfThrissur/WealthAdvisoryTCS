@@ -455,7 +455,7 @@ const Overview = () => {
               <div className="ov-profiles-list">
                 <div className="ov-profiles-list__head">
                   <div className="ov-profiles-list__head-row">
-                    <span className="ov-card__title">Priority Client Actions</span>
+                    <span className="ov-card__title">Priority Queue</span>
                     <div className="ov-profiles-list__head-actions">
                       <button className="ov-morning-refresh" onClick={() => setSelectedProfileId(null)} title="Refresh">
                         <RefreshCw size={13} />
