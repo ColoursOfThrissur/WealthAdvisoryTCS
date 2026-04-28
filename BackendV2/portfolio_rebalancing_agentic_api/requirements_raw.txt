@@ -1,0 +1,6 @@
+fastapi
+tiktoken
+setuptools
+strands-agents
+strands-agents-tools
+litellm

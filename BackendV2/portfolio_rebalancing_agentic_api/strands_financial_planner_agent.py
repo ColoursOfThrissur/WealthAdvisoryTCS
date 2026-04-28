@@ -10,17 +10,27 @@ from dotenv import load_dotenv
 from strands import Agent, tool
 # from strands.models.gemini import GeminiModel
 from strands.models.litellm import LiteLLMModel
+from strands.models.bedrock import BedrockModel
 
 from skill_manager import skill_manager
 from mcp_client import mcp_manager
 
 load_dotenv(override=True)
 
-# Explicitly initialize the Gemini model to avoid defaulting to AWS Bedrock
-gemini_model = LiteLLMModel(
-    model_id="gemini/gemini-2.5-flash",
-    params={"api_key": os.getenv("GOOGLE_API_KEY")}
+# --- Gemini (uncomment to use) ---
+# gemini_model = LiteLLMModel(
+#     model_id="gemini/gemini-2.5-flash",
+#     params={"api_key": os.getenv("GOOGLE_API_KEY")}
+# )
+
+# --- Bedrock Claude (active) ---
+bedrock_model = BedrockModel(
+    model_id=os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-20250514-v1:0"),
+    region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1"),
 )
+
+# Switch model here: gemini_model or bedrock_model
+active_model = bedrock_model
 
 @dataclass
 class PlannerDeps:
@@ -197,7 +207,7 @@ Keep the logic concise and focused on how you arrived at your conclusions.
 
 # Initialize the AWS Strands Agent
 planner_agent = Agent(
-    model=gemini_model,
+    model=active_model,
     tools=[manage_todo_list, query_mcp_tool],
     system_prompt='''\
 You are a Deep Research Assistant and Senior Financial Analyst.
