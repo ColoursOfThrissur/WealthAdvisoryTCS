@@ -37,13 +37,24 @@ const ClientDetail = () => {
       
       const fullData = await clientDataService.getFullAnalysis(clientId, {
         include_sentiment: true,
-        include_fund_universe: true,
+        selected_fund_universe: null,
         user_prompt: "",
         refresh: false
       });
 
+      // Detect empty cached data — auto-retry with refresh to clear backend cache
       if (!fullData.client_detail?.client?.name && !fullData.client_detail?.asset_allocation?.length) {
-        throw new Error('Analysis returned incomplete data — the AI agent may have encountered an issue. Please retry.');
+        console.log(`[ClientDetail] Empty data detected, retrying with refresh=true`);
+        const retryData = await clientDataService.getFullAnalysis(clientId, {
+          include_sentiment: true,
+          selected_fund_universe: null,
+          user_prompt: "",
+          refresh: true
+        });
+        if (!retryData.client_detail?.client?.name && !retryData.client_detail?.asset_allocation?.length) {
+          throw new Error('Analysis returned incomplete data — the AI agent may have encountered an issue. Please retry.');
+        }
+        Object.assign(fullData, retryData);
       }
       
       // Transform BackendV2 schema to frontend expected format
