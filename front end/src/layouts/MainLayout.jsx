@@ -29,7 +29,6 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
             <div className="brand-logo-text">
               <span>Agentic</span>
               <span>Wealth Advisor</span>
-              <span className="brand-powered-by">powered by TCS</span>
             </div>
           </div>
         </div>
