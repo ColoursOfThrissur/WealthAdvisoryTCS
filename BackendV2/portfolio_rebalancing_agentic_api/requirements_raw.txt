@@ -1,10 +1,6 @@
 fastapi
 tiktoken
-pydantic-ai
-tavily-python
-undetected-chromedriver
 setuptools
-nest-asyncio
 strands-agents
 strands-agents-tools
 litellm

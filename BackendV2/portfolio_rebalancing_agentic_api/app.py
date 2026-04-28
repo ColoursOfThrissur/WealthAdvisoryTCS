@@ -19,10 +19,8 @@ import pathlib
 
 import tiktoken
 
-from sample_api import agent
 from token_tracker import get_total_tool_tokens, add_tool_tokens
 from ws_braodcast import active_connections
-from kb_chatbot_integration import handle_knowledge_query
 
 from skill_manager import skill_manager
 # --- STRANDS ADAPTATION: Use the new strands-specific planner ---
@@ -403,33 +401,22 @@ async def handle_agent_request(request: MessageRequest):
             if callable(output_text): output_text = output_text()
             if not isinstance(output_text, str): output_text = str(output_text)
 
-        # 4. Standard fallback for conversational behavior (original stock analyst)
+        # 4. No skill matched and no active session — unknown command
         else:
-            # Check knowledge base first
-            kb_response = handle_knowledge_query(user_message)
-            if kb_response:
-                return {
-                    "output": kb_response["answer"],
-                    "suggestions": ["Tell me more", "Show other companies"],
-                    "sources": kb_response.get("sources", []),
-                    "confidence": kb_response.get("confidence", 0),
-                    "input_tokens": 0,
-                    "output_tokens": 0
-                }
-
-            # Token count (input)
-            input_tokens = count_tokens(user_message)
-
-            # NOTE: this fallback is currently still tied to your pydantic-ai sample_api agent
-            # If you port sample_api to strands later, you'd adapt the result extraction here too.
-            result = await asyncio.to_thread(
-                agent.run_sync,
-                user_message,
-                message_history=history
-            )
-
-            session_histories[session_id] = result.all_messages()
-            output_text = result.output or ""
+            input_tokens = 0
+            return {
+                "output": "Unknown command. Please use a skill command like /rebalance <client_id> to get started.",
+                "suggestions": [],
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "total_input_tokens_conversation": 0,
+                "total_output_tokens_conversation": 0,
+                "total_tokens_this_request": 0,
+                "total_tokens_entire_conversation": 0,
+                "total_input_tokens_tools": 0,
+                "total_output_tokens_tools": 0,
+                "total_tokens_tools": 0,
+            }
 
         # --- Output security validation ---
         skill_instructions = ""
