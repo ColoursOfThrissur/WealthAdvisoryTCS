@@ -41,6 +41,10 @@ const ClientDetail = () => {
         user_prompt: "",
         refresh: false
       });
+
+      if (!fullData.client_detail?.client?.name && !fullData.client_detail?.asset_allocation?.length) {
+        throw new Error('Analysis returned incomplete data — the AI agent may have encountered an issue. Please retry.');
+      }
       
       // Transform BackendV2 schema to frontend expected format
       const transformedData = {
