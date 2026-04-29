@@ -2177,7 +2177,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  padding: var(--space-sm) var(--space-2xl) 0 var(--space-2xl);
+  padding: var(--space-sm) var(--space-2xl) 70px var(--space-2xl);
   height: 100%;
   overflow: hidden;
 }
