@@ -7,6 +7,10 @@
   position: relative;
 }
 
+.overview--chat-open {
+  overflow: hidden;
+}
+
 .overview::before {
   display: none;
 }

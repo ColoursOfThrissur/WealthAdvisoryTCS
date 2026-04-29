@@ -155,7 +155,7 @@ const Overview = () => {
   const fmt = (v) => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : v >= 1000 ? `$${(v/1000).toFixed(0)}K` : `$${v}`;
 
   return (
-    <div className="overview">
+    <div className={`overview${isChatExpanded ? ' overview--chat-open' : ''}`}>
 
       {/* Mail Preview Modal */}
       {selectedMailClient && (
