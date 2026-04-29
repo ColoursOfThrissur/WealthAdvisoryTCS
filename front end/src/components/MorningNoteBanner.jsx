@@ -50,10 +50,7 @@ const MorningNoteBanner = () => {
   }, []);
 
   const getPreview = (section) =>
-    section.content
-      .filter(l => l.trim())
-      .slice(0, 3)
-      .join(' ')
+    (section.content.filter(l => l.trim())[1] || section.content.filter(l => l.trim())[0] || '')
       .replace(/\*\*/g, '')
       .slice(0, 200);
 

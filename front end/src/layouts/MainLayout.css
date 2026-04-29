@@ -80,7 +80,8 @@
 .brand-powered-by {
   font-size: 0.5625rem;
   font-weight: 400;
-  letter-spacing: 0.08em;
+  font-style: italic;
+  letter-spacing: 0.04em;
   color: var(--text-tertiary);
   -webkit-text-fill-color: var(--text-tertiary);
   background: none;

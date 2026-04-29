@@ -441,8 +441,10 @@ const BackendChatInterface = ({ onClose }) => {
         <div className="bci-messages-inner">
         {displayMessages.length === 0 ? (
           <div className="bci-welcome">
-            <Sparkles size={40} className="welcome-icon" />
-            <h3>Client Relationship Assist</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Sparkles size={32} className="welcome-icon" />
+              <h3>Client Relationship Assist</h3>
+            </div>
             <p>Your intelligent assistant for client management, portfolio analysis, and relationship insights.</p>
             <div className="bci-welcome-input">
               <form className="bci-input-row" onSubmit={handleSubmit}>
