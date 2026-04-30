@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, RefreshCw, AlertCircle } from 'lucide-react';
+import { X, RefreshCw, AlertCircle, TrendingUp, Activity, BarChart2, TrendingDown } from 'lucide-react';
 import clientDataService from '../services/clientDataService';
 import './RerunModal.css';
 
@@ -8,6 +8,15 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
   const [fundList, setFundList] = useState([]);
   const [excludedFunds, setExcludedFunds] = useState([]);
   const [advisorPrompt, setAdvisorPrompt] = useState('');
+  const [stressTestEnabled, setStressTestEnabled] = useState(false);
+  const [stressScenario, setStressScenario] = useState('Moderate Uptrend');
+
+  const STRESS_SCENARIOS = [
+    { id: 'Moderate Uptrend',    icon: <TrendingUp size={16} />,   desc: 'Steady growth, low volatility' },
+    { id: 'Volatile Mixed',      icon: <Activity size={16} />,     desc: 'High swings, mixed signals' },
+    { id: 'Stabilizing Market',  icon: <BarChart2 size={16} />,    desc: 'Recovery phase, cautious' },
+    { id: 'Downtrending Market', icon: <TrendingDown size={16} />, desc: 'Bearish conditions, defensive' },
+  ];
   const [loading, setLoading] = useState(false);
   const [loadingFunds, setLoadingFunds] = useState(false);
 
@@ -63,6 +72,7 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
         include_fund_universe: true,
         user_prompt: advisorPrompt.trim(),
         excluded_funds: excludedFunds,
+        stress_test_scenario: stressTestEnabled ? stressScenario : null,
       });
     } finally {
       setLoading(false);
@@ -73,6 +83,8 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
     setIncludeSentiment(true);
     setExcludedFunds([]);
     setAdvisorPrompt('');
+    setStressTestEnabled(false);
+    setStressScenario('Moderate Uptrend');
   };
 
   if (!isOpen) return null;
@@ -164,7 +176,43 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
             )}
           </div>
 
-          {/* Section 3: Advisor Prompt */}
+          {/* Section 3: Stress Testing */}
+          <div className="rerun-section">
+            <div className="rerun-section-header" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <h3 className="rerun-section-title">Stress Testing</h3>
+                <p className="rerun-section-desc">Simulate portfolio performance under different market conditions</p>
+              </div>
+              <div className="rerun-toggle-container" style={{ padding: 0 }}>
+                <label className="rerun-toggle">
+                  <input
+                    type="checkbox"
+                    checked={stressTestEnabled}
+                    onChange={(e) => setStressTestEnabled(e.target.checked)}
+                  />
+                  <span className="rerun-toggle-slider"></span>
+                </label>
+                <span className="rerun-toggle-label">{stressTestEnabled ? 'Enabled' : 'Disabled'}</span>
+              </div>
+            </div>
+            {stressTestEnabled && (
+              <div className="rerun-stress-grid">
+                {STRESS_SCENARIOS.map((s) => (
+                  <div
+                    key={s.id}
+                    className={`rerun-stress-card${stressScenario === s.id ? ' rerun-stress-card--active' : ''}`}
+                    onClick={() => setStressScenario(s.id)}
+                  >
+                    <div className="rerun-stress-card__icon">{s.icon}</div>
+                    <span className="rerun-stress-card__title">{s.id}</span>
+                    <span className="rerun-stress-card__desc">{s.desc}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Section 4: Advisor Prompt */}
           <div className="rerun-section">
             <div className="rerun-section-header">
               <h3 className="rerun-section-title">Advisor Instructions</h3>
