@@ -265,7 +265,10 @@ const MeetingPrep = () => {
             </div>
             <h3 className="mp-card__sub">Risks</h3>
             <ul className="mp-bullets mp-bullets--risk">
-              {risk.risks.map((r, i) => <li key={i}>{r}</li>)}
+              {risk.risks.map((r, i) => {
+                const [label, ...rest] = r.split(':');
+                return <li key={i}><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</li>;
+              })}
             </ul>
             <h3 className="mp-card__sub" style={{ marginTop: '0.75rem' }}>Opportunities</h3>
             <ul className="mp-bullets mp-bullets--opp">
@@ -300,7 +303,10 @@ const MeetingPrep = () => {
               <AIBadge size="sm" />
             </div>
             <ul className="mp-bullets">
-              {news.map((n, i) => <li key={i}>{n}</li>)}
+              {news.map((n, i) => {
+                const [label, ...rest] = n.split(':');
+                return <li key={i}><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</li>;
+              })}
             </ul>
           </section>
 
@@ -351,11 +357,14 @@ const MeetingPrep = () => {
           </div>
           <div className="mp-nba-col mp-nba-col--client">
             <h3 className="mp-nba-col__label">Client Aligned</h3>
-            {actions.clientAligned.map((a, i) => (
-              <div key={i} className="mp-nba-card mp-nba-card--client">
-                <span>{a}</span>
-              </div>
-            ))}
+            {actions.clientAligned.map((a, i) => {
+              const [label, ...rest] = a.split(':');
+              return (
+                <div key={i} className="mp-nba-card mp-nba-card--client">
+                  <span><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
