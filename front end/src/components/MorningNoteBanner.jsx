@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, RefreshCw, ChevronDown, AlertTriangle } from 'lucide-react';
+import { TrendingUp, RefreshCw, ChevronDown, AlertTriangle, CheckCircle } from 'lucide-react';
 import useMorningNotes from '../hooks/useMorningNotes';
 import { activeMarketEvent } from '../data/marketEventData';
 import './MorningNoteBanner.css';
@@ -14,7 +14,18 @@ const MorningNoteBanner = () => {
   const pillRefs = useRef([]);
   const pillsRef = useRef(null);
   const navigate = useNavigate();
-  const [mailerCompleted] = useState(() => localStorage.getItem('mailerEventCompleted') === 'true');
+  const [mailerCompleted, setMailerCompleted] = useState(() => localStorage.getItem('mailerEventCompleted') === 'true');
+  const longPressRef = useRef(null);
+
+  const handleRefreshMouseDown = () => {
+    longPressRef.current = setTimeout(() => {
+      localStorage.removeItem('mailerEventCompleted');
+      setMailerCompleted(false);
+      window.location.reload();
+    }, 1000);
+  };
+
+  const handleRefreshMouseUp = () => clearTimeout(longPressRef.current);
 
   const handleMouseEnter = (idx) => {
     clearTimeout(timeoutRef.current);
@@ -98,23 +109,26 @@ const MorningNoteBanner = () => {
           ))}
 
           {/* Market event pill */}
-          {!mailerCompleted && (
-            <div
-              className="mnb-pill mnb-pill--event"
-              onClick={() => navigate('/?event=mailer')}
-            >
-              <AlertTriangle size={11} className="mnb-pill__event-icon" />
-              <div className="mnb-pill__text">
-                <span className="mnb-pill__title">{activeMarketEvent.title} — Mass Mailer</span>
-                <span className="mnb-pill__subtitle">{activeMarketEvent.subtitle}</span>
-              </div>
+          <div
+            className={`mnb-pill${!mailerCompleted ? ' mnb-pill--event' : ''}`}
+            onClick={() => navigate('/?event=mailer')}
+          >
+            {mailerCompleted
+              ? <CheckCircle size={11} className="mnb-pill__event-icon" />
+              : <AlertTriangle size={11} className="mnb-pill__event-icon" />}
+            <div className="mnb-pill__text">
+              <span className="mnb-pill__title">{activeMarketEvent.title} — Mass Mailer</span>
+              <span className="mnb-pill__subtitle">{mailerCompleted ? 'Completed' : activeMarketEvent.subtitle}</span>
             </div>
-          )}
+          </div>
         </div>
 
         <button
           className={`mnb-refresh${refreshing ? ' mnb-refresh--spinning' : ''}`}
           onClick={refresh}
+          onMouseDown={handleRefreshMouseDown}
+          onMouseUp={handleRefreshMouseUp}
+          onMouseLeave={handleRefreshMouseUp}
           title="Refresh morning notes"
         >
           <RefreshCw size={13} />
