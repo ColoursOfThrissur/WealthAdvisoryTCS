@@ -231,25 +231,6 @@ const MeetingPrep = () => {
             {holdings.keyInsight && <p className="mp-card__insight">{holdings.keyInsight}</p>}
           </section>
 
-          {/* Recent Activity */}
-          <section className="mp-card">
-            <div className="mp-card__head">
-              <div className="mp-card__icon"><Clock size={15} /></div>
-              <h2 className="mp-card__title">Recent Activity</h2>
-            </div>
-            <div className="mp-activity-list">
-              {activity.map((a, i) => (
-                <div key={i} className="mp-activity-row">
-                  <span className="mp-activity-date">{a.date}</span>
-                  <div className="mp-activity-body">
-                    <span className="mp-activity-summary">{a.summary}</span>
-                    <span className="mp-activity-decision">→ {a.decision}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
           {/* Discussion Angles */}
           <section className="mp-card">
             <div className="mp-card__head">
@@ -290,6 +271,25 @@ const MeetingPrep = () => {
             <ul className="mp-bullets mp-bullets--opp">
               {risk.opportunities.map((o, i) => <li key={i}>{o}</li>)}
             </ul>
+          </section>
+
+          {/* Recent Activity */}
+          <section className="mp-card">
+            <div className="mp-card__head">
+              <div className="mp-card__icon"><Clock size={15} /></div>
+              <h2 className="mp-card__title">Recent Activity</h2>
+            </div>
+            <div className="mp-activity-list">
+              {activity.map((a, i) => (
+                <div key={i} className="mp-activity-row">
+                  <span className="mp-activity-date">{a.date}</span>
+                  <div className="mp-activity-body">
+                    <span className="mp-activity-summary">{a.summary}</span>
+                    <span className="mp-activity-decision">→ {a.decision}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
 
           {/* Fund News */}
