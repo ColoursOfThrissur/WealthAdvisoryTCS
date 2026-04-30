@@ -529,7 +529,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
                   <div className="ov-profile-detail__metrics">
                     {[['AUM', fmt(selectedProfile.aum), false],
                       ['Return', `+${(selectedProfile.return*100).toFixed(1)}%`, true],
-                      ['Risk', selectedProfile.riskLabel || `${(selectedProfile.risk*100).toFixed(0)}%`, false],
+                      ['Risk', selectedProfile.riskLabel || (selectedProfile.risk >= 0.35 ? 'Moderate Growth' : selectedProfile.risk >= 0.2 ? 'Moderate' : selectedProfile.risk >= 0.1 ? 'Low Risk' : 'Conservative'), false],
                       ['Credit', selectedProfile.creditScore, false],
                       ['Age', selectedProfile.age, false]
                     ].map(([label, val, green]) => (
