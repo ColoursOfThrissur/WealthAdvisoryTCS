@@ -31,6 +31,7 @@ function ProtectedRoute({ children }) {
 
 function App() {
   const [activeTab, setActiveTab] = useState('cockpit');
+  const [isChatExpanded, setIsChatExpanded] = useState(false);
 
   return (
     <BrowserRouter>
@@ -41,10 +42,10 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={
             <ProtectedRoute>
-            <MainLayout activeTab={activeTab} onTabChange={setActiveTab}>
+            <MainLayout activeTab={activeTab} onTabChange={setActiveTab} isChatExpanded={isChatExpanded} onChatClose={() => setIsChatExpanded(false)}>
               <CanvasLayout>
                 <div style={{ display: activeTab === 'cockpit' ? 'contents' : 'none' }}>
-                  <Overview />
+                  <Overview isChatExpanded={isChatExpanded} setIsChatExpanded={setIsChatExpanded} />
                 </div>
                 <div style={{ display: activeTab === 'advisor-assist' ? 'contents' : 'none' }}>
                   <BackendChatInterface onClose={() => setActiveTab('cockpit')} />

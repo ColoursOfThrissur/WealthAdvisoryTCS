@@ -4,10 +4,46 @@ import ThemeToggle from '../components/ThemeToggle';
 import MorningNoteBanner from '../components/MorningNoteBanner';
 import './MainLayout.css';
 
-const MainLayout = ({ children, activeTab, onTabChange }) => {
+const TOP_LEVEL_PREFIXES = ['/worklist', '/prioritize', '/meeting-prep', '/report-chat', '/action'];
+
+const isTopLevelRoute = (pathname) =>
+  TOP_LEVEL_PREFIXES.some(prefix => pathname.startsWith(prefix));
+
+const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === '/';
+
+  const renderNavBar = () => {
+    if (isHome && !isChatExpanded) {
+      return <MorningNoteBanner />;
+    }
+
+    if (isHome && isChatExpanded) {
+      return (
+        <div className="mnb-root mnb-nav">
+          <button className="mnb-nav-btn" onClick={() => { if (onChatClose) onChatClose(); }}>
+            <ArrowLeft size={14} /> Back
+          </button>
+        </div>
+      );
+    }
+
+    const isTopLevel = isTopLevelRoute(location.pathname);
+
+    return (
+      <div className="mnb-root mnb-nav">
+        <button className="mnb-nav-btn" onClick={() => navigate(-1)}>
+          <ArrowLeft size={14} /> Back
+        </button>
+        {!isTopLevel && (
+          <button className="mnb-nav-btn" onClick={() => navigate('/')}>
+            <Home size={14} /> Home
+          </button>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="main-layout">
@@ -38,19 +74,19 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
         <div className="main-layout__tabs">
           <button
             className={`main-layout__tab${activeTab === 'cockpit' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => onTabChange('cockpit')}
+            onClick={() => { if (!isHome) navigate('/'); onTabChange('cockpit'); }}
           >
             Cockpit
           </button>
           <button
             className={`main-layout__tab${activeTab === 'advisor-assist' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => onTabChange('advisor-assist')}
+            onClick={() => { if (!isHome) navigate('/'); onTabChange('advisor-assist'); }}
           >
             Assist
           </button>
           <button
             className={`main-layout__tab${activeTab === 'meeting-assist' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => onTabChange('meeting-assist')}
+            onClick={() => { if (!isHome) navigate('/'); onTabChange('meeting-assist'); }}
           >
             Live Meeting
           </button>
@@ -84,18 +120,7 @@ const MainLayout = ({ children, activeTab, onTabChange }) => {
         </div>
       </header>
 
-      {isHome ? (
-        <MorningNoteBanner />
-      ) : (
-        <div className="mnb-root mnb-nav">
-          <button className="mnb-nav-btn" onClick={() => navigate(-1)}>
-            <ArrowLeft size={14} /> Back
-          </button>
-          <button className="mnb-nav-btn" onClick={() => navigate('/')}>
-            <Home size={14} /> Home
-          </button>
-        </div>
-      )}
+      {renderNavBar()}
 
       <main className="main-layout__content">
         {children}

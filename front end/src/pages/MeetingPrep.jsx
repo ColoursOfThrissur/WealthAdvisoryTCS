@@ -42,6 +42,12 @@ const HOLDINGS_DATA = {
       { asset: 'Bonds', pct: 43, value: '$215K', target: 35, diff: +8, status: 'overweight' },
       { asset: 'Cash', pct: 5, value: '$25K', target: 5, diff: 0, status: 'on-target' },
     ],
+    performance: [
+      { fund: 'AEPGX', y2024: '+4.66%', y2025: '+28.72%', note: 'Strong recovery' },
+      { fund: 'FSPGX', y2024: '+33.26%', y2025: '+18.53%', note: 'Moderated' },
+      { fund: 'AGTHX', y2024: '+28.43%', y2025: '+19.93%', note: 'Declined' },
+      { fund: 'Bonds', y2024: 'Steady', y2025: 'Improving', note: 'Steady improvement' },
+    ],
     keyInsight: 'AEPGX recovered +28.7% YoY; FSPGX moderated to +18.5%. Bond overweight limiting upside.',
   },
 };
@@ -173,6 +179,26 @@ const MeetingPrep = () => {
                 </tbody>
               </table>
             </div>
+            {holdings.performance && holdings.performance.length > 0 && (
+              <>
+                <h3 className="mp-card__sub" style={{ marginTop: '12px' }}>Performance Trends</h3>
+                <div className="mp-table-wrap">
+                  <table className="mp-table">
+                    <thead><tr><th>Fund</th><th>2024</th><th>2025</th><th>Note</th></tr></thead>
+                    <tbody>
+                      {holdings.performance.map((p, i) => (
+                        <tr key={i}>
+                          <td className="mp-td--bold">{p.fund}</td>
+                          <td>{p.y2024}</td>
+                          <td>{p.y2025}</td>
+                          <td style={{ color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{p.note}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
             {holdings.keyInsight && <p className="mp-card__insight">{holdings.keyInsight}</p>}
           </section>
 

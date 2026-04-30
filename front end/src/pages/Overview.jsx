@@ -12,8 +12,7 @@ import { activeMarketEvent, generateMailPreview } from '../data/marketEventData'
 import worklistData from '../data/worklistCustomers.json';
 import './Overview.css';
 
-const Overview = () => {
-  const [isChatExpanded, setIsChatExpanded] = useState(false);
+const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
   const [eventData, setEventData] = useState(null);
   const { handleEventAlertClick } = useOverviewContext(setIsChatExpanded, setEventData);
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ const Overview = () => {
   const [mailStatus, setMailStatus] = useState({});
   const [selectedMailClient, setSelectedMailClient] = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [eventCompleted, setEventCompleted] = useState(false);
   const [hideCompletedEvent, setHideCompletedEvent] = useState(false);
 
   const [isMeetingsOpen, setIsMeetingsOpen] = useState(false);
@@ -129,6 +127,16 @@ const Overview = () => {
     }
   }, [location.search]);
 
+  // Clean up when chat closes (e.g. via MainLayout Back button)
+  useEffect(() => {
+    if (!isChatExpanded) {
+      setEventData(null);
+      setEventChatMessages([]);
+      setMailStatus({});
+      setChatInput('');
+    }
+  }, [isChatExpanded]);
+
   const handleScroll = (e) => setShowScrollTop(e.target.scrollTop > 300);
 
   const handleChatSubmit = (e) => {
@@ -151,7 +159,7 @@ const Overview = () => {
   const handleSuggestionClick = (s) => { setChatInput(s); handleChatSubmit({ preventDefault: () => {} }); };
   const handleReviewMail = (id) => setSelectedMailClient(activeMarketEvent.affectedClients.find(c => c.clientId === id));
   const handleConfirmMail = () => { setMailStatus(prev => ({ ...prev, [selectedMailClient.clientId]: 'confirmed' })); setSelectedMailClient(null); };
-  const handleChatExpand = (v) => { setIsChatExpanded(v); if (!v) navigate('/'); };
+  const handleChatExpand = (v) => { setIsChatExpanded(v); if (!v) { setEventData(null); setEventChatMessages([]); setMailStatus({}); setChatInput(''); navigate('/'); } };
   const fmt = (v) => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : v >= 1000 ? `$${(v/1000).toFixed(0)}K` : `$${v}`;
 
   return (
@@ -274,12 +282,7 @@ const Overview = () => {
       {/* Chat Overlay */}
       {isChatExpanded && (
         <div className="overview__chat-overlay">
-          <div className="chat-expanded" style={{ gap: 0 }}>
-            <div className="chat-expanded__header" style={{ padding: 0 }}>
-              <button className="chat-expanded__close" onClick={() => { handleChatExpand(false); setEventData(null); }}>
-                <ArrowLeft size={18} /> Back
-              </button>
-            </div>
+          <div className="chat-expanded">
             <div className="chat-expanded__content">
               {eventData ? (
                 <>
@@ -309,32 +312,46 @@ const Overview = () => {
                           <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.criticalCount}</span><span className="event-stat__label">Critical</span></div>
                           <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.highCount}</span><span className="event-stat__label">High</span></div>
                           <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.mediumCount}</span><span className="event-stat__label">Medium</span></div>
-                          <div className="event-stat"><span className="event-stat__value">${(activeMarketEvent.impactSummary.totalProjectedLoss/1000).toFixed(0)}K</span><span className="event-stat__label">Projected Loss</span></div>
+                          <div className="event-stat"><span className="event-stat__value">~${(activeMarketEvent.impactSummary.totalProjectedLoss/1000).toFixed(0)}K</span><span className="event-stat__label">Est. Loss (approx)</span></div>
                           <div className="event-stat"><span className="event-stat__value">${(activeMarketEvent.impactSummary.totalExposure/1000000).toFixed(1)}M</span><span className="event-stat__label">Total Exposure</span></div>
-                          <div className="event-stat"><span className="event-stat__value">{activeMarketEvent.impactSummary.averageLossPercentage}%</span><span className="event-stat__label">Avg Loss</span></div>
+                          <div className="event-stat"><span className="event-stat__value">~{activeMarketEvent.impactSummary.averageLossPercentage}%</span><span className="event-stat__label">Avg Loss (approx)</span></div>
                         </div>
 
                         <div className="event-overview-card__section">
                           <h4>Priority Client Actions</h4>
-                          <div className="event-clients-list">
-                            {activeMarketEvent.affectedClients.map((client, idx) => (
-                              <div key={client.clientId} className="event-client-row">
-                                <span className="event-client-rank">{idx + 1}</span>
-                                <div className="event-client-info">
-                                  <div className="event-client-name-row">
-                                    <strong>{client.clientName}</strong>
-                                    <span className="event-client-meta">{client.age} years, {client.riskProfile}</span>
-                                    <span className={`severity-badge severity-badge--${client.severity.toLowerCase()}`}>{client.severity}</span>
-                                  </div>
-                                  <div className="event-client-stats">
-                                    <span>${(client.currentValue/1000).toFixed(0)}K</span>
-                                    <span className="event-client-return">+{client.portfolioReturn}%</span>
-                                    <span className="event-client-loss">-${client.projectedLoss.toLocaleString()} ({client.lossPercentage}%)</span>
-                                  </div>
-                                  <span className="event-client-action">{client.recommendedAction}</span>
-                                </div>
-                              </div>
-                            ))}
+                          <div className="event-clients-table">
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Client</th>
+                                  <th>Severity</th>
+                                  <th>Portfolio</th>
+                                  <th>Est. Loss (approx)</th>
+                                  <th>Recommended Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {activeMarketEvent.affectedClients.map((client, idx) => (
+                                  <tr key={client.clientId}>
+                                    <td>{idx + 1}</td>
+                                    <td>
+                                      <strong>{client.clientName}</strong>
+                                      <br />
+                                      <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{client.age}y · {client.riskProfile}</span>
+                                    </td>
+                                    <td><span className={`severity-badge severity-badge--${client.severity.toLowerCase()}`}>{client.severity}</span></td>
+                                    <td>
+                                      ${(client.currentValue/1000).toFixed(0)}K
+                                      <br />
+                                      <span style={{ color: 'var(--success)', fontWeight: 600, fontSize: '0.75rem' }}>+{client.portfolioReturn}%</span>
+                                    </td>
+                                    <td style={{ color: 'var(--error)', fontWeight: 600 }}>~${client.projectedLoss.toLocaleString()} (~{client.lossPercentage}%)</td>
+                                    <td style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{client.recommendedAction}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         </div>
                       </div>
@@ -391,7 +408,7 @@ const Overview = () => {
                                       <span className={`severity-badge severity-badge--${client.severity.toLowerCase()}`}>{client.severity}</span>
                                     </div>
                                     <div className="sent-client-details">
-                                      <span>Portfolio Impact: -${client.projectedLoss.toLocaleString()} ({client.lossPercentage}%)</span>
+                                      <span>Est. Portfolio Impact: ~${client.projectedLoss.toLocaleString()} (~{client.lossPercentage}%)</span>
                                       <span>Reason: {client.reason}</span>
                                       <span>Action: {client.recommendedAction}</span>
                                     </div>
@@ -406,13 +423,12 @@ const Overview = () => {
                               <button
                                 className="back-to-dashboard-btn"
                                 onClick={() => {
-                                  setEventCompleted(true);
                                   setEventData(null);
                                   setIsChatExpanded(false);
-                                  setTimeout(() => {
-                                    setEventCompleted(false);
-                                    setHideCompletedEvent(true);
-                                  }, 5000);
+                                  setEventChatMessages([]);
+                                  setMailStatus({});
+                                  setChatInput('');
+                                  setHideCompletedEvent(true);
                                 }}
                               >
                                 Return to Dashboard
