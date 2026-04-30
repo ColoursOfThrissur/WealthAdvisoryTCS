@@ -14,6 +14,7 @@ const MorningNoteBanner = () => {
   const pillRefs = useRef([]);
   const pillsRef = useRef(null);
   const navigate = useNavigate();
+  const [mailerCompleted] = useState(() => localStorage.getItem('mailerEventCompleted') === 'true');
 
   const handleMouseEnter = (idx) => {
     clearTimeout(timeoutRef.current);
@@ -97,16 +98,18 @@ const MorningNoteBanner = () => {
           ))}
 
           {/* Market event pill */}
-          <div
-            className="mnb-pill mnb-pill--event"
-            onClick={() => navigate('/?event=mailer')}
-          >
-            <AlertTriangle size={11} className="mnb-pill__event-icon" />
-            <div className="mnb-pill__text">
-              <span className="mnb-pill__title">{activeMarketEvent.title} — Mass Mailer</span>
-              <span className="mnb-pill__subtitle">{activeMarketEvent.subtitle}</span>
+          {!mailerCompleted && (
+            <div
+              className="mnb-pill mnb-pill--event"
+              onClick={() => navigate('/?event=mailer')}
+            >
+              <AlertTriangle size={11} className="mnb-pill__event-icon" />
+              <div className="mnb-pill__text">
+                <span className="mnb-pill__title">{activeMarketEvent.title} — Mass Mailer</span>
+                <span className="mnb-pill__subtitle">{activeMarketEvent.subtitle}</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <button

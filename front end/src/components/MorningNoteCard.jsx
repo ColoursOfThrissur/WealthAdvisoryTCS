@@ -291,7 +291,7 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
         )}
 
         {/* Mass Mailer Event */}
-        {!hideCompletedEvent && (
+        {!hideCompletedEvent && localStorage.getItem('mailerEventCompleted') !== 'true' && (
           <div className="morning-note-card__events">
             {eventCompleted ? (
               <div className="event-item event-item--resolved">

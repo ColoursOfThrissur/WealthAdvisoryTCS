@@ -24,7 +24,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
   const [mailStatus, setMailStatus] = useState({});
   const [selectedMailClient, setSelectedMailClient] = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [hideCompletedEvent, setHideCompletedEvent] = useState(false);
+  const [hideCompletedEvent, setHideCompletedEvent] = useState(() => localStorage.getItem('mailerEventCompleted') === 'true');
 
   const [isMeetingsOpen, setIsMeetingsOpen] = useState(false);
 
@@ -432,6 +432,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
                                   setMailStatus({});
                                   setChatInput('');
                                   setHideCompletedEvent(true);
+                                  localStorage.setItem('mailerEventCompleted', 'true');
                                 }}
                               >
                                 Return to Dashboard
