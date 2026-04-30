@@ -502,6 +502,13 @@
   display: block;
 }
 
+.ov-profile-detail__profession {
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  display: block;
+  text-transform: capitalize;
+}
+
 /* Metrics row */
 .ov-profile-detail__metrics {
   display: flex;

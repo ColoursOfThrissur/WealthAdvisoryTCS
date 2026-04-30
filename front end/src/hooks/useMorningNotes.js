@@ -88,7 +88,7 @@ const HARDCODED_SECTIONS = [
     title: 'Fed Rate Cuts Delayed',
     content: [
       'Elevated inflation and geopolitical climate will push cuts to 2026 end',
-      'As bond yields become more attractive and intermediate duration bonds regain relevance as stabilizers, this will impact 45 bond heavy portfolios and 12 clients sensitive to income stability',
+      'Impact on 45 bond heavy portfolios and 12 clients seen as sensitive to income stability, as bond yields become more attractive and intermediate duration bonds regain relevance as stabilizers',
     ],
   },
   {
@@ -101,8 +101,8 @@ const HARDCODED_SECTIONS = [
   {
     title: 'Key Events Today',
     content: [
-      'MSFT, GOOGL, META earnings',
-      'Q1 GDP, PCE inflation data',
+      'MSFT, GOOGL, META earnings after market close — expect volatility in tech-heavy portfolios',
+      'Q1 GDP first estimate and PCE inflation data release — key signals for Fed rate path and bond positioning',
     ],
   },
 ];

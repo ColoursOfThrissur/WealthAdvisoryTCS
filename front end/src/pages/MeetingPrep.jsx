@@ -36,17 +36,23 @@ const CLIENT_DATA = {
 
 const HOLDINGS_DATA = {
   '15600001': {
-    totalValue: '$500,000',
+    totalValue: '$502,000',
+    costBasis: '$450,000',
+    unrealizedGL: '$52,000',
     allocation: [
       { asset: 'Equity', pct: 52, value: '$260K', target: 60, diff: -8, status: 'underweight' },
       { asset: 'Bonds', pct: 43, value: '$215K', target: 35, diff: +8, status: 'overweight' },
       { asset: 'Cash', pct: 5, value: '$25K', target: 5, diff: 0, status: 'on-target' },
     ],
     performance: [
-      { fund: 'AEPGX', y2024: '+4.66%', y2025: '+28.72%', note: 'Strong recovery' },
-      { fund: 'FSPGX', y2024: '+33.26%', y2025: '+18.53%', note: 'Moderated' },
-      { fund: 'AGTHX', y2024: '+28.43%', y2025: '+19.93%', note: 'Declined' },
-      { fund: 'Bonds', y2024: 'Steady', y2025: 'Improving', note: 'Steady improvement' },
+      { fund: 'FSPGX', type: 'US Large-Cap Growth (Equity)', weight: 20, y2024: '33.26%', y2025: '18.53%', trend: 'Declining', remarks: 'Concentration Risk' },
+      { fund: 'AGTHX', type: 'US Growth (Equity)', weight: 18, y2024: '28.43%', y2025: '19.93%', trend: 'Declining', remarks: '' },
+      { fund: 'ABNDX', type: 'Core Bond', weight: 18, y2024: '4.51%', y2025: '6.71%', trend: 'Improving', remarks: '' },
+      { fund: 'AEPGX', type: 'International Equity', weight: 17, y2024: '4.66%', y2025: '28.72%', trend: 'Growing', remarks: 'Highly Volatile Diversification Opportunity' },
+      { fund: 'CWBFX', type: 'Global Bond', weight: 15, y2024: '3.42%', y2025: '5.62%', trend: 'Improving', remarks: 'Defensive Drag' },
+      { fund: 'AMECX', type: 'Income/Balanced', weight: 10, y2024: '9.52%', y2025: '12.55%', trend: 'Improving', remarks: 'Excess Stability' },
+      { fund: 'AIVSX', type: 'US Core Equity', weight: 7, y2024: '18.57%', y2025: '14.66%', trend: 'Declining', remarks: 'Core Anchor' },
+      { fund: 'ANWPX', type: 'Global Growth Equity', weight: 7, y2024: '14.16%', y2025: '16.18%', trend: 'Improving', remarks: 'Global Balance' },
     ],
     keyInsight: 'AEPGX recovered +28.7% YoY; FSPGX moderated to +18.5%. Bond overweight limiting upside.',
   },
@@ -61,9 +67,9 @@ const RISK_DATA = {
       'Currency Exposure: International funds (AEPGX, CWBFX, ANWPX) subject to currency risk',
     ],
     opportunities: [
-      'Rebalancing Upside: Moving toward target allocation could enhance returns',
-      'International Value: AEPGX showing strong recovery and relative undervaluation',
-      'Phased Approach: Client has approved gradual rebalancing strategy',
+      'Growth and Target achievement with Rebalancing',
+      'Diversification Opportunity with AEPGX',
+      'Client Comfort aligned phased allocation',
     ],
   },
 };
@@ -77,10 +83,10 @@ const ACTIVITY_DATA = {
 
 const CLIENT_NEWS = {
   '15600001': [
-    'US Large-Cap Growth: Tech-heavy funds showing high volatility after strong rally',
-    'International equities (AEPGX) lagging but relatively undervalued vs US markets',
-    'Bond markets stabilizing, but interest rate uncertainty persists',
-    'Increasing interest in income + dividend strategies for stability',
+    'US Large-Cap Growth: Tech-heavy funds remain volatile after a strong rally; leadership narrowing increases concentration risk.',
+    'International Equities: Valuations remain attractive relative to U.S. markets, with improving fundamentals supporting selective entry.',
+    'Bond Markets: Conditions have stabilized, but ongoing rate uncertainty limits incremental upside from bond overweights.',
+    'Industry Trends: Continued shift toward low-cost index funds.',
   ],
 };
 
@@ -93,19 +99,26 @@ const UPCOMING_MEETINGS = {
 
 const DISCUSSION_ANGLES = {
   '15600001': [
-    'Frame AEPGX underperformance as a diversification benefit with recovery upside',
-    'Present phased rebalancing as lower-risk path vs lump-sum — aligns with client preference',
-    'Highlight that bond overweight is stable but capping growth potential',
-    'Use Phase 1 approval momentum to build confidence for larger future rebalancing',
+    { title: 'Portfolio Drift Check', desc: 'Review current equity underweight vs target and growth impact.' },
+    { title: 'Rebalancing Approach', desc: 'Compare phased vs lump-sum rebalancing; reinforce gradual strategy.' },
+    { title: 'Fund Performance Highlights', desc: 'Discuss international recovery, manage US growth volatility, and revisit bond role.' },
+    { title: 'Execution Plan', desc: 'Confirm Phase-1 $10K rebalance, timing, and mechanics.' },
+    { title: 'Next Milestone', desc: 'Set expectations for Phase-2 planning and schedule follow-up.' },
   ],
 };
 
 const RECOMMENDED_ACTIONS = {
-  '15600001': [
-    { label: 'Execute Phase 1', desc: 'Proceed with approved $10K bond-to-equity rebalance targeting AMECX and AEPGX', priority: 'high' },
-    { label: 'Schedule Follow-up', desc: 'Book review meeting within one month of Phase 1 execution', priority: 'medium' },
-    { label: 'Build Toward Target', desc: 'Work toward 60/35/5 allocation over 3-4 phases across 6 months', priority: 'low' },
-  ],
+  '15600001': {
+    primary: [
+      { label: 'Execute Phase-1 Rebalance', desc: 'Proceed with the approved $10K bond-to-equity shift' },
+      { label: 'Target Selective Equity Adds', desc: 'Increase AEPGX and AMECX exposure; avoid adding to high-volatility growth funds.' },
+    ],
+    clientAligned: [
+      'Phased Approach: Continue $10K increments to align with client comfort and reduce timing risk.',
+      'Objective: Reframe rebalancing as returning to the long-term plan, not reacting to markets.',
+      'Follow-Up: Reassess portfolio and client confidence within 30 days to plan Phase-2.',
+    ],
+  },
 };
 
 const fallbackClient = {
@@ -157,10 +170,23 @@ const MeetingPrep = () => {
           <section className="mp-card">
             <div className="mp-card__head">
               <div className="mp-card__icon"><BarChart3 size={15} /></div>
-              <h2 className="mp-card__title">Holdings</h2>
+              <h2 className="mp-card__title">Portfolio Snapshot</h2>
               <AIBadge size="sm" />
             </div>
-            <p className="mp-card__desc">Portfolio Value: {holdings.totalValue}</p>
+            <div className="mp-snapshot-kpis">
+              <div className="mp-snapshot-kpi">
+                <span className="mp-snapshot-kpi__label">Market Value</span>
+                <span className="mp-snapshot-kpi__value">{holdings.totalValue}</span>
+              </div>
+              <div className="mp-snapshot-kpi">
+                <span className="mp-snapshot-kpi__label">Cost Basis</span>
+                <span className="mp-snapshot-kpi__value">{holdings.costBasis}</span>
+              </div>
+              <div className="mp-snapshot-kpi">
+                <span className="mp-snapshot-kpi__label">Unrealized Gain/Loss</span>
+                <span className="mp-snapshot-kpi__value mp-snapshot-kpi__value--positive">{holdings.unrealizedGL}</span>
+              </div>
+            </div>
             <div className="mp-table-wrap">
               <table className="mp-table">
                 <thead><tr><th>Asset</th><th>Current</th><th>Target</th><th>Diff</th><th>Status</th></tr></thead>
@@ -184,14 +210,17 @@ const MeetingPrep = () => {
                 <h3 className="mp-card__sub" style={{ marginTop: '12px' }}>Performance Trends</h3>
                 <div className="mp-table-wrap">
                   <table className="mp-table">
-                    <thead><tr><th>Fund</th><th>2024</th><th>2025</th><th>Note</th></tr></thead>
+                    <thead><tr><th>Fund</th><th>Fund Type</th><th>Weight</th><th>2024</th><th>2025</th><th>Trend</th><th>Remarks</th></tr></thead>
                     <tbody>
                       {holdings.performance.map((p, i) => (
                         <tr key={i}>
                           <td className="mp-td--bold">{p.fund}</td>
+                          <td style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{p.type}</td>
+                          <td>{p.weight}%</td>
                           <td>{p.y2024}</td>
                           <td>{p.y2025}</td>
-                          <td style={{ color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{p.note}</td>
+                          <td><span className={`mp-badge ${p.trend === 'Growing' || p.trend === 'Improving' ? 'mp-badge--ok' : p.trend === 'Declining' ? 'mp-badge--warn' : ''}`}>{p.trend}</span></td>
+                          <td style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{p.remarks}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -228,9 +257,17 @@ const MeetingPrep = () => {
               <h2 className="mp-card__title">Discussion Angles</h2>
               <AIBadge size="sm" />
             </div>
-            <ul className="mp-bullets">
-              {angles.map((a, i) => <li key={i}>{a}</li>)}
-            </ul>
+            <div className="mp-discussion-list">
+              {angles.map((a, i) => (
+                <div key={i} className="mp-discussion-item">
+                  <span className="mp-discussion-num">{i + 1}</span>
+                  <div>
+                    <span className="mp-discussion-title">{a.title}</span>
+                    <span className="mp-discussion-desc">{a.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
 
         </div>
@@ -255,11 +292,11 @@ const MeetingPrep = () => {
             </ul>
           </section>
 
-          {/* Client in the News */}
+          {/* Fund News */}
           <section className="mp-card">
             <div className="mp-card__head">
               <div className="mp-card__icon"><Newspaper size={15} /></div>
-              <h2 className="mp-card__title">Client in the News</h2>
+              <h2 className="mp-card__title">Fund News</h2>
               <AIBadge size="sm" />
             </div>
             <ul className="mp-bullets">
@@ -296,20 +333,30 @@ const MeetingPrep = () => {
       <section className="mp-card mp-card--actions">
         <div className="mp-card__head">
           <div className="mp-card__icon mp-card__icon--accent"><Rocket size={15} /></div>
-          <h2 className="mp-card__title">Recommended Actions</h2>
+          <h2 className="mp-card__title">Next Best Actions</h2>
           <AIBadge size="sm" />
         </div>
-        <div className="mp-actions-row">
-          {actions.map((a, i) => (
-            <div key={i} className={`mp-action-item mp-action-item--${a.priority}`}>
-              <div className="mp-action-item__head">
-                <CheckCircle size={14} />
-                <span className="mp-action-item__label">{a.label}</span>
-                <span className={`mp-action-item__priority mp-action-item__priority--${a.priority}`}>{a.priority}</span>
+        <div className="mp-nba-grid">
+          <div className="mp-nba-col mp-nba-col--primary">
+            <h3 className="mp-nba-col__label">Primary</h3>
+            {actions.primary.map((a, i) => (
+              <div key={i} className="mp-nba-card mp-nba-card--primary">
+                <div className="mp-nba-card__head">
+                  <CheckCircle size={14} />
+                  <span className="mp-nba-card__title">{a.label}</span>
+                </div>
+                <p className="mp-nba-card__desc">{a.desc}</p>
               </div>
-              <p className="mp-action-item__desc">{a.desc}</p>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div className="mp-nba-col mp-nba-col--client">
+            <h3 className="mp-nba-col__label">Client Aligned</h3>
+            {actions.clientAligned.map((a, i) => (
+              <div key={i} className="mp-nba-card mp-nba-card--client">
+                <span>{a}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

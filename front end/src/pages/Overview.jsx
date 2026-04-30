@@ -41,13 +41,14 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
       age: c.Age,
       priority: c.Priority || 'Medium',
       riskLabel: c.FirstName === 'Mary' ? 'Moderate Growth' : null,
+      profession: c.BusinessOwner ? 'business owner' : (c.FirstName === 'Mary' ? 'marketing executive' : null),
       trigger: c.Trigger,
       rebalanceReason: c.RebalanceReason,
       keyContext: c.KeyContext || [],
       intro: [
         `${c.Age}y/o`,
-        c.Married ? 'married' : 'single',
-        c.BusinessOwner ? 'business owner' : null,
+        c.RiskProfile >= 0.35 ? 'moderate growth' : c.RiskProfile >= 0.2 ? 'moderate' : c.RiskProfile >= 0.1 ? 'low risk' : 'conservative',
+        c.BusinessOwner ? 'business owner' : (c.FirstName === 'Mary' ? 'marketing executive' : null),
         `${c.NumProducts} product${c.NumProducts !== 1 ? 's' : ''}`,
       ].filter(Boolean).join(' \u00b7 '),
       actions: Array.isArray(c.RecommendedActions) && c.RecommendedActions.length && typeof c.RecommendedActions[0] === 'object'
@@ -68,10 +69,11 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
       creditScore: 590,
       age: 35,
       priority: 'Medium',
+      profession: 'business owner',
       trigger: 'Market conditions and portfolio positioning makes this the right opportunity to advance the client\'s long-term goals with a timely proposal',
       rebalanceReason: 'Investment Proposal Review',
       keyContext: ['Portfolio trend: Moderate growth, business owner', 'Client Sensitivity: Family financial planning \u2191', 'Market Backdrop: Rate uncertainty'],
-      intro: '35y/o \u00b7 married \u00b7 business owner \u00b7 3 products',
+      intro: '35y/o \u00b7 moderate \u00b7 business owner \u00b7 3 products',
       actions: [
         { label: 'Investment Proposal Review', route: '/action/proposal/15678284' },
         { label: 'Engagement Letter', route: '/client/15678284/profile' },
@@ -87,12 +89,13 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
       age: c.Age,
       priority: c.Priority || 'Medium',
       riskLabel: null,
+      profession: c.BusinessOwner ? 'business owner' : null,
       trigger: c.Trigger,
       rebalanceReason: c.RebalanceReason,
       keyContext: c.KeyContext || [],
       intro: [
         `${c.Age}y/o`,
-        c.Married ? 'married' : 'single',
+        c.RiskProfile >= 0.35 ? 'moderate growth' : c.RiskProfile >= 0.2 ? 'moderate' : c.RiskProfile >= 0.1 ? 'low risk' : 'conservative',
         c.BusinessOwner ? 'business owner' : null,
         `${c.NumProducts} product${c.NumProducts !== 1 ? 's' : ''}`,
       ].filter(Boolean).join(' \u00b7 '),
@@ -515,6 +518,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
                     </div>
                     <div>
                       <span className="ov-profile-detail__name">{selectedProfile.name}</span>
+                      {selectedProfile.profession && <span className="ov-profile-detail__profession">{selectedProfile.profession}</span>}
                       <span className="ov-profile-detail__id">#{selectedProfile.id}</span>
                     </div>
                     <span className={`ov-profile__status${selectedProfile.priority === 'Critical' ? ' ov-profile__status--critical' : ''}`}>
