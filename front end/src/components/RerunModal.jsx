@@ -21,11 +21,13 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
   const [loadingFunds, setLoadingFunds] = useState(false);
 
   useEffect(() => {
-    if (isOpen) fetchFundUniverse();
+    if (isOpen) {
+      setLoadingFunds(true);
+      fetchFundUniverse();
+    }
   }, [isOpen]);
 
   const fetchFundUniverse = async () => {
-    setLoadingFunds(true);
     try {
       const cached = clientDataService._sliceFromFull(clientId, 'rebalancing_action');
       if (cached.success) {
