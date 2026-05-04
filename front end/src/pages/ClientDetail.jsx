@@ -152,9 +152,13 @@ const ClientDetail = () => {
       let selectedFundUniverse = null;
       if (config.excluded_funds && config.excluded_funds.length > 0) {
         // Get the full fund list from the rerun modal and remove excluded ones
-        const cached = clientDataService._sliceFromFull(clientId, 'rebalancing_action');
-        const optionBTrades = cached.success
-          ? (cached.data?.data?.options?.option_b?.trade_recommendations || []).filter(t => t.action === 'Buy' || t.action === 'buy')
+        let rebalSlice = clientDataService._sliceFromFull(clientId, 'rebalancing_action');
+        if (!rebalSlice.success) {
+          const waited = await clientDataService._waitForFullThenSlice(clientId, 'rebalancing_action');
+          if (waited) rebalSlice = { success: true, data: waited };
+        }
+        const optionBTrades = rebalSlice.success
+          ? (rebalSlice.data?.data?.options?.option_b?.trade_recommendations || []).filter(t => t.action === 'Buy' || t.action === 'buy')
           : [];
         if (optionBTrades.length > 0) {
           selectedFundUniverse = optionBTrades

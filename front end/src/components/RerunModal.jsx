@@ -5,7 +5,7 @@ import './RerunModal.css';
 
 const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
   const [includeSentiment, setIncludeSentiment] = useState(true);
-  const [fundList, setFundList] = useState([]);
+  const [fundList, setFundList] = useState([]); // null = load error, [] = empty/loading, [...] = loaded
   const [excludedFunds, setExcludedFunds] = useState([]);
   const [advisorPrompt, setAdvisorPrompt] = useState('');
   const [stressTestEnabled, setStressTestEnabled] = useState(false);
@@ -29,9 +29,17 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
 
   const fetchFundUniverse = async () => {
     try {
-      const cached = clientDataService._sliceFromFull(clientId, 'rebalancing_action');
-      if (cached.success) {
-        const optionBTrades = cached.data?.data?.options?.option_b?.trade_recommendations || [];
+      // First try the in-memory cache slice (instant if ClientDetail already loaded)
+      let rebalSlice = clientDataService._sliceFromFull(clientId, 'rebalancing_action');
+
+      // If not cached yet, wait for the in-flight full-analysis (ClientDetail may still be loading)
+      if (!rebalSlice.success) {
+        const waited = await clientDataService._waitForFullThenSlice(clientId, 'rebalancing_action');
+        if (waited) rebalSlice = { success: true, data: waited };
+      }
+
+      if (rebalSlice.success) {
+        const optionBTrades = rebalSlice.data?.data?.options?.option_b?.trade_recommendations || [];
         const buyTrades = optionBTrades.filter(t => t.action === 'Buy' || t.action === 'buy');
         if (buyTrades.length > 0) {
           setFundList(buyTrades.map(t => ({
@@ -43,6 +51,8 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
           return;
         }
       }
+
+      // Fallback: fetch from DynamoDB FundMaster via backend
       const universeData = await clientDataService.getFundUniverse();
       if (universeData?.data?.length > 0) {
         setFundList(universeData.data.map(f => ({
@@ -51,10 +61,12 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
           category: f.asset_class || f.category || 'N/A',
           expense_ratio: f.expense_ratio || null,
         })));
+      } else {
+        setFundList([]);
       }
     } catch (error) {
       console.error('[RerunModal] Error fetching fund universe:', error);
-      setFundList([]);
+      setFundList(null); // null = error state, distinct from [] = genuinely empty
     } finally {
       setLoadingFunds(false);
     }
@@ -137,6 +149,11 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
               <div className="rerun-funds-loading">
                 <div className="rerun-spinner"></div>
                 <span>Loading fund universe...</span>
+              </div>
+            ) : fundList === null ? (
+              <div className="rerun-funds-empty">
+                <AlertCircle size={24} />
+                <p>Could not load fund universe — backend may be unavailable</p>
               </div>
             ) : fundList.length > 0 ? (
               <div className="rerun-funds-table-container">

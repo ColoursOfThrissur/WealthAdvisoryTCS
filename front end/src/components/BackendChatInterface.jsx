@@ -5,13 +5,10 @@ import MeetingPrepSection from '../components/sections/MeetingPrepSection';
 import SuggestedPrompts from './SuggestedPrompts';
 import { Send, Sparkles, CheckCircle2, XCircle, FileText, TrendingUp, Mail, Users, ArrowUp, ArrowDown } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { getApiUrl } from '../config/api';
 import { getSuggestedPromptsForMode } from '../utils/suggestedPromptsHelper';
 
 const BackendChatInterface = ({ onClose }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const [chatMode, setChatMode] = useState('normal'); // 'normal', 'research', 'report', 'email', 'meeting'
   const [researchLoading, setResearchLoading] = useState(false);
   const [localMessages, setLocalMessages] = useState([]); // For research mode messages
@@ -26,17 +23,6 @@ const BackendChatInterface = ({ onClose }) => {
     sessionId
   } = useReportChat();
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const mode = params.get('mode');
-    if (mode && ['research', 'report', 'email', 'meeting'].includes(mode)) {
-      setChatMode(mode);
-    } else if (!mode) {
-      // If no mode in URL, default to normal
-      setChatMode('normal');
-    }
-  }, [location.search]);
-
   // Update suggested prompts when mode changes
   useEffect(() => {
     const context = {
@@ -50,17 +36,7 @@ const BackendChatInterface = ({ onClose }) => {
   }, [chatMode]);
 
   const handleModeChange = (newMode) => {
-    // Toggle off if clicking the same mode
-    const targetMode = chatMode === newMode ? 'normal' : newMode;
-    setChatMode(targetMode);
-    
-    const params = new URLSearchParams(location.search);
-    if (targetMode !== 'normal') {
-      params.set('mode', targetMode);
-    } else {
-      params.delete('mode');
-    }
-    navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+    setChatMode(chatMode === newMode ? 'normal' : newMode);
   };
 
   const handleSubmit = (e) => {

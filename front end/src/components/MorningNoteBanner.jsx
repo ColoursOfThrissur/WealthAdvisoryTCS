@@ -90,7 +90,8 @@ const MorningNoteBanner = () => {
         <div className="mnb-divider" />
 
         <div className="mnb-pills" ref={pillsRef}>
-          {sections.map((section, idx) => (
+          {/* First section pill */}
+          {sections.slice(0, 1).map((section, idx) => (
             <div
               key={idx}
               ref={el => pillRefs.current[idx] = el}
@@ -108,7 +109,7 @@ const MorningNoteBanner = () => {
             </div>
           ))}
 
-          {/* Market event pill */}
+          {/* Market event pill — second position */}
           <div
             className={`mnb-pill${!mailerCompleted ? ' mnb-pill--event' : ''}`}
             onClick={() => navigate('/?event=mailer')}
@@ -121,6 +122,25 @@ const MorningNoteBanner = () => {
               <span className="mnb-pill__subtitle">{mailerCompleted ? 'Completed' : activeMarketEvent.subtitle}</span>
             </div>
           </div>
+
+          {/* Remaining section pills */}
+          {sections.slice(1).map((section, idx) => (
+            <div
+              key={idx + 1}
+              ref={el => pillRefs.current[idx + 1] = el}
+              className={`mnb-pill${activeIdx === idx + 1 ? ' mnb-pill--active' : ''}`}
+              onMouseEnter={() => handleMouseEnter(idx + 1)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="mnb-pill__text">
+                <span className="mnb-pill__title">{section.title}</span>
+                <span className="mnb-pill__subtitle">
+                  {section.content.find(l => l.trim() && !l.startsWith('#'))?.replace(/\*\*/g, '').substring(0, 120) || ''}
+                </span>
+              </div>
+              <ChevronDown size={11} className="mnb-pill__chevron" />
+            </div>
+          ))}
         </div>
 
         <button

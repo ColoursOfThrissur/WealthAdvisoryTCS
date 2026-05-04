@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import CanvasLayout from './layouts/CanvasLayout';
 import Overview from './pages/Overview';
@@ -29,13 +29,21 @@ function ProtectedRoute({ children }) {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
-function App() {
+function AppRoutes() {
   const [activeTab, setActiveTab] = useState('cockpit');
   const [isChatExpanded, setIsChatExpanded] = useState(false);
+  const location = useLocation();
+
+  // Reset activeTab and chat when navigating away from '/'
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setActiveTab('cockpit');
+      setIsChatExpanded(false);
+    }
+  }, [location.pathname]);
 
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
       <WorklistProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -179,7 +187,14 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </WorklistProvider>
-      </AuthProvider>
+    </AuthProvider>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

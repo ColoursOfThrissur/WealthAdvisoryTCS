@@ -121,9 +121,15 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
     { name: 'Portfolio Review',      count: 12, critical: 0, icon: <BarChart3 size={16} />,   onClick: () => navigate('/worklist/rebalancing') },
   ];
 
+  // Only runs on mount — handles deep-link into chat via ?mode= param
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     if (location.pathname === '/chat' || searchParams.get('mode')) setIsChatExpanded(true);
+  }, []);
+
+  // Runs whenever search params change — handles mass mailer pill click (?event=mailer)
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
     if (searchParams.get('event') === 'mailer') {
       handleEventAlertClick('market-event');
       navigate('/', { replace: true });

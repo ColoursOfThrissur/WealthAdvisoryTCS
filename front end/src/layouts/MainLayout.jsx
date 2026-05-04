@@ -15,11 +15,25 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
   const isHome = location.pathname === '/';
 
   const renderNavBar = () => {
-    if (isHome && !isChatExpanded) {
-      return <MorningNoteBanner />;
+    // Sub-routes (not home)
+    if (!isHome) {
+      const isTopLevel = isTopLevelRoute(location.pathname);
+      return (
+        <div className="mnb-root mnb-nav">
+          <button className="mnb-nav-btn" onClick={() => navigate(-1)}>
+            <ArrowLeft size={14} /> Back
+          </button>
+          {!isTopLevel && (
+            <button className="mnb-nav-btn" onClick={() => navigate('/')}>
+              <Home size={14} /> Home
+            </button>
+          )}
+        </div>
+      );
     }
 
-    if (isHome && isChatExpanded) {
+    // Home — Cockpit tab with chat open (mass mailer overlay)
+    if (activeTab === 'cockpit' && isChatExpanded) {
       return (
         <div className="mnb-root mnb-nav">
           <button className="mnb-nav-btn" onClick={() => { if (onChatClose) onChatClose(); }}>
@@ -29,21 +43,23 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
       );
     }
 
-    const isTopLevel = isTopLevelRoute(location.pathname);
+    // Home — Cockpit tab, no chat: show morning notes banner
+    if (activeTab === 'cockpit') {
+      return <MorningNoteBanner />;
+    }
 
+    // Home — Assist or Live Meeting tabs: show Home button only
     return (
       <div className="mnb-root mnb-nav">
-        <button className="mnb-nav-btn" onClick={() => navigate(-1)}>
-          <ArrowLeft size={14} /> Back
+        <button className="mnb-nav-btn" onClick={() => { if (onChatClose) onChatClose(); onTabChange('cockpit'); }}>
+          <Home size={14} /> Home
         </button>
-        {!isTopLevel && (
-          <button className="mnb-nav-btn" onClick={() => navigate('/')}>
-            <Home size={14} /> Home
-          </button>
-        )}
       </div>
     );
   };
+
+  // Derive the visually active tab from the URL so the highlight is always correct
+  const resolvedActiveTab = isHome ? activeTab : null;
 
   return (
     <div className="main-layout">
@@ -73,20 +89,20 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
         {/* Center: Tab Toggle */}
         <div className="main-layout__tabs">
           <button
-            className={`main-layout__tab${activeTab === 'cockpit' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => { if (!isHome) navigate('/'); onTabChange('cockpit'); }}
+            className={`main-layout__tab${resolvedActiveTab === 'cockpit' ? ' main-layout__tab--active' : ''}`}
+            onClick={() => { if (onChatClose) onChatClose(); if (!isHome) navigate('/'); onTabChange('cockpit'); }}
           >
             Cockpit
           </button>
           <button
-            className={`main-layout__tab${activeTab === 'advisor-assist' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => { if (!isHome) navigate('/'); onTabChange('advisor-assist'); }}
+            className={`main-layout__tab${resolvedActiveTab === 'advisor-assist' ? ' main-layout__tab--active' : ''}`}
+            onClick={() => { if (onChatClose) onChatClose(); if (!isHome) navigate('/'); onTabChange('advisor-assist'); }}
           >
             Assist
           </button>
           <button
-            className={`main-layout__tab${activeTab === 'meeting-assist' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => { if (!isHome) navigate('/'); onTabChange('meeting-assist'); }}
+            className={`main-layout__tab${resolvedActiveTab === 'meeting-assist' ? ' main-layout__tab--active' : ''}`}
+            onClick={() => { if (onChatClose) onChatClose(); if (!isHome) navigate('/'); onTabChange('meeting-assist'); }}
           >
             Live Meeting
           </button>

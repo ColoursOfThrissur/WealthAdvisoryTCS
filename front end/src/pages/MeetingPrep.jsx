@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   User, TrendingUp, Target, MessageSquare,
   BarChart3, AlertTriangle, CheckCircle, Download,
-  Sparkles, Clock, Shield, Rocket, Newspaper, Calendar
+  Sparkles, Clock, Shield, Rocket, Newspaper, ChevronDown
 } from 'lucide-react';
 import AIBadge from '../components/AIBadge';
 import './MeetingPrep.css';
@@ -140,10 +141,12 @@ const MeetingPrep = () => {
   const angles = DISCUSSION_ANGLES[clientId] || DISCUSSION_ANGLES['15600001'];
   const actions = RECOMMENDED_ACTIONS[clientId] || RECOMMENDED_ACTIONS['15600001'];
 
+  const [newsExpanded, setNewsExpanded] = useState(false);
+
   return (
     <div className="mp-page">
 
-      {/* ── Compact Header ── */}
+      {/* ── Header ── */}
       <div className="mp-header">
         <div className="mp-header__title-row">
           <Sparkles size={18} style={{ color: 'var(--success)', flexShrink: 0 }} />
@@ -160,214 +163,167 @@ const MeetingPrep = () => {
         </div>
       </div>
 
-      {/* ── Two-Column Grid ── */}
+      {/* ── 3-Row × 2-Col Grid ── */}
       <div className="mp-grid">
 
-        {/* LEFT COLUMN */}
-        <div className="mp-col">
-
-          {/* Holdings */}
-          <section className="mp-card">
-            <div className="mp-card__head">
-              <div className="mp-card__icon"><BarChart3 size={15} /></div>
-              <h2 className="mp-card__title">Portfolio Snapshot</h2>
-              <AIBadge size="sm" />
+        {/* ROW 1: Portfolio Snapshot + Risks & Opportunities */}
+        <section className="mp-card">
+          <div className="mp-card__head">
+            <div className="mp-card__icon"><BarChart3 size={15} /></div>
+            <h2 className="mp-card__title">Portfolio Snapshot</h2>
+            <AIBadge size="sm" />
+          </div>
+          <div className="mp-snapshot-kpis">
+            <div className="mp-snapshot-kpi">
+              <span className="mp-snapshot-kpi__label">Market Value</span>
+              <span className="mp-snapshot-kpi__value">{holdings.totalValue}</span>
             </div>
-            <div className="mp-snapshot-kpis">
-              <div className="mp-snapshot-kpi">
-                <span className="mp-snapshot-kpi__label">Market Value</span>
-                <span className="mp-snapshot-kpi__value">{holdings.totalValue}</span>
+            <div className="mp-snapshot-kpi">
+              <span className="mp-snapshot-kpi__label">Cost Basis</span>
+              <span className="mp-snapshot-kpi__value">{holdings.costBasis}</span>
+            </div>
+            <div className="mp-snapshot-kpi">
+              <span className="mp-snapshot-kpi__label">Unrealized Gain/Loss</span>
+              <span className="mp-snapshot-kpi__value mp-snapshot-kpi__value--positive">{holdings.unrealizedGL}</span>
+            </div>
+          </div>
+          {holdings.performance && holdings.performance.length > 0 && (
+            <>
+              <h3 className="mp-card__sub">Performance Trends</h3>
+              <div className="mp-table-wrap">
+                <table className="mp-table">
+                  <thead><tr><th>Fund</th><th>Fund Type</th><th>Weight</th><th>2024</th><th>2025</th><th>Trend</th><th>Remarks</th></tr></thead>
+                  <tbody>
+                    {holdings.performance.map((p, i) => (
+                      <tr key={i}>
+                        <td className="mp-td--bold">{p.fund}</td>
+                        <td style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{p.type}</td>
+                        <td>{p.weight}%</td>
+                        <td>{p.y2024}</td>
+                        <td>{p.y2025}</td>
+                        <td><span className={`mp-badge ${p.trend === 'Growing' || p.trend === 'Improving' ? 'mp-badge--ok' : p.trend === 'Declining' ? 'mp-badge--warn' : ''}`}>{p.trend}</span></td>
+                        <td style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{p.remarks}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <div className="mp-snapshot-kpi">
-                <span className="mp-snapshot-kpi__label">Cost Basis</span>
-                <span className="mp-snapshot-kpi__value">{holdings.costBasis}</span>
+            </>
+          )}
+          {holdings.keyInsight && <p className="mp-card__insight">{holdings.keyInsight}</p>}
+        </section>
+
+        <section className="mp-card">
+          <div className="mp-card__head">
+            <div className="mp-card__icon mp-card__icon--warn"><AlertTriangle size={15} /></div>
+            <h2 className="mp-card__title">Risks & Opportunities</h2>
+            <AIBadge size="sm" />
+          </div>
+          <h3 className="mp-card__sub">Risks</h3>
+          <ul className="mp-bullets mp-bullets--risk">
+            {risk.risks.map((r, i) => {
+              const [label, ...rest] = r.split(':');
+              return <li key={i}><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</li>;
+            })}
+          </ul>
+          <h3 className="mp-card__sub mp-card__sub--spaced">Opportunities</h3>
+          <ul className="mp-bullets mp-bullets--opp">
+            {risk.opportunities.map((o, i) => <li key={i}>{o}</li>)}
+          </ul>
+        </section>
+
+        {/* ROW 2: Recent Activity + Fund News */}
+        <section className="mp-card mp-card--row2">
+          <div className="mp-card__head">
+            <div className="mp-card__icon"><Clock size={15} /></div>
+            <h2 className="mp-card__title">Recent Activity</h2>
+          </div>
+          <div className="mp-activity-list">
+            {activity.map((a, i) => (
+              <div key={i} className="mp-activity-row">
+                <span className="mp-activity-date">{a.date}</span>
+                <div className="mp-activity-body">
+                  <span className="mp-activity-summary">{a.summary}</span>
+                  <span className="mp-activity-decision">→ {a.decision}</span>
+                </div>
               </div>
-              <div className="mp-snapshot-kpi">
-                <span className="mp-snapshot-kpi__label">Unrealized Gain/Loss</span>
-                <span className="mp-snapshot-kpi__value mp-snapshot-kpi__value--positive">{holdings.unrealizedGL}</span>
-              </div>
-            </div>
-            <div className="mp-table-wrap">
-              <table className="mp-table">
-                <thead><tr><th>Asset</th><th>Current</th><th>Target</th><th>Diff</th><th>Status</th></tr></thead>
-                <tbody>
-                  {holdings.allocation.map((r, i) => (
-                    <tr key={i}>
-                      <td className="mp-td--bold">{r.asset}</td>
-                      <td>{r.pct}%</td>
-                      <td>{r.target}%</td>
-                      <td className={r.diff > 0 ? 'mp-td--neg' : r.diff < 0 ? 'mp-td--warn' : 'mp-td--ok'}>
-                        {r.diff > 0 ? `+${r.diff}%` : r.diff < 0 ? `${r.diff}%` : '—'}
-                      </td>
-                      <td><span className={`mp-badge ${r.status === 'on-target' ? 'mp-badge--ok' : 'mp-badge--warn'}`}>{r.status}</span></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {holdings.performance && holdings.performance.length > 0 && (
-              <>
-                <h3 className="mp-card__sub" style={{ marginTop: '12px' }}>Performance Trends</h3>
-                <div className="mp-table-wrap">
-                  <table className="mp-table">
-                    <thead><tr><th>Fund</th><th>Fund Type</th><th>Weight</th><th>2024</th><th>2025</th><th>Trend</th><th>Remarks</th></tr></thead>
-                    <tbody>
-                      {holdings.performance.map((p, i) => (
-                        <tr key={i}>
-                          <td className="mp-td--bold">{p.fund}</td>
-                          <td style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{p.type}</td>
-                          <td>{p.weight}%</td>
-                          <td>{p.y2024}</td>
-                          <td>{p.y2025}</td>
-                          <td><span className={`mp-badge ${p.trend === 'Growing' || p.trend === 'Improving' ? 'mp-badge--ok' : p.trend === 'Declining' ? 'mp-badge--warn' : ''}`}>{p.trend}</span></td>
-                          <td style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{p.remarks}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-            {holdings.keyInsight && <p className="mp-card__insight">{holdings.keyInsight}</p>}
-          </section>
+            ))}
+          </div>
+        </section>
 
-          {/* Discussion Angles */}
-          <section className="mp-card">
-            <div className="mp-card__head">
-              <div className="mp-card__icon"><MessageSquare size={15} /></div>
-              <h2 className="mp-card__title">Discussion Angles</h2>
-              <AIBadge size="sm" />
-            </div>
-            <div className="mp-discussion-list">
-              {angles.map((a, i) => (
-                <div key={i} className="mp-discussion-item">
-                  <span className="mp-discussion-num">{i + 1}</span>
-                  <div>
-                    <span className="mp-discussion-title">{a.title}</span>
-                    <span className="mp-discussion-desc">{a.desc}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-        </div>
-
-        {/* RIGHT COLUMN */}
-        <div className="mp-col">
-
-          {/* Risks & Opportunities */}
-          <section className="mp-card">
-            <div className="mp-card__head">
-              <div className="mp-card__icon mp-card__icon--warn"><AlertTriangle size={15} /></div>
-              <h2 className="mp-card__title">Risks & Opportunities</h2>
-              <AIBadge size="sm" />
-            </div>
-            <h3 className="mp-card__sub">Risks</h3>
-            <ul className="mp-bullets mp-bullets--risk">
-              {risk.risks.map((r, i) => {
-                const [label, ...rest] = r.split(':');
-                return <li key={i}><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</li>;
-              })}
-            </ul>
-            <h3 className="mp-card__sub" style={{ marginTop: '0.75rem' }}>Opportunities</h3>
-            <ul className="mp-bullets mp-bullets--opp">
-              {risk.opportunities.map((o, i) => <li key={i}>{o}</li>)}
-            </ul>
-          </section>
-
-          {/* Recent Activity */}
-          <section className="mp-card">
-            <div className="mp-card__head">
-              <div className="mp-card__icon"><Clock size={15} /></div>
-              <h2 className="mp-card__title">Recent Activity</h2>
-            </div>
-            <div className="mp-activity-list">
-              {activity.map((a, i) => (
-                <div key={i} className="mp-activity-row">
-                  <span className="mp-activity-date">{a.date}</span>
-                  <div className="mp-activity-body">
-                    <span className="mp-activity-summary">{a.summary}</span>
-                    <span className="mp-activity-decision">→ {a.decision}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Fund News */}
-          <section className="mp-card">
-            <div className="mp-card__head">
-              <div className="mp-card__icon"><Newspaper size={15} /></div>
-              <h2 className="mp-card__title">Fund News</h2>
-              <AIBadge size="sm" />
-            </div>
+        <section className="mp-card mp-card--row2">
+          <div className="mp-card__head">
+            <div className="mp-card__icon"><Newspaper size={15} /></div>
+            <h2 className="mp-card__title">Fund News</h2>
+            <AIBadge size="sm" />
+          </div>
+          <div className={`mp-collapsible-body${newsExpanded ? ' mp-collapsible-body--expanded' : ''}`}>
             <ul className="mp-bullets">
               {news.map((n, i) => {
                 const [label, ...rest] = n.split(':');
                 return <li key={i}><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</li>;
               })}
             </ul>
-          </section>
+          </div>
+          <button className="mp-view-more" onClick={() => setNewsExpanded(p => !p)}>
+            {newsExpanded ? 'Show less' : 'View more'} <ChevronDown size={12} className={newsExpanded ? 'mp-chevron--up' : ''} />
+          </button>
+        </section>
 
-          {/* Upcoming Meetings */}
-          <section className="mp-card">
-            <div className="mp-card__head">
-              <div className="mp-card__icon"><Calendar size={15} /></div>
-              <h2 className="mp-card__title">Upcoming Meetings</h2>
-            </div>
-            <div className="mp-meetings-list">
-              {upcoming.map((m, i) => (
-                <div key={i} className="mp-meeting-row">
-                  <div className="mp-meeting-when">
-                    <span className="mp-meeting-date">{m.date}</span>
-                    <span className="mp-meeting-time">{m.time}</span>
-                  </div>
-                  <div className="mp-meeting-info">
-                    <span className="mp-meeting-topic">{m.topic}</span>
-                    <span className="mp-meeting-type">{m.type}</span>
-                  </div>
+        {/* ROW 3: Discussion Angles + Next Best Actions */}
+        <section className="mp-card mp-card--row3">
+          <div className="mp-card__head">
+            <div className="mp-card__icon"><MessageSquare size={15} /></div>
+            <h2 className="mp-card__title">Discussion Angles</h2>
+            <AIBadge size="sm" />
+          </div>
+          <div className="mp-discussion-list">
+            {angles.map((a, i) => (
+              <div key={i} className="mp-discussion-item">
+                <span className="mp-discussion-num">{i + 1}</span>
+                <div>
+                  <span className="mp-discussion-title">{a.title}</span>
+                  <span className="mp-discussion-desc">{a.desc}</span>
                 </div>
-              ))}
-            </div>
-          </section>
-
-        </div>
-      </div>
-
-      {/* ── Full-Width Bottom: Recommended Actions ── */}
-      <section className="mp-card mp-card--actions">
-        <div className="mp-card__head">
-          <div className="mp-card__icon mp-card__icon--accent"><Rocket size={15} /></div>
-          <h2 className="mp-card__title">Next Best Actions</h2>
-          <AIBadge size="sm" />
-        </div>
-        <div className="mp-nba-grid">
-          <div className="mp-nba-col mp-nba-col--primary">
-            <h3 className="mp-nba-col__label">Primary</h3>
-            {actions.primary.map((a, i) => (
-              <div key={i} className="mp-nba-card mp-nba-card--primary">
-                <div className="mp-nba-card__head">
-                  <CheckCircle size={14} />
-                  <span className="mp-nba-card__title">{a.label}</span>
-                </div>
-                <p className="mp-nba-card__desc">{a.desc}</p>
               </div>
             ))}
           </div>
-          <div className="mp-nba-col mp-nba-col--client">
-            <h3 className="mp-nba-col__label">Client Aligned</h3>
-            {actions.clientAligned.map((a, i) => {
-              const [label, ...rest] = a.split(':');
-              return (
-                <div key={i} className="mp-nba-card mp-nba-card--client">
-                  <span><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</span>
-                </div>
-              );
-            })}
+        </section>
+
+        <section className="mp-card mp-card--row3">
+          <div className="mp-card__head">
+            <div className="mp-card__icon mp-card__icon--accent"><Rocket size={15} /></div>
+            <h2 className="mp-card__title">Next Best Actions</h2>
+            <AIBadge size="sm" />
           </div>
-        </div>
-      </section>
+          <div className="mp-nba-grid">
+            <div className="mp-nba-col mp-nba-col--primary">
+              <h3 className="mp-nba-col__label">Primary</h3>
+              {actions.primary.map((a, i) => (
+                <div key={i} className="mp-nba-card mp-nba-card--primary">
+                  <div className="mp-nba-card__head">
+                    <CheckCircle size={14} />
+                    <span className="mp-nba-card__title">{a.label}</span>
+                  </div>
+                  <p className="mp-nba-card__desc">{a.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mp-nba-col mp-nba-col--client">
+              <h3 className="mp-nba-col__label">Client Aligned</h3>
+              {actions.clientAligned.map((a, i) => {
+                const [label, ...rest] = a.split(':');
+                return (
+                  <div key={i} className="mp-nba-card mp-nba-card--client">
+                    <span><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+      </div>
 
       {/* ── Quick Links ── */}
       <div className="mp-quicklinks">

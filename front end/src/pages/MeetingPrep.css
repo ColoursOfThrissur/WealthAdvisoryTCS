@@ -4,7 +4,7 @@
   flex-direction: column;
   padding: 20px var(--space-2xl) var(--space-xl);
   overflow-y: auto;
-  gap: 16px;
+  gap: 18px;
   animation: mp-fadeIn 0.3s ease;
 }
 
@@ -13,7 +13,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Compact Header ── */
+/* ── Header ── */
 .mp-header {
   display: flex;
   flex-direction: column;
@@ -90,19 +90,24 @@
   color: var(--success);
 }
 
-/* ── Two-Column Grid ── */
+/* ── 3-Row × 2-Col Grid ── */
 .mp-grid {
   display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
   align-items: start;
 }
 
-.mp-col {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
+/* Row 1 cards stretch to match each other */
+.mp-grid > section:nth-child(1),
+.mp-grid > section:nth-child(2) {
+  align-self: stretch;
+}
+
+/* Rows 2 and 3 — both cards always stretch to match the taller sibling */
+.mp-card--row2,
+.mp-card--row3 {
+  align-self: stretch;
 }
 
 /* ── Card Shell ── */
@@ -110,23 +115,20 @@
   background: var(--bg-secondary);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
-  padding: 16px 20px;
+  padding: 20px 24px;
   transition: box-shadow 0.2s, border-color 0.2s;
+  min-width: 0;
 }
 
 .mp-card:hover {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-.mp-card--actions {
-  border-left: 3px solid var(--success);
-}
-
 .mp-card__head {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .mp-card__icon {
@@ -141,13 +143,8 @@
   flex-shrink: 0;
 }
 
-.mp-card__icon--warn {
-  background: var(--warning);
-}
-
-.mp-card__icon--accent {
-  background: var(--success);
-}
+.mp-card__icon--warn { background: var(--warning); }
+.mp-card__icon--accent { background: var(--success); }
 
 .mp-card__title {
   font-size: 0.9375rem;
@@ -163,24 +160,28 @@
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
+}
+
+.mp-card__sub--spaced {
+  margin-top: 16px;
 }
 
 .mp-card__desc {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
   margin: 0 0 10px 0;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .mp-card__insight {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-tertiary);
   font-style: italic;
-  margin: 10px 0 0 0;
-  padding-top: 8px;
+  margin: 12px 0 0 0;
+  padding-top: 10px;
   border-top: 1px solid var(--glass-border);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* ── Table ── */
@@ -193,27 +194,28 @@
 .mp-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 .mp-table th {
   background: var(--glass-bg);
   color: var(--text-tertiary);
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 5px 8px;
+  padding: 7px 10px;
   text-align: left;
   border-bottom: 1px solid var(--glass-border);
   white-space: nowrap;
 }
 
 .mp-table td {
-  padding: 5px 8px;
+  padding: 7px 10px;
   border-bottom: 1px solid var(--glass-border);
   color: var(--text-secondary);
   white-space: nowrap;
+  font-size: 0.8rem;
 }
 
 .mp-table tr:last-child td { border-bottom: none; }
@@ -233,15 +235,8 @@
   white-space: nowrap;
 }
 
-.mp-badge--warn {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--warning);
-}
-
-.mp-badge--ok {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--success);
-}
+.mp-badge--warn { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.mp-badge--ok   { background: rgba(16, 185, 129, 0.1); color: var(--success); }
 
 /* ── Bullet Lists ── */
 .mp-bullets {
@@ -250,14 +245,14 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .mp-bullets li {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
-  line-height: 1.5;
-  padding-left: 14px;
+  line-height: 1.6;
+  padding-left: 16px;
   position: relative;
 }
 
@@ -265,7 +260,7 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 7px;
+  top: 8px;
   width: 5px;
   height: 5px;
   border-radius: 50%;
@@ -273,7 +268,55 @@
 }
 
 .mp-bullets--risk li::before { background: var(--error); }
-.mp-bullets--opp li::before { background: var(--success); }
+.mp-bullets--opp li::before  { background: var(--success); }
+
+/* ── Collapsible body ── */
+.mp-collapsible-body {
+  max-height: 155px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.35s ease;
+}
+
+.mp-collapsible-body::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(transparent, var(--bg-secondary));
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.mp-collapsible-body--expanded {
+  max-height: 1000px;
+}
+
+.mp-collapsible-body--expanded::after {
+  opacity: 0;
+}
+
+.mp-view-more {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--success);
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+
+.mp-view-more:hover { opacity: 0.7; }
+.mp-view-more svg { transition: transform 0.2s; }
+.mp-chevron--up { transform: rotate(180deg); }
 
 /* ── Activity List ── */
 .mp-activity-list {
@@ -285,7 +328,7 @@
 .mp-activity-row {
   display: flex;
   gap: 12px;
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--glass-border);
   align-items: flex-start;
 }
@@ -304,155 +347,84 @@
 .mp-activity-body {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   flex: 1;
   min-width: 0;
 }
 
 .mp-activity-summary {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-primary);
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .mp-activity-decision {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--success);
   font-weight: 600;
 }
 
-/* ── Meetings List ── */
-.mp-meetings-list {
+/* ── Discussion Angles ── */
+.mp-discussion-list {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.mp-meeting-row {
+.mp-discussion-item {
   display: flex;
-  gap: 12px;
-  padding: 8px 0;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
   border-bottom: 1px solid var(--glass-border);
-  align-items: center;
 }
 
-.mp-meeting-row:last-child { border-bottom: none; }
+.mp-discussion-item:last-child { border-bottom: none; }
 
-.mp-meeting-when {
+.mp-discussion-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--success);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
   display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 70px;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
-.mp-meeting-date {
-  font-size: 0.8125rem;
+.mp-discussion-title {
+  display: block;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 3px;
 }
 
-.mp-meeting-time {
-  font-size: 0.6875rem;
-  color: var(--text-tertiary);
+.mp-discussion-desc {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
-.mp-meeting-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1;
-  min-width: 0;
-}
-
-.mp-meeting-topic {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.mp-meeting-type {
-  font-size: 0.6875rem;
-  color: var(--text-tertiary);
-}
-
-/* ── Quick Links ── */
-.mp-quicklinks {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding-top: 4px;
-}
-
-.mp-ql-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 14px;
-  background: transparent;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-full);
-  color: var(--text-tertiary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.mp-ql-btn:hover {
-  border-color: var(--success);
-  color: var(--success);
-}
-
-.mp-ql-btn svg {
-  color: var(--success);
-  flex-shrink: 0;
-}
-
-/* ── Responsive ── */
-@media (max-width: 1024px) {
-  .mp-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .mp-header__stats {
-    gap: 4px;
-  }
-
-  .mp-nba-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .mp-page {
-    padding: 16px var(--space-md) var(--space-md);
-  }
-
-  .mp-header__title-row {
-    flex-wrap: wrap;
-  }
-
-  .mp-header__title {
-    font-size: 1.0625rem;
-  }
-}
-
-
-/* Portfolio Snapshot KPIs */
+/* ── Portfolio Snapshot KPIs ── */
 .mp-snapshot-kpis {
   display: flex;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .mp-snapshot-kpi {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 10px 14px;
+  gap: 3px;
+  padding: 12px 14px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 10px;
@@ -472,71 +444,13 @@
   color: var(--text-primary);
 }
 
-.mp-snapshot-kpi__value--positive {
-  color: var(--success);
-}
+.mp-snapshot-kpi__value--positive { color: var(--success); }
 
-/* Discussion Angles - Numbered */
-.mp-discussion-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mp-discussion-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.mp-discussion-item:last-child {
-  border-bottom: none;
-}
-
-.mp-discussion-num {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--success);
-  color: #fff;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.mp-discussion-title {
-  display: block;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 2px;
-}
-
-.mp-discussion-desc {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-  .mp-snapshot-kpis {
-    flex-direction: column;
-  }
-}
-
-
-/* Next Best Actions — Two Column */
+/* ── Next Best Actions ── */
 .mp-nba-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
 }
 
 .mp-nba-col {
@@ -572,11 +486,8 @@
   transition: all 0.15s;
 }
 
-.mp-nba-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
+.mp-nba-card:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
 
-/* Primary cards — green accent */
 .mp-nba-card--primary {
   background: rgba(16, 185, 129, 0.04);
   border-left: 3px solid var(--success);
@@ -589,29 +500,88 @@
   margin-bottom: 4px;
 }
 
-.mp-nba-card--primary .mp-nba-card__head svg {
-  color: var(--success);
-  flex-shrink: 0;
-}
+.mp-nba-card--primary .mp-nba-card__head svg { color: var(--success); flex-shrink: 0; }
 
 .mp-nba-card--primary .mp-nba-card__title {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .mp-nba-card--primary .mp-nba-card__desc {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
 }
 
-/* Client Aligned cards — blue accent */
 .mp-nba-card--client {
   background: rgba(59, 130, 246, 0.03);
   border-left: 3px solid var(--info, #3b82f6);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+/* ── Quick Links ── */
+.mp-quicklinks {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.mp-ql-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mp-ql-btn:hover { border-color: var(--success); color: var(--success); }
+.mp-ql-btn svg  { color: var(--success); flex-shrink: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .mp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mp-nba-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mp-collapsible-body {
+    max-height: none;
+  }
+
+  .mp-collapsible-body::after {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .mp-page {
+    padding: 16px var(--space-md) var(--space-md);
+  }
+
+  .mp-header__title-row {
+    flex-wrap: wrap;
+  }
+
+  .mp-header__title {
+    font-size: 1.0625rem;
+  }
+
+  .mp-snapshot-kpis {
+    flex-direction: column;
+  }
 }

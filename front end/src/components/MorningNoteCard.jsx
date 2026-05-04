@@ -267,7 +267,8 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
         )}
         {!loading && noteData && sections.length > 0 && (
           <div className="morning-note-card__summary">
-            {sections.slice(0, 3).map((section, idx) => (
+            {/* First section */}
+            {sections.slice(0, 1).map((section, idx) => (
               <div
                 key={idx}
                 className="summary-item"
@@ -284,13 +285,14 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
             ))}
           </div>
         )}
+
         {!loading && (!noteData || sections.length === 0) && (
           <div className="morning-note-card__empty">
             <p>Morning notes not available</p>
           </div>
         )}
 
-        {/* Mass Mailer Event */}
+        {/* Mass Mailer Event — second position */}
         {!hideCompletedEvent && localStorage.getItem('mailerEventCompleted') !== 'true' && (
           <div className="morning-note-card__events">
             {eventCompleted ? (
@@ -318,6 +320,27 @@ const MorningNoteCard = ({ onEventClick, eventCompleted, hideCompletedEvent }) =
                 </button>
               </div>
             )}
+          </div>
+        )}
+
+        {!loading && noteData && sections.length > 1 && (
+          <div className="morning-note-card__summary">
+            {/* Remaining sections */}
+            {sections.slice(1, 3).map((section, idx) => (
+              <div
+                key={idx + 1}
+                className="summary-item"
+                onClick={() => { setSelectedSection(section); setShowPopup(true); }}
+              >
+                <div className="summary-item__content">
+                  <span className="summary-title">{section.title}</span>
+                  <p className="summary-desc">
+                    {section.content.find(l => l.trim() && !l.startsWith('#'))?.replace(/\*\*/g, '').substring(0, 120) || ''}
+                  </p>
+                </div>
+                <span className="summary-view-more">View More</span>
+              </div>
+            ))}
           </div>
         )}
       </div>
