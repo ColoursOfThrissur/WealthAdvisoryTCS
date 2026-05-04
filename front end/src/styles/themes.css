@@ -5,6 +5,10 @@
   --bg-chat-gradient: #050807;
   --bg-card-solid: #050807;
   --bg-chat-card: rgba(5, 8, 7, 0.8);
+  --card-bg: #0a1a14;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --info-light: rgba(59, 130, 246, 0.15);
+  --info-dark: #93c5fd;
 
   --text-primary: #ffffff;
   --text-secondary: #a0aec0;
@@ -36,6 +40,10 @@
   --bg-chat-gradient: #f0fdf4;
   --bg-card-solid: #064e3b;
   --bg-chat-card: rgba(6, 78, 59, 0.8);
+  --card-bg: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.12);
+  --info-light: #dbeafe;
+  --info-dark: #1e40af;
   
   --text-primary: #1a202c;
   --text-secondary: #4a5568;

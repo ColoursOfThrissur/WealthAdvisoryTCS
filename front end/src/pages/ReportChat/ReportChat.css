@@ -48,7 +48,7 @@
 }
 
 .clear-session-btn:hover {
-  background: var(--bg-secondary, #f3f4f6);
+  background: var(--bg-secondary);
 }
 
 .report-chat-content {
@@ -207,7 +207,7 @@
 .message-data {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background: var(--bg-secondary, #f3f4f6);
+  background: var(--bg-secondary);
   border-radius: 6px;
   font-size: 0.75rem;
   overflow-x: auto;
@@ -298,7 +298,7 @@
 }
 
 .message-input:disabled {
-  background: var(--bg-secondary, #f3f4f6);
+  background: var(--bg-secondary);
   cursor: not-allowed;
 }
 
