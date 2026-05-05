@@ -307,7 +307,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
                         </div>
 
                         <div className="event-overview-card__section">
-                          <h4>Market Impact Brief</h4>
+                          <h4>Market Event Summary</h4>
                           <p className="event-overview-card__desc">{activeMarketEvent.eventBrief}</p>
                         </div>
 

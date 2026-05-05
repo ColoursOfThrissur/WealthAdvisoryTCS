@@ -102,12 +102,33 @@
 .mp-grid > section:nth-child(1),
 .mp-grid > section:nth-child(2) {
   align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Risks & Opportunities — distribute content evenly across full height */
+.mp-grid > section:nth-child(2) .mp-risk-list:last-of-type {
+  flex: 1;
+  justify-content: space-between;
+}
+
+.mp-grid > section:nth-child(2) .mp-risk-list {
+  flex: 1;
+  justify-content: space-between;
 }
 
 /* Rows 2 and 3 — both cards always stretch to match the taller sibling */
 .mp-card--row2,
 .mp-card--row3 {
   align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+.mp-card--row2 .mp-view-more,
+.mp-card--row3 .mp-view-more {
+  margin-top: auto;
+  padding-top: 12px;
 }
 
 /* ── Card Shell ── */
@@ -164,7 +185,7 @@
 }
 
 .mp-card__sub--spaced {
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 .mp-card__desc {
@@ -238,6 +259,114 @@
 .mp-badge--warn { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
 .mp-badge--ok   { background: rgba(16, 185, 129, 0.1); color: var(--success); }
 
+/* ── Risk Metrics Row ── */
+.mp-risk-metrics {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mp-risk-metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+}
+
+.mp-risk-metric__label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+}
+
+.mp-risk-metric__value {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mp-risk-metric__value--warn {
+  color: var(--warning);
+}
+
+/* ── Risk & Opportunity Cards ── */
+.mp-risk-opp-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: 0;
+}
+.mp-risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mp-risk-card,
+.mp-opp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+}
+
+.mp-risk-card {
+  background: rgba(239, 68, 68, 0.03);
+  border-left: 3px solid var(--error);
+}
+
+.mp-opp-card {
+  background: rgba(16, 185, 129, 0.03);
+  border-left: 3px solid var(--success);
+}
+
+.mp-risk-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mp-risk-card__label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mp-risk-card__detail {
+  font-size: 0.775rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.mp-risk-card__badge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mp-risk-card__badge--high {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--error);
+}
+
+.mp-risk-card__badge--medium {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning);
+}
+
 /* ── Bullet Lists ── */
 .mp-bullets {
   list-style: none;
@@ -245,7 +374,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .mp-bullets li {
@@ -270,9 +399,14 @@
 .mp-bullets--risk li::before { background: var(--error); }
 .mp-bullets--opp li::before  { background: var(--success); }
 
+.mp-card--row2 .mp-collapsible-body,
+.mp-card--row3 .mp-collapsible-body {
+  flex-shrink: 0;
+}
+
 /* ── Collapsible body ── */
 .mp-collapsible-body {
-  max-height: 155px;
+  max-height: 180px;
   overflow: hidden;
   position: relative;
   transition: max-height 0.35s ease;

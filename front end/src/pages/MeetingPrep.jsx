@@ -55,22 +55,22 @@ const HOLDINGS_DATA = {
       { fund: 'AIVSX', type: 'US Core Equity', weight: 7, y2024: '18.57%', y2025: '14.66%', trend: 'Declining', remarks: 'Core Anchor' },
       { fund: 'ANWPX', type: 'Global Growth Equity', weight: 7, y2024: '14.16%', y2025: '16.18%', trend: 'Improving', remarks: 'Global Balance' },
     ],
-    keyInsight: 'AEPGX recovered +28.7% YoY; FSPGX moderated to +18.5%. Bond overweight limiting upside.',
+    keyInsight: 'Growth concentration risk is emerging on the US equities — FSPGX, AGTHX\n\nInternational and balanced allocations are becoming key growth drivers — AEPGX, AMECX, ANWPX',
   },
 };
 
 const RISK_DATA = {
   '15600001': {
     risks: [
-      'Portfolio Drift: 8% underweight in equities, 8% overweight in bonds',
-      'Growth Limitations: Bond overweight limiting long-term growth potential',
-      'Concentration Risk: FSPGX (20%) is tech-heavy and high volatility',
-      'Currency Exposure: International funds (AEPGX, CWBFX, ANWPX) subject to currency risk',
+      { label: 'Portfolio Drift', detail: '8% underweight in equities, 8% overweight in bonds', severity: 'High' },
+      { label: 'Growth Limitations', detail: 'Bond overweight limiting long-term growth potential', severity: 'Medium' },
+      { label: 'Concentration Risk', detail: 'FSPGX (20%) is tech-heavy and high volatility', severity: 'High' },
+      { label: 'Currency Exposure', detail: 'International funds (AEPGX, CWBFX, ANWPX) subject to currency risk', severity: 'Medium' },
     ],
     opportunities: [
-      'Growth and Target achievement with Rebalancing',
-      'Diversification Opportunity with AEPGX',
-      'Client Comfort aligned phased allocation',
+      { label: 'Growth', detail: 'Target achievement with Rebalancing' },
+      { label: 'Diversification', detail: 'Opportunity with AEPGX' },
+      { label: 'Client Alignment', detail: 'Phased allocation' },
     ],
   },
 };
@@ -142,6 +142,7 @@ const MeetingPrep = () => {
   const actions = RECOMMENDED_ACTIONS[clientId] || RECOMMENDED_ACTIONS['15600001'];
 
   const [newsExpanded, setNewsExpanded] = useState(false);
+  const [activityExpanded, setActivityExpanded] = useState(false);
 
   return (
     <div className="mp-page">
@@ -210,7 +211,13 @@ const MeetingPrep = () => {
               </div>
             </>
           )}
-          {holdings.keyInsight && <p className="mp-card__insight">{holdings.keyInsight}</p>}
+          {holdings.keyInsight && (
+            <div className="mp-card__insight">
+              {holdings.keyInsight.split('\n\n').map((line, i) => (
+                <p key={i} style={{ margin: i > 0 ? '6px 0 0 0' : '0' }}>{line}</p>
+              ))}
+            </div>
+          )}
         </section>
 
         <section className="mp-card">
@@ -219,17 +226,33 @@ const MeetingPrep = () => {
             <h2 className="mp-card__title">Risks & Opportunities</h2>
             <AIBadge size="sm" />
           </div>
-          <h3 className="mp-card__sub">Risks</h3>
-          <ul className="mp-bullets mp-bullets--risk">
-            {risk.risks.map((r, i) => {
-              const [label, ...rest] = r.split(':');
-              return <li key={i}><strong>{label}</strong>{rest.length ? `:${rest.join(':')}` : ''}</li>;
-            })}
-          </ul>
-          <h3 className="mp-card__sub mp-card__sub--spaced">Opportunities</h3>
-          <ul className="mp-bullets mp-bullets--opp">
-            {risk.opportunities.map((o, i) => <li key={i}>{o}</li>)}
-          </ul>
+          <div className="mp-risk-opp-body">
+            <div>
+              <h3 className="mp-card__sub">Risks</h3>
+              <div className="mp-risk-list">
+                {risk.risks.map((r, i) => (
+                  <div key={i} className="mp-risk-card">
+                    <div className="mp-risk-card__top">
+                      <span className="mp-risk-card__label">{r.label}</span>
+                      <span className={`mp-risk-card__badge mp-risk-card__badge--${r.severity.toLowerCase()}`}>{r.severity}</span>
+                    </div>
+                    <span className="mp-risk-card__detail">{r.detail}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="mp-card__sub mp-card__sub--spaced">Opportunities</h3>
+              <div className="mp-risk-list">
+                {risk.opportunities.map((o, i) => (
+                  <div key={i} className="mp-opp-card">
+                    <span className="mp-risk-card__label">{o.label}</span>
+                    <span className="mp-risk-card__detail">{o.detail}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* ROW 2: Recent Activity + Fund News */}
@@ -238,17 +261,22 @@ const MeetingPrep = () => {
             <div className="mp-card__icon"><Clock size={15} /></div>
             <h2 className="mp-card__title">Recent Activity</h2>
           </div>
-          <div className="mp-activity-list">
-            {activity.map((a, i) => (
-              <div key={i} className="mp-activity-row">
-                <span className="mp-activity-date">{a.date}</span>
-                <div className="mp-activity-body">
-                  <span className="mp-activity-summary">{a.summary}</span>
-                  <span className="mp-activity-decision">→ {a.decision}</span>
+          <div className={`mp-collapsible-body${activityExpanded ? ' mp-collapsible-body--expanded' : ''}`}>
+            <div className="mp-activity-list">
+              {activity.map((a, i) => (
+                <div key={i} className="mp-activity-row">
+                  <span className="mp-activity-date">{a.date}</span>
+                  <div className="mp-activity-body">
+                    <span className="mp-activity-summary">{a.summary}</span>
+                    <span className="mp-activity-decision">→ {a.decision}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          <button className="mp-view-more" onClick={() => setActivityExpanded(p => !p)}>
+            {activityExpanded ? 'Show less' : 'View more'} <ChevronDown size={12} className={activityExpanded ? 'mp-chevron--up' : ''} />
+          </button>
         </section>
 
         <section className="mp-card mp-card--row2">
