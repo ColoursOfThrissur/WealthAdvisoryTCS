@@ -443,10 +443,6 @@
   background: var(--bg-secondary);
 }
 
-.ov-profile-detail--critical {
-  background: var(--error-subtle);
-}
-
 .ov-profile-detail__head {
   display: flex;
   align-items: center;

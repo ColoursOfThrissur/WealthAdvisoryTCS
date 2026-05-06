@@ -71,9 +71,6 @@
   --success-light: rgba(16, 185, 129, 0.1);
   --success-lighter: rgba(16, 185, 129, 0.05);
   --success-subtle: rgba(16, 185, 129, 0.02);
-
-  /* Error/Critical Variations */
-  --error-subtle: rgba(239, 68, 68, 0.05);
   
   /* Border Weights */
   --border-thin: 1px;
