@@ -39,23 +39,20 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
           <button className="mnb-nav-btn" onClick={() => { if (onChatClose) onChatClose(); }}>
             <ArrowLeft size={14} /> Back
           </button>
+          <button className="mnb-nav-btn" onClick={() => { if (onChatClose) onChatClose(); onTabChange('advisor-assist'); }}>
+            <Home size={14} /> Home
+          </button>
         </div>
       );
     }
 
-    // Home — Cockpit tab, no chat: show morning notes banner
+    // Home — Cockpit tab, no chat: show morning notes banner only
     if (activeTab === 'cockpit') {
       return <MorningNoteBanner />;
     }
 
-    // Home — Assist or Live Meeting tabs: show Home button only
-    return (
-      <div className="mnb-root mnb-nav">
-        <button className="mnb-nav-btn" onClick={() => { if (onChatClose) onChatClose(); onTabChange('cockpit'); }}>
-          <Home size={14} /> Home
-        </button>
-      </div>
-    );
+    // Home — Assist or Live Meeting: no nav needed, Assist IS home
+    return null;
   };
 
   // Derive the visually active tab from the URL so the highlight is always correct
@@ -89,16 +86,16 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
         {/* Center: Tab Toggle */}
         <div className="main-layout__tabs">
           <button
-            className={`main-layout__tab${resolvedActiveTab === 'cockpit' ? ' main-layout__tab--active' : ''}`}
-            onClick={() => { if (onChatClose) onChatClose(); if (!isHome) navigate('/'); onTabChange('cockpit'); }}
-          >
-            Cockpit
-          </button>
-          <button
             className={`main-layout__tab${resolvedActiveTab === 'advisor-assist' ? ' main-layout__tab--active' : ''}`}
             onClick={() => { if (onChatClose) onChatClose(); if (!isHome) navigate('/'); onTabChange('advisor-assist'); }}
           >
             Assist
+          </button>
+          <button
+            className={`main-layout__tab${resolvedActiveTab === 'cockpit' ? ' main-layout__tab--active' : ''}`}
+            onClick={() => { if (onChatClose) onChatClose(); if (!isHome) navigate('/'); onTabChange('cockpit'); }}
+          >
+            Cockpit
           </button>
           <button
             className={`main-layout__tab${resolvedActiveTab === 'meeting-assist' ? ' main-layout__tab--active' : ''}`}

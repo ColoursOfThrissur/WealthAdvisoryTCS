@@ -18,7 +18,7 @@
   border-bottom: none;
   z-index: 1001;
   position: relative;
-  height: 60px;
+  height: 70px;
 }
 
 /* Left: Brand — fixed width matching right side */
@@ -95,31 +95,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 4px;
 }
 
 .main-layout__tab {
-  padding: 6px 20px;
+  padding: 5px 16px;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-radius: 9999px;
   background: transparent;
   color: var(--text-tertiary);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.15s ease;
   font-family: inherit;
   white-space: nowrap;
 }
 
 .main-layout__tab:hover {
-  color: var(--text-primary);
+  color: var(--success);
+  background: var(--success-light);
 }
 
 .main-layout__tab--active {
-  color: var(--text-primary);
-  font-weight: 700;
-  border-bottom-color: var(--success);
+  color: #fff;
+  font-weight: 600;
+  background: var(--success);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+}
+
+.main-layout__tab--active:hover {
+  background: var(--success-dark);
+  color: #fff;
 }
 
 /* Right: Metrics + Controls — same fixed width as left */

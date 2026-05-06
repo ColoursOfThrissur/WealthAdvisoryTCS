@@ -394,7 +394,7 @@
 }
 
 .ov-profiles-list__item--critical.ov-profiles-list__item--active .ov-profiles-list__name {
-  color: var(--error);
+  color: var(--text-primary);
 }
 
 .ov-profiles-list__sub {
@@ -441,6 +441,10 @@
   flex-direction: column;
   gap: 14px;
   background: var(--bg-secondary);
+}
+
+.ov-profile-detail--critical {
+  background: var(--error-subtle);
 }
 
 .ov-profile-detail__head {

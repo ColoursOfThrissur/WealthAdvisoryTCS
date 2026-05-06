@@ -517,7 +517,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
 
               {/* Right detail */}
               {selectedProfile && (
-                <div className="ov-profile-detail">
+                <div className={`ov-profile-detail${selectedProfile.priority === 'Critical' ? ' ov-profile-detail--critical' : ''}`}>
 
                   <div className={`ov-profile-detail__head${selectedProfile.priority === 'Critical' ? ' ov-profile-detail__head--critical' : ''}`}>
                     <div className="ov-profile-detail__avatar">
