@@ -23,7 +23,7 @@
 .mp-header__title-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .mp-header__title {
@@ -79,10 +79,10 @@
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-full);
-  padding: 3px 12px;
+  padding: 4px 12px;
   cursor: pointer;
   transition: all 0.15s;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .mp-export-btn:hover {
@@ -660,30 +660,127 @@
 /* ── Quick Links ── */
 .mp-quicklinks {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
   flex-wrap: wrap;
   padding-top: 4px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.mp-ql-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
 }
 
 .mp-ql-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 5px 14px;
-  background: transparent;
+  gap: 5px;
+  padding: 4px 12px;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-full);
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
+  font-family: inherit;
 }
 
-.mp-ql-btn:hover { border-color: var(--success); color: var(--success); }
-.mp-ql-btn svg  { color: var(--success); flex-shrink: 0; }
+.mp-ql-btn:hover {
+  border-color: var(--success);
+  color: var(--success);
+  background: rgba(16, 185, 129, 0.06);
+}
 
-/* ── David: CRITICAL header badge ── */
+.mp-ql-btn svg { color: var(--success); flex-shrink: 0; }
+
+/* ── David: NBA reason strip ── */
+.mp-nba-reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 16px;
+  background: rgba(239, 68, 68, 0.04);
+  border-left: 3px solid var(--error);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.mp-nba-reason svg { color: var(--error); flex-shrink: 0; margin-top: 2px; }
+
+/* ── David: client profile strip ── */
+.mp-profile-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.mp-profile-strip__left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mp-profile-strip__name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.mp-profile-strip__bio {
+  font-size: 0.775rem;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.mp-profile-strip__ref {
+  opacity: 0.45;
+}
+
+.mp-profile-strip__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.mp-profile-strip__badge {
+  font-size: 0.625rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.mp-profile-strip__badge--ok {
+  color: var(--success);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+}
+
+.mp-profile-strip__badge--warn {
+  color: var(--warning);
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+}
+
+
+/* ── Shared: CRITICAL header badge ── */
 .mp-header__critical {
   font-size: 0.6875rem;
   font-weight: 700;
@@ -696,112 +793,32 @@
   letter-spacing: 0.05em;
 }
 
-/* ── David: Risk badge critical ── */
+/* ── Shared: risk badge critical ── */
 .mp-risk-card__badge--critical {
   background: rgba(239, 68, 68, 0.18);
   color: var(--error);
 }
 
-/* ── David: Client Profile card ── */
-.mp-client-profile {
-  border-color: rgba(239, 68, 68, 0.2);
-}
-
-.mp-cp-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 14px;
-}
-
-.mp-cp-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mp-cp-section__label {
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-tertiary);
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.mp-cp-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.mp-cp-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.mp-cp-row__key {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-  flex-shrink: 0;
-}
-
-.mp-cp-row__val {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-align: right;
-}
-
-.mp-cp-row__val--critical {
-  color: var(--error);
-}
-
-.mp-cp-row__val--yes {
-  color: var(--success);
-}
-
-.mp-cp-row__val--no {
-  color: var(--error);
-}
-
-.mp-cp-nba-trigger {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 10px 14px;
-  background: rgba(239, 68, 68, 0.04);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 10px;
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* ── David: Returns grid ── */
+/* ── Returns grid (David) ── */
 .mp-returns-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 6px;
 }
 
 .mp-return-kpi {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 10px 14px;
+  gap: 2px;
+  padding: 8px 12px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  min-width: 80px;
+  border-radius: 8px;
+  min-width: 72px;
 }
 
 .mp-return-kpi__label {
-  font-size: 0.6rem;
+  font-size: 0.5625rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -809,12 +826,12 @@
 }
 
 .mp-return-kpi__value {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--success);
 }
 
-/* ── David: Full-width NBA card ── */
+/* ── Full-width NBA card (David) ── */
 .mp-card--full-width {
   grid-column: 1 / -1;
   display: flex;
@@ -831,16 +848,21 @@
     grid-template-columns: 1fr;
   }
 
-  .mp-nba-grid {
+  .mp-nba-grid,
+  .mp-nba-grid--wide {
     grid-template-columns: 1fr;
   }
 
-  .mp-cp-grid {
+  .mp-cp-metrics {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mp-cp-fields {
     grid-template-columns: 1fr 1fr;
   }
 
-  .mp-nba-grid--wide {
-    grid-template-columns: 1fr;
+  .mp-col-stack {
+    gap: 14px;
   }
 
   .mp-collapsible-body {
@@ -869,11 +891,15 @@
     flex-direction: column;
   }
 
-  .mp-cp-grid {
+  .mp-cp-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mp-cp-fields {
     grid-template-columns: 1fr;
   }
 
-  .mp-returns-grid {
-    gap: 6px;
+  .mp-cp-identity {
+    flex-direction: column;
   }
 }
