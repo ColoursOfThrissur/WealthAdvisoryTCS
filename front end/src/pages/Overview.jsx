@@ -31,6 +31,26 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
   const [selectedProfileId, setSelectedProfileId] = useState(null);
 
   const priorityProfiles = [
+    {
+      id: 'C005',
+      name: 'David Thompson',
+      aum: 1590000,
+      return: 0.112,
+      risk: 0.78,
+      creditScore: 720,
+      age: 54,
+      priority: 'Critical',
+      profession: null,
+      riskLabel: 'Moderate Growth',
+      trigger: 'Excess idle cash of >$350K above target — compliance escalation triggered. Deploy cash and address behavioral anxiety before drift widens.',
+      rebalanceReason: 'Cash Deployment & Compliance Escalation',
+      keyContext: ['Cash 22% vs 10% target — >$350K idle', 'Compliance: Advice boundary breached', 'Behavioral Risk: Elevated (score 83)'],
+      intro: '54y/o · high net worth · advisory · 1 account',
+      actions: [
+        { label: 'Meeting Prep — 9:00 AM', route: '/meeting-prep/C005' },
+        { label: 'Rebalance Portfolio', route: '/client/C005/rebalancing' },
+      ],
+    },
     ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(0, 1).map(c => ({
       id: c.CustomerID,
       name: `${c.FirstName} ${c.Surname}`,
@@ -593,6 +613,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
             </div>
             <div className="ov-meetings-body">
               {[
+                { time: '9:00',  period: 'AM', client: 'David Thompson', topic: 'Cash Deployment & Compliance Review', btn: 'Prep', clientId: 'C005', critical: true },
                 { time: '10:00', period: 'AM', client: 'Alex Morgan', topic: 'Quarterly Review', btn: 'Prep', clientId: '15600001' },
                 { time: '2:30',  period: 'PM', client: 'Jean Williams', topic: 'Investment Planning', btn: 'Prep', clientId: '15740900' },
                 { time: '4:00',  period: 'PM', client: 'Marcus Thompson', topic: 'Portfolio Review', btn: 'Prep', clientId: '15623828' },
@@ -607,8 +628,8 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
                     <span className="ov-meeting-row__topic">{m.topic}</span>
                   </div>
                   <button
-                    className={`ov-meeting-row__btn${m.live ? ' ov-meeting-row__btn--live' : ''}`}
-                    onClick={() => m.clientId && navigate(`/meeting-prep/${m.clientId}`)}
+                    className={`ov-meeting-row__btn${m.live ? ' ov-meeting-row__btn--live' : ''}${m.critical ? ' ov-meeting-row__btn--critical' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); m.clientId && navigate(`/meeting-prep/${m.clientId}`); }}
                   >{m.btn}</button>
                 </div>
               ))}

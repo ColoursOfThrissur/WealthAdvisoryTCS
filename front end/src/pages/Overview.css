@@ -1068,6 +1068,14 @@
   animation: pulse-live 2s ease-in-out infinite;
 }
 
+.ov-meeting-row__btn--critical {
+  background: var(--error);
+}
+
+.ov-meeting-row__btn--critical:hover {
+  background: #b91c1c;
+}
+
 .ov-meeting-row--event {
   background: rgba(245, 158, 11, 0.04);
   border-top: 1px dashed rgba(245, 158, 11, 0.3);
