@@ -27,7 +27,7 @@ const CLIENT_DATA = {
     regBIOptIn: 'Yes', disclosureMethod: 'Electronic',
     privacyClassification: 'Standard',
     consentMarketing: true, consentAdvice: true, consentThirdParty: false,
-    nbaTrigger: 'Excess idle cash of >$350K above target — compliance escalation triggered. Deploy cash and address behavioral anxiety before drift widens.',
+    nbaTrigger: 'High idle cash (22% vs 10% target, >$350K) combined with anxious sentiment creates immediate performance, behavioral, and compliance risk — confirming ideal trigger for proactive advisor engagement.',
   },
   '15634602': {
     name: 'Mary Hargrave', tier: 'Platinum', riskProfile: 'Moderate Growth',
@@ -181,11 +181,11 @@ const UPCOMING_MEETINGS = {
 
 const DISCUSSION_ANGLES = {
   'C005': [
-    { title: 'Cash Deployment Strategy',   desc: 'Review the >$350K idle cash position and present phased equity deployment options to close the 12% gap.' },
-    { title: 'Compliance & Reg BI',        desc: 'Walk through the compliance escalation, explain the Cash Deployment NBA, and confirm Reg BI opt-in obligations.' },
-    { title: 'Behavioral Reassurance',     desc: 'Address client anxiety and high volatility reactivity — reframe rebalancing as a structured, low-risk plan.' },
-    { title: 'Rebalancing to 90% Equity',  desc: 'Present phased rebalancing roadmap: Phase 1 deployment amount, timeline, and target allocation milestones.' },
-    { title: 'Follow-up & Monitoring',     desc: 'Set 30-day check-in, define Phase 2 triggers, and confirm preferred communication channel (Phone).' },
+    { title: 'Capital Efficiency',     desc: 'Idle cash at 22% is creating return drag vs MSCI World benchmark — present phased equity deployment to close the 12% gap and restore growth alignment.' },
+    { title: 'Risk Containment',       desc: 'Prolonged inactivity may amplify anxiety-driven decisions later — a structured deployment plan now reduces the risk of reactive, poorly-timed moves.' },
+    { title: 'Compliance & IPS',       desc: 'Sustained deviation from IPS asset mix (90% equity target) triggers escalation — walk through the Reg BI obligation and document the advice boundary resolution.' },
+    { title: 'Behavioral Coaching',    desc: 'Structured deployment can reduce volatility reactivity — reframe rebalancing as returning to the agreed plan, not reacting to markets.' },
+    { title: 'Follow-up & Monitoring', desc: 'Set 30-day check-in, define Phase 2 triggers, and confirm preferred communication channel (Phone).' },
   ],
   '15600001': [
     { title: 'Portfolio Drift Check', desc: 'Review current equity underweight vs target and growth impact.' },
@@ -199,15 +199,11 @@ const DISCUSSION_ANGLES = {
 const RECOMMENDED_ACTIONS = {
   'C005': {
     primary: [
-      { label: 'Deploy Cash — Phase 1',      desc: 'Initiate structured deployment of idle cash into equities to begin closing the 12% allocation gap.' },
-      { label: 'Rebalance to Equity Target', desc: 'Execute phased rebalancing toward 90% equity target; avoid lump-sum to manage behavioral risk.' },
-      { label: 'Address Behavioral Anxiety', desc: 'Use structured reassurance script — reframe rebalancing as returning to the agreed strategic plan.' },
+      { label: 'Cash Deployment',        desc: 'Review cash deployment strategy — initiate structured phased deployment of >$350K idle cash into equities to begin closing the 12% allocation gap.' },
+      { label: 'Rebalancing',            desc: 'Rebalance toward equity target — execute phased rebalancing toward 90% equity; avoid lump-sum to manage behavioral risk and timing anxiety.' },
+      { label: 'Behavioral',             desc: 'Address anxiety and risk behavior — use structured reassurance to reframe rebalancing as returning to the agreed strategic plan, not reacting to markets.' },
     ],
-    clientAligned: [
-      'Phased Approach: Deploy in increments aligned to client comfort — reduces timing anxiety and compliance risk.',
-      'Compliance: Confirm Reg BI opt-in acknowledgment and document advice boundary resolution in CRM.',
-      'Follow-Up: Schedule 30-day review to assess Phase 1 impact and plan Phase 2 deployment.',
-    ],
+    clientAligned: [],
   },
   '15600001': {
     primary: [
@@ -451,7 +447,7 @@ const MeetingPrep = () => {
         <section className="mp-card mp-card--row3">
           <div className="mp-card__head">
             <div className="mp-card__icon"><MessageSquare size={15} /></div>
-            <h2 className="mp-card__title">Discussion Angles</h2>
+            <h2 className="mp-card__title">{isDavid ? 'Decision Angles' : 'Discussion Angles'}</h2>
             <AIBadge size="sm" />
           </div>
           <div className="mp-discussion-list">
