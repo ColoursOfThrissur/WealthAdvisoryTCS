@@ -123,8 +123,29 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
         { label: 'Risk Analysis', route: '/client/C013/risk-analysis' },
       ],
     },
-    // 5 & 6: Miguel Angel, Margaret Davis (original positions)
-    ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(1, 3).map(c => ({
+    // 5. David Thompson
+    {
+      id: 'C005',
+      name: 'David Thompson',
+      aum: 1590000,
+      return: 0.112,
+      risk: 0.78,
+      creditScore: 720,
+      age: 54,
+      priority: 'Critical',
+      profession: null,
+      riskLabel: 'Moderate Growth',
+      trigger: 'Excess idle cash of >$350K above target — compliance escalation triggered. Deploy cash and address behavioral anxiety before drift widens.',
+      rebalanceReason: 'Cash Deployment & Compliance Escalation',
+      keyContext: ['Cash 22% vs 10% target — >$350K idle', 'Compliance: Advice boundary breached', 'Behavioral Risk: Elevated (score 83)'],
+      intro: '54y/o · high net worth · advisory · 1 account',
+      actions: [
+        { label: 'Cash Deployment', route: '/meeting-prep/C005' },
+        { label: 'Meeting Prep — 9:00 AM', route: '/meeting-prep/C005' },
+      ],
+    },
+    // 6: Margaret Davis (original position)
+    ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(2, 3).map(c => ({
       id: c.CustomerID,
       name: `${c.FirstName} ${c.Surname}`,
       aum: c.NetAssets,
@@ -634,8 +655,8 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
             </div>
             <div className="ov-meetings-body">
               {[
-                { time: '9:00',  period: 'AM', client: 'David Thompson', topic: 'Cash Deployment & Compliance Review', btn: 'Prep', clientId: 'C005', critical: true },
-                { time: '10:00', period: 'AM', client: 'Alex Morgan', topic: 'Quarterly Review', btn: 'Prep', clientId: '15600001' },
+                { time: '9:00',  period: 'AM', client: 'David Thompson', topic: 'Cash Deployment & Compliance Review', btn: 'Prep', clientId: 'C005' },
+                { time: '10:00', period: 'AM', client: 'Kevin Smyth', topic: 'Cash Deployment Review', btn: 'Prep', clientId: 'C012' },
                 { time: '2:30',  period: 'PM', client: 'Jean Williams', topic: 'Investment Planning', btn: 'Prep', clientId: '15740900' },
                 { time: '4:00',  period: 'PM', client: 'Marcus Thompson', topic: 'Portfolio Review', btn: 'Prep', clientId: '15623828' },
               ].map(m => (
