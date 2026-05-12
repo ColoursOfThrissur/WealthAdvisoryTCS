@@ -262,31 +262,32 @@
 /* ── Risk Metrics Row ── */
 .mp-risk-metrics {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .mp-risk-metric {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 14px 14px;
+  gap: 2px;
+  padding: 10px 12px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .mp-risk-metric__label {
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-tertiary);
+  white-space: nowrap;
 }
 
 .mp-risk-metric__value {
-  font-size: 1.0625rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -549,7 +550,7 @@
 /* ── Portfolio Snapshot KPIs ── */
 .mp-snapshot-kpis {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
@@ -557,30 +558,40 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 12px 14px;
+  gap: 2px;
+  padding: 10px 12px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .mp-snapshot-kpi__label {
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-tertiary);
+  white-space: nowrap;
 }
 
 .mp-snapshot-kpi__value {
-  font-size: 1.0625rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mp-snapshot-kpi__value--positive { color: var(--success); }
 
 /* ── Next Best Actions ── */
+.mp-nba-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .mp-nba-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -646,7 +657,17 @@
   font-size: 0.8rem;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin: 0;
+  margin: 0 0 8px 0;
+}
+
+.mp-view-more--reasoning {
+  width: 100%;
+  justify-content: center;
+  padding: 5px 0;
+  border-top: 1px solid rgba(16, 185, 129, 0.15);
+  margin-top: 2px;
+  color: var(--success);
+  font-size: 0.7rem;
 }
 
 .mp-nba-card--client {
@@ -720,33 +741,38 @@
 .mp-profile-strip {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--glass-border);
+  gap: 0;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--error);
+  border-radius: 12px;
 }
 
 .mp-profile-strip__left {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 0;
   min-width: 0;
 }
 
 .mp-profile-strip__name {
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.2;
+  margin-bottom: 6px;
 }
 
 .mp-profile-strip__bio {
-  font-size: 0.775rem;
-  color: var(--text-tertiary);
-  line-height: 1.4;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 12px;
 }
 
 .mp-profile-strip__ref {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .mp-profile-strip__badges {

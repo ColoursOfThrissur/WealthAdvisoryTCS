@@ -28,6 +28,7 @@ const CLIENT_DATA = {
     privacyClassification: 'Standard',
     consentMarketing: true, consentAdvice: true, consentThirdParty: false,
     nbaTrigger: 'High idle cash (22% vs 10% target, >$350K) combined with anxious sentiment creates immediate performance, behavioral, and compliance risk — confirming ideal trigger for proactive advisor engagement.',
+    profileIntro: 'New HNW client onboarded Feb 2026 — still in early trust-building phase. Tech professional based in San Jose, high income, accumulation-focused. Exhibits high volatility reactivity and tends to defer decisions under market stress. Prefers Phone contact and responds better to structured, data-backed reassurance than open-ended discussion.',
   },
   '15634602': {
     name: 'Mary Hargrave', tier: 'Platinum', riskProfile: 'Moderate Growth',
@@ -276,10 +277,7 @@ const MeetingPrep = () => {
         <div className="mp-profile-strip">
           <div className="mp-profile-strip__left">
             <span className="mp-profile-strip__name">{client.name}</span>
-            <span className="mp-profile-strip__bio">
-              {client.age}y/o {client.segment} client · {client.clientType} · Onboarded {client.onboardingDate} · Prefers {client.preferredChannel}
-              <span className="mp-profile-strip__ref"> · {client.customerId} · {client.householdId} · {client.accountId} · {client.advisorId}</span>
-            </span>
+            <span className="mp-profile-strip__bio">{client.profileIntro}</span>
             <div className="mp-profile-strip__badges">
               <span className="mp-profile-strip__badge mp-profile-strip__badge--ok"><CheckCircle size={10} /> KYC {client.kycStatus}</span>
               <span className="mp-profile-strip__badge mp-profile-strip__badge--ok"><Shield size={10} /> {client.lifecycleStage}</span>
@@ -447,7 +445,7 @@ const MeetingPrep = () => {
         <section className="mp-card mp-card--row3">
           <div className="mp-card__head">
             <div className="mp-card__icon"><MessageSquare size={15} /></div>
-            <h2 className="mp-card__title">{isDavid ? 'Decision Angles' : 'Discussion Angles'}</h2>
+            <h2 className="mp-card__title">Discussion Angles</h2>
             <AIBadge size="sm" />
           </div>
           <div className="mp-discussion-list">
@@ -470,22 +468,19 @@ const MeetingPrep = () => {
             <h2 className="mp-card__title">Next Best Actions</h2>
             <AIBadge size="sm" />
           </div>
-          <div className="mp-nba-grid">
-            <div className="mp-nba-col mp-nba-col--primary">
-              <h3 className="mp-nba-col__label">Primary</h3>
-              {actions.primary.map((a, i) => (
-                <div key={i} className="mp-nba-card mp-nba-card--primary">
-                  <div className="mp-nba-card__head">
-                    <CheckCircle size={14} />
-                    <span className="mp-nba-card__title">{a.label}</span>
-                  </div>
-                  <p className="mp-nba-card__desc">{a.desc}</p>
+          <div className="mp-nba-list">
+            {actions.primary.map((a, i) => (
+              <div key={i} className="mp-nba-card mp-nba-card--primary">
+                <div className="mp-nba-card__head">
+                  <CheckCircle size={14} />
+                  <span className="mp-nba-card__title">{a.label}</span>
                 </div>
-              ))}
-              <button className="mp-view-more" style={{ marginTop: '10px' }}>
-                View Agent Reasoning <ChevronDown size={12} />
-              </button>
-            </div>
+                <p className="mp-nba-card__desc">{a.desc}</p>
+                <button className="mp-view-more mp-view-more--reasoning">
+                  View Agent Reasoning <ChevronDown size={12} />
+                </button>
+              </div>
+            ))}
           </div>
         </section>
 
