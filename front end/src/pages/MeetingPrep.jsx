@@ -68,15 +68,16 @@ const HOLDINGS_DATA = {
       { asset: 'Cash',   pct: 22, value: '$350K',   target: 10, diff: +12, status: 'overweight' },
     ],
     performance: [
-      { fund: 'VTI',   type: 'US Total Market (Equity)',       weight: 24, y2024: '23.84%', y2025: '14.20%', trend: 'Declining',  remarks: 'Core Equity Anchor' },
-      { fund: 'QQQ',   type: 'US Large-Cap Tech (Equity)',     weight: 16, y2024: '26.57%', y2025: '11.43%', trend: 'Declining',  remarks: 'Concentration Risk' },
-      { fund: 'VXUS',  type: 'International Equity',           weight: 12, y2024: '5.12%',  y2025: '22.38%', trend: 'Growing',    remarks: 'Diversification Upside' },
-      { fund: 'VGT',   type: 'US Tech Sector (Equity)',        weight: 8,  y2024: '31.20%', y2025: '9.85%',  trend: 'Declining',  remarks: 'High Volatility — Monitor' },
-      { fund: 'VMFXX', type: 'Money Market / Cash Equivalent', weight: 22, y2024: '5.28%',  y2025: '4.91%',  trend: 'Declining',  remarks: 'Excess Cash — Deploy' },
-      { fund: 'BND',   type: 'US Aggregate Bond',              weight: 6,  y2024: '4.22%',  y2025: '5.10%',  trend: 'Improving',  remarks: 'Defensive Buffer' },
-      { fund: 'VYMI',  type: 'Intl High Dividend Equity',      weight: 4,  y2024: '6.80%',  y2025: '14.60%', trend: 'Growing',    remarks: 'Income Diversifier' },
-      { fund: 'VWO',   type: 'Emerging Markets Equity',        weight: 4,  y2024: '7.20%',  y2025: '16.40%', trend: 'Growing',    remarks: 'EM Growth Exposure' },
-      { fund: 'VTIP',  type: 'Inflation-Protected Bond',       weight: 4,  y2024: '3.80%',  y2025: '4.20%',  trend: 'Improving',  remarks: 'Inflation Hedge' },
+      { fund: 'RAEFX', type: 'US Large-Cap Growth (Active)',  weight: 9,  y2024: '27.7%', y2025: '2.7%',  trend: 'Declining',  remarks: 'Active Growth Core' },
+      { fund: 'RGAHX', type: 'US Large-Cap Growth (Active)',  weight: 8,  y2024: '29.1%', y2025: '2.5%',  trend: 'Declining',  remarks: 'Top 1Y Performer' },
+      { fund: 'RMFHX', type: 'US Large-Cap Value/Income',     weight: 7,  y2024: '19.9%', y2025: '3.0%',  trend: 'Stable',     remarks: 'Value Anchor' },
+      { fund: 'RIGIX', type: 'Intl Equity (Active)',           weight: 6,  y2024: '32.9%', y2025: '10.7%', trend: 'Growing',    remarks: 'Intl Outperformer' },
+      { fund: 'RIDHX', type: 'Multi-Asset Income',             weight: 7,  y2024: '19.9%', y2025: '6.1%',  trend: 'Improving',  remarks: 'Income Diversifier' },
+      { fund: 'RGBHX', type: 'Global Balanced',                weight: 5,  y2024: '19.9%', y2025: '5.5%',  trend: 'Improving',  remarks: 'Global Balance' },
+      { fund: 'RLEFX', type: 'Moderate Allocation',            weight: 8,  y2024: '26.4%', y2025: '6.0%',  trend: 'Improving',  remarks: 'Allocation Core' },
+      { fund: 'FSPGX', type: 'US Large-Cap Growth (Index)',    weight: 6,  y2024: '32.5%', y2025: '4.6%',  trend: 'Declining',  remarks: 'Index Growth' },
+      { fund: 'VFIAX', type: 'US Large-Cap Blend (Index)',     weight: 10, y2024: '32.3%', y2025: '8.5%',  trend: 'Improving',  remarks: 'S&P 500 Core' },
+      { fund: 'VTIAX', type: 'Intl Equity (Index)',             weight: 6,  y2024: '~19%',  y2025: '~7.5%', trend: 'Growing',    remarks: 'Intl Index' },
     ],
     returns: [
       { label: '1D',             value: '+0.25%' },
@@ -88,8 +89,8 @@ const HOLDINGS_DATA = {
       { label: 'Since Inception',value: '+11.20%' },
     ],
     keyInsight: [
-      'Cash drag is the core issue — VMFXX at 22% earning ~4.9% while equity target sits 12% below IPS; deploying $350K into VTI and VXUS closes the gap.',
-      'QQQ + VGT = 26% tech concentration — elevated for Moderate Growth; VXUS, VWO and VYMI outperforming YTD, international allocation is working.',
+      'Most equity and balanced holdings delivered 20–32% 1-year returns, yet 22% of the portfolio sat in cash — materially diluting overall outcomes.',
+      'Strong fund performance vs anxious client sentiment reveals a clear mismatch — strategic rebalancing out of excess cash is suitability-critical, not optional.',
     ],
   },
   '15600001': {
@@ -212,9 +213,9 @@ const DISCUSSION_ANGLES = {
 const RECOMMENDED_ACTIONS = {
   'C005': {
     primary: [
-      { label: 'Cash Deployment',  desc: 'Deploy >$350K from VMFXX into equities to close the 12% allocation gap.' },
-      { label: 'Rebalancing',       desc: 'Phased rebalancing toward 90% equity target — avoid lump-sum to manage behavioral risk.' },
-      { label: 'Behavioral',        desc: 'Structured reassurance — reframe rebalancing as returning to the agreed plan.' },
+      { label: 'Cash Deployment',  desc: 'Deploy >$350K from VMFXX into equities to close the 12% allocation gap.', reasoning: "David's 22% cash position materially exceeds the 10% IPS target, creating return drag and triggering suitability review under the advisory mandate. All regulatory, product, and household checks pass, with no conflicts or liquidity constraints identified." },
+      { label: 'Rebalancing',       desc: 'Phased rebalancing toward 90% equity target — avoid lump-sum to manage behavioral risk.', reasoning: "Rebalancing is fully permitted within advisory and product eligibility rules, with no household or compliance blockers. To optimize execution given David's behavioral profile, the model recommends phased rebalancing, avoiding lump-sum actions that could increase anxiety and reversal risk." },
+      { label: 'Behavioral',        desc: 'Structured reassurance — reframe rebalancing as returning to the agreed plan.', reasoning: "Despite strong underlying fund performance, David's sentiment remains classified as anxious, increasing the likelihood of reactive, non-goal-aligned decisions. Structured reassurance is recommended, reframing rebalancing as a return to the agreed strategic plan to reduce override propensity and stabilize execution." },
     ],
     clientAligned: [],
   },
@@ -256,6 +257,7 @@ const MeetingPrep = () => {
   const [activityExpanded, setActivityExpanded] = useState(false);
   const [anglesExpanded, setAnglesExpanded] = useState(false);
   const [showScript, setShowScript] = useState(false);
+  const [reasoningAction, setReasoningAction] = useState(null);
 
   return (
     <div className="mp-page">
@@ -283,7 +285,6 @@ const MeetingPrep = () => {
       {/* ── David only: reason strip ── */}
       {isDavid && (
         <div className="mp-nba-reason">
-          <AlertTriangle size={13} />
           <span>{client.nbaTrigger}</span>
         </div>
       )}
@@ -485,7 +486,7 @@ const MeetingPrep = () => {
                 <div className="mp-nba-card__head">
                   <CheckCircle size={14} />
                   <span className="mp-nba-card__title">{a.label}</span>
-                  <button className="mp-view-more mp-view-more--reasoning">
+                  <button className="mp-view-more mp-view-more--reasoning" onClick={() => a.reasoning && setReasoningAction(a)}>
                     View Agent Reasoning <ChevronDown size={11} />
                   </button>
                 </div>
@@ -519,11 +520,26 @@ const MeetingPrep = () => {
         <div className="mp-modal-overlay" onClick={() => setShowScript(false)}>
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
             <div className="mp-modal__head">
-              <h3 className="mp-modal__title">Discussion Script</h3>
+              <h3 className="mp-modal__title">NBC Script</h3>
               <button className="mp-modal__close" onClick={() => setShowScript(false)}>✕</button>
             </div>
             <div className="mp-modal__body">
-              <p className="mp-modal__placeholder">Script content coming soon.</p>
+              <p className="mp-modal__script">"David, I want to start by acknowledging that your caution over the last year has been understandable given the volatility we've seen. The gap we're seeing in your overall results isn't coming from poor investments or bad timing but it's coming from the fact that about 22% of your portfolio is still sitting in cash. That cash gave you comfort, but it also quietly worked against your long-term growth goal and moved the portfolio away from the plan we agreed on together. I would like to walk you through exactly what this means using a phased, structured approach so your money is doing the job it's meant to do while still respecting how you feel about market swings. Let's focus on getting you back in line with your strategy in a way that feels controlled and thoughtful, rather than reactive."</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Agent Reasoning Modal ── */}
+      {reasoningAction && (
+        <div className="mp-modal-overlay" onClick={() => setReasoningAction(null)}>
+          <div className="mp-modal" onClick={e => e.stopPropagation()}>
+            <div className="mp-modal__head">
+              <h3 className="mp-modal__title">Agent Reasoning — {reasoningAction.label}</h3>
+              <button className="mp-modal__close" onClick={() => setReasoningAction(null)}>✕</button>
+            </div>
+            <div className="mp-modal__body">
+              <p className="mp-modal__script">{reasoningAction.reasoning}</p>
             </div>
           </div>
         </div>

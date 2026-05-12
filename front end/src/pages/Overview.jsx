@@ -31,26 +31,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
   const [selectedProfileId, setSelectedProfileId] = useState(null);
 
   const priorityProfiles = [
-    {
-      id: 'C005',
-      name: 'David Thompson',
-      aum: 1590000,
-      return: 0.112,
-      risk: 0.78,
-      creditScore: 720,
-      age: 54,
-      priority: 'Critical',
-      profession: null,
-      riskLabel: 'Moderate Growth',
-      trigger: 'Excess idle cash of >$350K above target — compliance escalation triggered. Deploy cash and address behavioral anxiety before drift widens.',
-      rebalanceReason: 'Cash Deployment & Compliance Escalation',
-      keyContext: ['Cash 22% vs 10% target — >$350K idle', 'Compliance: Advice boundary breached', 'Behavioral Risk: Elevated (score 83)'],
-      intro: '54y/o · high net worth · advisory · 1 account',
-      actions: [
-        { label: 'Meeting Prep — 9:00 AM', route: '/meeting-prep/C005' },
-        { label: 'Rebalance Portfolio', route: '/client/C005/rebalancing' },
-      ],
-    },
+    // 1. Mary Hargrave — from worklist, first entry
     ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(0, 1).map(c => ({
       id: c.CustomerID,
       name: `${c.FirstName} ${c.Surname}`,
@@ -80,6 +61,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
             ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
           ],
     })),
+    // 2. Sam Pai
     {
       id: 15678284,
       name: 'Sam Pai',
@@ -99,7 +81,50 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
         { label: 'Engagement Letter', route: '/client/15678284/profile' },
       ],
     },
-    ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(1, 5).map(c => ({
+    // 3. Kevin Smyth
+    {
+      id: 'C012',
+      name: 'Kevin Smyth',
+      aum: 850000,
+      return: 0.048,
+      risk: 0.20,
+      creditScore: 680,
+      age: 44,
+      priority: 'Medium',
+      profession: null,
+      riskLabel: 'Moderate',
+      trigger: 'Defensive bias materially limiting growth — 40% cash vs 20% IPS target creating return drag and increasing suitability review risk.',
+      rebalanceReason: 'Cash Deployment',
+      keyContext: ['Cash 40% vs 20% target', 'Behavioral inconsistency risk', 'IPS misalignment increasing'],
+      intro: '44y/o \u00b7 mass affluent \u00b7 advisory \u00b7 accumulation',
+      actions: [
+        { label: 'Cash Deployment Review', route: '/client/C012/rebalancing' },
+        { label: 'IPS Review', route: '/client/C012/ips' },
+      ],
+    },
+    // 4. Sarah Jenkins
+    {
+      id: 'C013',
+      name: 'Sarah Jenkins',
+      aum: 3000000,
+      return: 0.143,
+      risk: 0.90,
+      creditScore: 740,
+      age: 48,
+      priority: 'High',
+      profession: null,
+      riskLabel: 'Aggressive Growth',
+      trigger: 'Strong returns have pushed equity to 90% vs 80% IPS target — risk beyond comfort zone, rebalancing suitability-critical.',
+      rebalanceReason: 'Equity Rebalancing',
+      keyContext: ['Equity 90% vs 80% target', 'Volatility risk elevated', 'Suitability review required'],
+      intro: '48y/o \u00b7 high net worth \u00b7 advisory \u00b7 accumulation',
+      actions: [
+        { label: 'Rebalance Portfolio', route: '/client/C013/rebalancing' },
+        { label: 'Risk Analysis', route: '/client/C013/risk-analysis' },
+      ],
+    },
+    // 5 & 6: Miguel Angel, Margaret Davis (original positions)
+    ...worklistData.rebalancing.filter(c => c.CustomerID !== 15740900 && c.CustomerID !== 15623828).slice(1, 3).map(c => ({
       id: c.CustomerID,
       name: `${c.FirstName} ${c.Surname}`,
       aum: c.NetAssets,
@@ -119,14 +144,10 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
         c.BusinessOwner ? 'business owner' : null,
         `${c.NumProducts} product${c.NumProducts !== 1 ? 's' : ''}`,
       ].filter(Boolean).join(' \u00b7 '),
-      actions: Array.isArray(c.RecommendedActions) && c.RecommendedActions.length && typeof c.RecommendedActions[0] === 'object'
-        ? c.RecommendedActions
-        : [
-            { label: c.RebalanceReason, route: `/client/${c.CustomerID}/rebalancing` },
-            ...(c.FirstName === 'Mary' ? [{ label: 'Meeting Prep \u2014 10:00 AM', route: `/meeting-prep/${c.CustomerID}` }] : []),
-            ...(c.Priority === 'Critical' && c.FirstName !== 'Mary' ? [{ label: 'Market Event Mailer', route: '/' }] : []),
-            ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
-          ],
+      actions: [
+        { label: c.RebalanceReason, route: `/client/${c.CustomerID}/rebalancing` },
+        ...(c.PortfolioReturn > 0.12 ? [{ label: 'Investment Proposal', route: '/worklist/proposals' }] : []),
+      ],
     })),
   ];
 

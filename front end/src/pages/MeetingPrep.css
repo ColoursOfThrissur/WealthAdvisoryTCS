@@ -708,8 +708,8 @@
 
 .mp-view-more--reasoning {
   margin-left: auto;
-  font-size: 0.6875rem;
-  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  color: var(--success);
   border: none;
   background: none;
   padding: 0;
@@ -720,11 +720,11 @@
   align-items: center;
   gap: 3px;
   white-space: nowrap;
-  transition: color 0.15s;
+  transition: opacity 0.15s;
   flex-shrink: 0;
 }
 
-.mp-view-more--reasoning:hover { color: var(--success); }
+.mp-view-more--reasoning:hover { opacity: 0.7; }
 
 .mp-nba-card--client {
   background: rgba(59, 130, 246, 0.03);
@@ -779,19 +779,15 @@
 
 /* ── David: NBA reason strip ── */
 .mp-nba-reason {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 9px 16px;
-  background: rgba(239, 68, 68, 0.04);
+  padding: 12px 18px;
+  background: rgba(239, 68, 68, 0.06);
   border-left: 3px solid var(--error);
   border-radius: var(--radius-md);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  line-height: 1.5;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.6;
 }
-.mp-nba-reason svg { color: var(--error); flex-shrink: 0; margin-top: 2px; }
 
 
 /* ── Script button ── */
@@ -877,6 +873,14 @@
   font-size: 0.875rem;
   color: var(--text-tertiary);
   margin: 0;
+}
+
+.mp-modal__script {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin: 0;
+  font-style: italic;
 }
 .mp-header__critical {
   font-size: 0.6875rem;
