@@ -68,11 +68,15 @@ const HOLDINGS_DATA = {
       { asset: 'Cash',   pct: 22, value: '$350K',   target: 10, diff: +12, status: 'overweight' },
     ],
     performance: [
-      { fund: 'VTI',   type: 'US Total Market (Equity)',      weight: 32, y2024: '23.84%', y2025: '14.20%', trend: 'Declining',  remarks: 'Core Equity Anchor' },
-      { fund: 'QQQ',   type: 'US Large-Cap Tech (Equity)',    weight: 20, y2024: '26.57%', y2025: '11.43%', trend: 'Declining',  remarks: 'Concentration Risk' },
-      { fund: 'VXUS',  type: 'International Equity',          weight: 16, y2024: '5.12%',  y2025: '22.38%', trend: 'Growing',   remarks: 'Diversification Upside' },
-      { fund: 'VMFXX', type: 'Money Market / Cash Equivalent', weight: 22, y2024: '5.28%',  y2025: '4.91%',  trend: 'Declining', remarks: 'Excess Cash — Deploy' },
-      { fund: 'BND',   type: 'US Aggregate Bond',             weight: 10, y2024: '4.22%',  y2025: '5.10%',  trend: 'Improving', remarks: 'Defensive Buffer' },
+      { fund: 'VTI',   type: 'US Total Market (Equity)',       weight: 24, y2024: '23.84%', y2025: '14.20%', trend: 'Declining',  remarks: 'Core Equity Anchor' },
+      { fund: 'QQQ',   type: 'US Large-Cap Tech (Equity)',     weight: 16, y2024: '26.57%', y2025: '11.43%', trend: 'Declining',  remarks: 'Concentration Risk' },
+      { fund: 'VXUS',  type: 'International Equity',           weight: 12, y2024: '5.12%',  y2025: '22.38%', trend: 'Growing',    remarks: 'Diversification Upside' },
+      { fund: 'VGT',   type: 'US Tech Sector (Equity)',        weight: 8,  y2024: '31.20%', y2025: '9.85%',  trend: 'Declining',  remarks: 'High Volatility — Monitor' },
+      { fund: 'VMFXX', type: 'Money Market / Cash Equivalent', weight: 22, y2024: '5.28%',  y2025: '4.91%',  trend: 'Declining',  remarks: 'Excess Cash — Deploy' },
+      { fund: 'BND',   type: 'US Aggregate Bond',              weight: 6,  y2024: '4.22%',  y2025: '5.10%',  trend: 'Improving',  remarks: 'Defensive Buffer' },
+      { fund: 'VYMI',  type: 'Intl High Dividend Equity',      weight: 4,  y2024: '6.80%',  y2025: '14.60%', trend: 'Growing',    remarks: 'Income Diversifier' },
+      { fund: 'VWO',   type: 'Emerging Markets Equity',        weight: 4,  y2024: '7.20%',  y2025: '16.40%', trend: 'Growing',    remarks: 'EM Growth Exposure' },
+      { fund: 'VTIP',  type: 'Inflation-Protected Bond',       weight: 4,  y2024: '3.80%',  y2025: '4.20%',  trend: 'Improving',  remarks: 'Inflation Hedge' },
     ],
     returns: [
       { label: '1D',             value: '+0.25%' },
@@ -83,7 +87,10 @@ const HOLDINGS_DATA = {
       { label: '1-Year',         value: '+11.20%' },
       { label: 'Since Inception',value: '+11.20%' },
     ],
-    keyInsight: 'Cash drag is the primary issue — VMFXX at 22% is earning ~4.9% while equity targets remain unmet.\n\nDeploying into VTI and VXUS would close the 12% equity gap and improve long-term growth alignment vs MSCI World benchmark.',
+    keyInsight: [
+      'Cash drag is the core issue — VMFXX at 22% earning ~4.9% while equity target sits 12% below IPS; deploying $350K into VTI and VXUS closes the gap.',
+      'QQQ + VGT = 26% tech concentration — elevated for Moderate Growth; VXUS, VWO and VYMI outperforming YTD, international allocation is working.',
+    ],
   },
   '15600001': {
     totalValue: '$502,000',
@@ -104,7 +111,12 @@ const HOLDINGS_DATA = {
       { fund: 'AIVSX', type: 'US Core Equity', weight: 7, y2024: '18.57%', y2025: '14.66%', trend: 'Declining', remarks: 'Core Anchor' },
       { fund: 'ANWPX', type: 'Global Growth Equity', weight: 7, y2024: '14.16%', y2025: '16.18%', trend: 'Improving', remarks: 'Global Balance' },
     ],
-    keyInsight: 'Growth concentration risk is emerging on the US equities — FSPGX, AGTHX\n\nInternational and balanced allocations are becoming key growth drivers — AEPGX, AMECX, ANWPX',
+    keyInsight: [
+      'FSPGX and AGTHX together at 38% — US growth concentration is the primary risk heading into this meeting.',
+      'AEPGX is the standout at +28.72% YTD — international recovery is outpacing domestic growth funds.',
+      'Bond overweight (ABNDX + CWBFX = 33%) is limiting upside — 8% above target allocation.',
+      'AMECX and ANWPX improving steadily — balanced and global exposure providing stability amid US volatility.',
+    ],
   },
 };
 
@@ -182,11 +194,11 @@ const UPCOMING_MEETINGS = {
 
 const DISCUSSION_ANGLES = {
   'C005': [
-    { title: 'Capital Efficiency',     desc: 'Idle cash at 22% is creating return drag vs MSCI World benchmark — present phased equity deployment to close the 12% gap and restore growth alignment.' },
-    { title: 'Risk Containment',       desc: 'Prolonged inactivity may amplify anxiety-driven decisions later — a structured deployment plan now reduces the risk of reactive, poorly-timed moves.' },
-    { title: 'Compliance & IPS',       desc: 'Sustained deviation from IPS asset mix (90% equity target) triggers escalation — walk through the Reg BI obligation and document the advice boundary resolution.' },
-    { title: 'Behavioral Coaching',    desc: 'Structured deployment can reduce volatility reactivity — reframe rebalancing as returning to the agreed plan, not reacting to markets.' },
-    { title: 'Follow-up & Monitoring', desc: 'Set 30-day check-in, define Phase 2 triggers, and confirm preferred communication channel (Phone).' },
+    { title: 'Capital Efficiency',     desc: 'Idle cash at 22% creating return drag vs benchmark — present phased deployment to close the 12% equity gap.' },
+    { title: 'Risk Containment',       desc: 'Prolonged inactivity risks amplifying anxiety-driven decisions — structured plan now prevents reactive moves later.' },
+    { title: 'Compliance & IPS',       desc: 'Sustained deviation from 90% equity IPS target triggers escalation — walk through Reg BI obligation and document resolution.' },
+    { title: 'Behavioral Coaching',    desc: 'Structured deployment reduces volatility reactivity — reframe as returning to the agreed plan, not reacting to markets.' },
+    { title: 'Follow-up & Monitoring', desc: 'Set 30-day check-in, Phase 2 triggers, confirm Phone as preferred channel.' },
   ],
   '15600001': [
     { title: 'Portfolio Drift Check', desc: 'Review current equity underweight vs target and growth impact.' },
@@ -200,9 +212,9 @@ const DISCUSSION_ANGLES = {
 const RECOMMENDED_ACTIONS = {
   'C005': {
     primary: [
-      { label: 'Cash Deployment',        desc: 'Review cash deployment strategy — initiate structured phased deployment of >$350K idle cash into equities to begin closing the 12% allocation gap.' },
-      { label: 'Rebalancing',            desc: 'Rebalance toward equity target — execute phased rebalancing toward 90% equity; avoid lump-sum to manage behavioral risk and timing anxiety.' },
-      { label: 'Behavioral',             desc: 'Address anxiety and risk behavior — use structured reassurance to reframe rebalancing as returning to the agreed strategic plan, not reacting to markets.' },
+      { label: 'Cash Deployment',  desc: 'Deploy >$350K from VMFXX into equities to close the 12% allocation gap.' },
+      { label: 'Rebalancing',       desc: 'Phased rebalancing toward 90% equity target — avoid lump-sum to manage behavioral risk.' },
+      { label: 'Behavioral',        desc: 'Structured reassurance — reframe rebalancing as returning to the agreed plan.' },
     ],
     clientAligned: [],
   },
@@ -242,6 +254,8 @@ const MeetingPrep = () => {
 
   const [newsExpanded, setNewsExpanded] = useState(false);
   const [activityExpanded, setActivityExpanded] = useState(false);
+  const [anglesExpanded, setAnglesExpanded] = useState(false);
+  const [showScript, setShowScript] = useState(false);
 
   return (
     <div className="mp-page">
@@ -255,9 +269,11 @@ const MeetingPrep = () => {
           <span className="mp-header__time">{client.meetingTime}</span>
           <button className="mp-export-btn"><Download size={13} /> Export</button>
         </div>
+        {isDavid && (
+          <p className="mp-header__insight">{client.profileIntro}</p>
+        )}
         <div className="mp-header__stats">
           <span className="mp-stat"><Shield size={12} /> {client.tier}</span>
-          <span className="mp-stat"><TrendingUp size={12} /> {client.riskProfile}</span>
           <span className="mp-stat">{client.aum} AUM</span>
           <span className="mp-stat mp-stat--warn"><AlertTriangle size={12} /> {client.sentiment}</span>
           <span className="mp-stat mp-stat--accent"><Target size={12} /> {client.meetingGoal}</span>
@@ -269,22 +285,6 @@ const MeetingPrep = () => {
         <div className="mp-nba-reason">
           <AlertTriangle size={13} />
           <span>{client.nbaTrigger}</span>
-        </div>
-      )}
-
-      {/* ── David only: client profile strip (not a card) ── */}
-      {isDavid && (
-        <div className="mp-profile-strip">
-          <div className="mp-profile-strip__left">
-            <span className="mp-profile-strip__name">{client.name}</span>
-            <span className="mp-profile-strip__bio">{client.profileIntro}</span>
-            <div className="mp-profile-strip__badges">
-              <span className="mp-profile-strip__badge mp-profile-strip__badge--ok"><CheckCircle size={10} /> KYC {client.kycStatus}</span>
-              <span className="mp-profile-strip__badge mp-profile-strip__badge--ok"><Shield size={10} /> {client.lifecycleStage}</span>
-              <span className="mp-profile-strip__badge mp-profile-strip__badge--ok">Reg BI: {client.regBIOptIn}</span>
-              <span className="mp-profile-strip__badge mp-profile-strip__badge--warn">3rd Party: {client.consentThirdParty ? 'Yes' : 'No'}</span>
-            </div>
-          </div>
         </div>
       )}
 
@@ -311,10 +311,12 @@ const MeetingPrep = () => {
               <span className="mp-snapshot-kpi__label">Unrealized Gain/Loss</span>
               <span className="mp-snapshot-kpi__value mp-snapshot-kpi__value--positive">{holdings.unrealizedGL}</span>
             </div>
-            {isDavid && holdings.benchmark && (
+            {isDavid && holdings.returns && (
               <div className="mp-snapshot-kpi">
-                <span className="mp-snapshot-kpi__label">Benchmark</span>
-                <span className="mp-snapshot-kpi__value" style={{ fontSize: '0.75rem' }}>{holdings.benchmark}</span>
+                <span className="mp-snapshot-kpi__label">1-Year Return</span>
+                <span className="mp-snapshot-kpi__value mp-snapshot-kpi__value--positive">
+                  {holdings.returns.find(r => r.label === '1-Year')?.value}
+                </span>
               </div>
             )}
           </div>
@@ -343,8 +345,11 @@ const MeetingPrep = () => {
           )}
           {holdings.keyInsight && (
             <div className="mp-card__insight">
-              {holdings.keyInsight.split('\n\n').map((line, i) => (
-                <p key={i} style={{ margin: i > 0 ? '6px 0 0 0' : '0' }}>{line}</p>
+              {holdings.keyInsight.map((line, i) => (
+                <div key={i} className="mp-insight-bullet">
+                  <span className="mp-insight-bullet__dot" />
+                  <span>{line}</span>
+                </div>
               ))}
             </div>
           )}
@@ -446,19 +451,25 @@ const MeetingPrep = () => {
           <div className="mp-card__head">
             <div className="mp-card__icon"><MessageSquare size={15} /></div>
             <h2 className="mp-card__title">Discussion Angles</h2>
+            <button className="mp-script-btn" onClick={() => setShowScript(true)}>Show Script</button>
             <AIBadge size="sm" />
           </div>
-          <div className="mp-discussion-list">
-            {angles.map((a, i) => (
-              <div key={i} className="mp-discussion-item">
-                <span className="mp-discussion-num">{i + 1}</span>
-                <div>
-                  <span className="mp-discussion-title">{a.title}</span>
-                  <span className="mp-discussion-desc">{a.desc}</span>
+          <div className={`mp-collapsible-body${anglesExpanded ? ' mp-collapsible-body--expanded' : ''}`}>
+            <div className="mp-discussion-list">
+              {angles.map((a, i) => (
+                <div key={i} className="mp-discussion-item">
+                  <span className="mp-discussion-num">{i + 1}</span>
+                  <div>
+                    <span className="mp-discussion-title">{a.title}</span>
+                    <span className="mp-discussion-desc">{a.desc}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          <button className="mp-view-more" onClick={() => setAnglesExpanded(p => !p)}>
+            {anglesExpanded ? 'Show less' : 'View more'} <ChevronDown size={12} className={anglesExpanded ? 'mp-chevron--up' : ''} />
+          </button>
         </section>
 
         {/* ROW 3 RIGHT: Next Best Actions */}
@@ -474,11 +485,11 @@ const MeetingPrep = () => {
                 <div className="mp-nba-card__head">
                   <CheckCircle size={14} />
                   <span className="mp-nba-card__title">{a.label}</span>
+                  <button className="mp-view-more mp-view-more--reasoning">
+                    View Agent Reasoning <ChevronDown size={11} />
+                  </button>
                 </div>
                 <p className="mp-nba-card__desc">{a.desc}</p>
-                <button className="mp-view-more mp-view-more--reasoning">
-                  View Agent Reasoning <ChevronDown size={12} />
-                </button>
               </div>
             ))}
           </div>
@@ -502,6 +513,21 @@ const MeetingPrep = () => {
           <Shield size={12} /> IPS
         </button>
       </div>
+
+      {/* ── Script Modal ── */}
+      {showScript && (
+        <div className="mp-modal-overlay" onClick={() => setShowScript(false)}>
+          <div className="mp-modal" onClick={e => e.stopPropagation()}>
+            <div className="mp-modal__head">
+              <h3 className="mp-modal__title">Discussion Script</h3>
+              <button className="mp-modal__close" onClick={() => setShowScript(false)}>✕</button>
+            </div>
+            <div className="mp-modal__body">
+              <p className="mp-modal__placeholder">Script content coming soon.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
