@@ -656,9 +656,8 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
             <div className="ov-meetings-body">
               {[
                 { time: '9:00',  period: 'AM', client: 'David Thompson', topic: 'Cash Deployment & Compliance Review', btn: 'Prep', clientId: 'C005' },
-                { time: '10:00', period: 'AM', client: 'Kevin Smyth', topic: 'Cash Deployment Review', btn: 'Prep', clientId: 'C012' },
-                { time: '2:30',  period: 'PM', client: 'Jean Williams', topic: 'Investment Planning', btn: 'Prep', clientId: '15740900' },
-                { time: '4:00',  period: 'PM', client: 'Marcus Thompson', topic: 'Portfolio Review', btn: 'Prep', clientId: '15623828' },
+                { time: '10:00', period: 'AM', client: 'Kevin Smyth',     topic: 'Cash Deployment Review',             btn: 'Prep', clientId: 'C012' },
+                { time: '2:30',  period: 'PM', client: 'Alex Morgan',     topic: 'Quarterly Review',                   btn: 'Prep', clientId: '15600001' },
               ].map(m => (
                 <div key={m.client} className="ov-meeting-row" style={{ cursor: 'pointer' }} onClick={() => m.clientId && navigate(`/meeting-prep/${m.clientId}`)}>
                   <div className="ov-meeting-row__time">
