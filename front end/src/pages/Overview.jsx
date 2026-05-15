@@ -3,13 +3,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Sparkles, Send, X, ArrowLeft, TrendingUp, FileText,
   AlertTriangle, User, BarChart3, DollarSign, Mail, Users,
-  ArrowRight, RefreshCw, ChevronRight
+  ArrowRight, RefreshCw, ChevronRight, SlidersHorizontal
 } from 'lucide-react';
 import UniversalCard from '../components/UniversalCard';
 import BackendChatInterface from '../components/BackendChatInterface';
 import { useOverviewContext } from '../contexts/OverviewContext';
 import { activeMarketEvent, generateMailPreview } from '../data/marketEventData';
 import worklistData from '../data/worklistCustomers.json';
+import Spinner from '../components/Spinner';
 import './Overview.css';
 
 const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
@@ -27,8 +28,46 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
   const [hideCompletedEvent, setHideCompletedEvent] = useState(() => localStorage.getItem('mailerEventCompleted') === 'true');
 
   const [isMeetingsOpen, setIsMeetingsOpen] = useState(false);
-
   const [selectedProfileId, setSelectedProfileId] = useState(null);
+  const [meetingTab, setMeetingTab] = useState('today');
+  const [showMeetingSettings, setShowMeetingSettings] = useState(false);
+  const [autoGenerate, setAutoGenerate] = useState(false);
+  const [queueDays, setQueueDays] = useState('1');
+  const [googleStatus, setGoogleStatus] = useState(() => localStorage.getItem('googleCalConnected') === 'true' ? 'connected' : 'idle');
+  const [prepStatus, setPrepStatus] = useState({});
+  const [prepStep, setPrepStep] = useState({});
+
+  const AGENT_STEPS = [
+    'Pulling calendar context & meeting notes...',
+    'Analysing portfolio & recent activity...',
+    'Running risk & compliance checks...',
+    'Drafting discussion angles & NBA...',
+    'Finalising meeting brief...',
+  ];
+
+  const handleGenerate = (clientId) => {
+    setPrepStatus(p => ({ ...p, [clientId]: 'generating' }));
+    setPrepStep(p => ({ ...p, [clientId]: 0 }));
+    let step = 0;
+    const interval = setInterval(() => {
+      step += 1;
+      if (step < AGENT_STEPS.length) {
+        setPrepStep(p => ({ ...p, [clientId]: step }));
+      } else {
+        clearInterval(interval);
+        setPrepStatus(p => ({ ...p, [clientId]: 'ready' }));
+      }
+    }, 4000);
+  };
+
+  const handleGoogleConnect = () => {
+    window.open('https://accounts.google.com', '_blank');
+    setGoogleStatus('loading');
+    setTimeout(() => {
+      setGoogleStatus('connected');
+      localStorage.setItem('googleCalConnected', 'true');
+    }, 5000);
+  };
 
   const priorityProfiles = [
     // 1. Mary Hargrave — from worklist, first entry
@@ -512,7 +551,7 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
                     ))}
                     {isLoading && (
                       <div className="chat-expanded__message chat-expanded__message--ai">
-                        <div className="chat-loading"><div className="chat-loading__spinner" /><span>{loadingMessage}</span></div>
+                        <div className="chat-loading"><Spinner size={22} /><span>{loadingMessage}</span></div>
                       </div>
                     )}
                   </div>
@@ -557,21 +596,19 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
                   {priorityProfiles.map(p => (
                     <div
                       key={p.id}
-                      className={`ov-profiles-list__item${(selectedProfile?.id === p.id) ? ' ov-profiles-list__item--active' : ''}${p.priority === 'Critical' ? ' ov-profiles-list__item--critical' : ''}`}
+                      className={`ov-profiles-list__item${(selectedProfile?.id === p.id) ? ' ov-profiles-list__item--active' : ''}${p.priority === 'Critical' ? ' ov-profiles-list__item--critical' : p.priority === 'High' ? ' ov-profiles-list__item--high' : ''}`}
                       onClick={() => setSelectedProfileId(p.id)}
                     >
-                      <div className="ov-profiles-list__avatar">
-                        {p.name.split(' ').map(n => n[0]).join('')}
-                      </div>
                       <div className="ov-profiles-list__info">
-                        <span className="ov-profiles-list__name">{p.name}</span>
-                        <span className="ov-profiles-list__sub">{p.intro}</span>
+                        <div className="ov-profiles-list__row1">
+                          <span className="ov-profiles-list__name">{p.name}</span>
+                          <span className={`ov-profiles-list__priority-pill ov-profiles-list__priority-pill--${p.priority.toLowerCase()}`}>{p.priority}</span>
+                        </div>
+                        <span className="ov-profiles-list__trigger">{p.rebalanceReason}</span>
                         <span className="ov-profiles-list__aum">
                           {fmt(p.aum)} <span className="ov-profiles-list__ret">+{(p.return*100).toFixed(1)}%</span>
                         </span>
-                        <span className="ov-profiles-list__trigger">{p.trigger}</span>
                       </div>
-                      {p.priority === 'Critical' && <span className="ov-profiles-list__dot" />}
                     </div>
                   ))}
                 </div>
@@ -649,32 +686,127 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
 
           {/* Today's Meetings */}
           <div className="ov-card overview__meetings">
+
+            {/* Row 1: Title + View More */}
             <div className="ov-card__head">
               <span className="ov-card__title">Meeting Intelligence</span>
-              <span className="ov-view-all" onClick={() => navigate('/prioritize')}>View More</span>
+              <span className="ov-view-all" onClick={() => navigate('/prioritize')}>View More <ChevronRight size={11} /></span>
             </div>
-            <div className="ov-meetings-body">
-              {[
-                { time: '9:00',  period: 'AM', client: 'David Thompson', topic: 'Cash Deployment & Compliance Review', btn: 'Prep', clientId: 'C005' },
-                { time: '10:00', period: 'AM', client: 'Kevin Smyth',     topic: 'Cash Deployment Review',             btn: 'Prep', clientId: 'C012' },
-                { time: '2:30',  period: 'PM', client: 'Alex Morgan',     topic: 'Quarterly Review',                   btn: 'Prep', clientId: '15600001' },
-              ].map(m => (
-                <div key={m.client} className="ov-meeting-row" style={{ cursor: 'pointer' }} onClick={() => m.clientId && navigate(`/meeting-prep/${m.clientId}`)}>
-                  <div className="ov-meeting-row__time">
-                    <span>{m.time}</span>
-                    <span className="ov-meeting-row__period">{m.period}</span>
-                  </div>
-                  <div className="ov-meeting-row__info">
-                    <span className="ov-meeting-row__client">{m.client}</span>
-                    <span className="ov-meeting-row__topic">{m.topic}</span>
-                  </div>
-                  <button
-                    className={`ov-meeting-row__btn${m.live ? ' ov-meeting-row__btn--live' : ''}${m.critical ? ' ov-meeting-row__btn--critical' : ''}`}
-                    onClick={(e) => { e.stopPropagation(); m.clientId && navigate(`/meeting-prep/${m.clientId}`); }}
-                  >{m.btn}</button>
-                </div>
-              ))}
 
+            {/* Row 2: Tabs + Settings icon */}
+            <div className="ov-meeting-tabs-row">
+              <div className="ov-meeting-tabs">
+                <button className={`ov-meeting-tab${meetingTab === 'today' ? ' ov-meeting-tab--active' : ''}`} onClick={() => setMeetingTab('today')}>Today</button>
+                <button className={`ov-meeting-tab${meetingTab === 'upcoming' ? ' ov-meeting-tab--active' : ''}`} onClick={() => setMeetingTab('upcoming')}>Upcoming</button>
+              </div>
+              <button className="ov-settings-btn" onClick={() => setShowMeetingSettings(true)} title="Meeting Prep Settings">
+                <SlidersHorizontal size={14} />
+              </button>
+            </div>
+
+            {/* Fixed date label — always rendered to prevent height jump */}
+            <div className="ov-meetings-date-label">
+              {meetingTab === 'today'
+                ? `Today · ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`
+                : 'Upcoming Meetings'
+              }
+            </div>
+
+            {/* Scrollable meeting list */}
+            <div className="ov-meetings-scroll">
+              {meetingTab === 'today' ? (
+                [
+                  { time: '9:00',  period: 'AM', client: 'David Thompson', topic: 'Cash Deployment & Compliance Review', clientId: 'C005',     generate: true },
+                  { time: '10:00', period: 'AM', client: 'Kevin Smyth',    topic: 'Cash Deployment Review',             clientId: 'C012',     generate: true },
+                  { time: '2:30',  period: 'PM', client: 'Alex Morgan',    topic: 'Quarterly Review',                   clientId: '15600001', generate: false },
+                  { time: '4:00',  period: 'PM', client: 'Mary Hargrave',  topic: 'Portfolio Realignment',              clientId: '15634602', generate: false },
+                ]
+                .filter(m => !m.generate || googleStatus === 'connected')
+                .map(m => {
+                  const status = prepStatus[m.clientId];
+                  const step   = prepStep[m.clientId] || 0;
+                  const isGenerating = status === 'generating';
+                  return (
+                    <div key={m.clientId} className="ov-meeting-row-wrap">
+                      <div className="ov-meeting-row">
+                        <div className="ov-meeting-row__time">
+                          <span>{m.time}</span>
+                          <span className="ov-meeting-row__period">{m.period}</span>
+                        </div>
+                        {isGenerating ? (
+                          <div className="ov-meeting-row__generating">
+                            <span className="ov-meeting-row__client">{m.client}</span>
+                            <div className="ov-agent-steps-inline">
+                              <div className="ov-agent-step ov-agent-step--active">
+                                <span className="ov-agent-step__dot" />
+                                <span className="ov-agent-step__text">{AGENT_STEPS[step]}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="ov-meeting-row__info">
+                            <span className="ov-meeting-row__client">{m.client}</span>
+                            <span className="ov-meeting-row__topic">{m.topic}</span>
+                          </div>
+                        )}
+                        <div className="ov-meeting-row__action">
+                          {m.generate ? (
+                            status === 'ready' ? (
+                              <button className="ov-meeting-row__btn ov-meeting-row__btn--ready" onClick={() => navigate(`/meeting-prep/${m.clientId}`)}>View Prep</button>
+                            ) : isGenerating ? (
+                              <Spinner size={16} />
+                            ) : (
+                              <button className="ov-meeting-row__btn ov-meeting-row__btn--generate" onClick={(e) => { e.stopPropagation(); handleGenerate(m.clientId); }}>Generate</button>
+                            )
+                          ) : (
+                            <button className="ov-meeting-row__btn ov-meeting-row__btn--ready" onClick={() => navigate(`/meeting-prep/${m.clientId}`)}>View Prep</button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                [
+                  { date: 'Tomorrow',  dateLabel: 'Tomorrow', client: 'Sarah Jenkins',  topic: 'Portfolio Risk Review',  clientId: 'C013' },
+                  { date: 'Wed 22',    dateLabel: 'Wed, May 22', client: 'Mary Hargrave',  topic: 'Q2 Rebalancing Review',  clientId: '15634602' },
+                  { date: 'Thu 23',    dateLabel: 'Thu, May 23', client: 'Sam Pai',        topic: 'Investment Proposal',    clientId: '15678284' },
+                  { date: 'Fri 24',    dateLabel: 'Fri, May 24', client: 'Kevin Smyth',    topic: 'IPS Follow-up',          clientId: 'C012' },
+                ].reduce((acc, m, i, arr) => {
+                  const prevDate = i > 0 ? arr[i - 1].date : null;
+                  if (m.date !== prevDate) {
+                    acc.push(<div key={`label-${m.date}`} className="ov-meetings-date-label ov-meetings-date-label--group">{m.dateLabel}</div>);
+                  }
+                  acc.push(
+                    <div key={m.clientId} className="ov-meeting-row ov-meeting-row--upcoming">
+                      <div className="ov-meeting-row__date">{m.date}</div>
+                      <div className="ov-meeting-row__info">
+                        <span className="ov-meeting-row__client">{m.client}</span>
+                        <span className="ov-meeting-row__topic">{m.topic}</span>
+                      </div>
+                      <button className="ov-meeting-row__btn ov-meeting-row__btn--generate" onClick={() => navigate(`/meeting-prep/${m.clientId}`)}>Generate</button>
+                    </div>
+                  );
+                  return acc;
+                }, [])
+              )}
+
+            </div>
+
+            {/* Status strip */}
+            <div className="ov-meetings-status">
+              <span className="ov-meetings-status__item ov-meetings-status__item--connected">
+                <span className="ov-meetings-status__dot" /> Outlook
+              </span>
+              <span className={`ov-meetings-status__item${googleStatus === 'connected' ? ' ov-meetings-status__item--connected' : ' ov-meetings-status__item--off'}`}>
+                <span className="ov-meetings-status__dot" /> Google
+              </span>
+              <span className="ov-meetings-status__item ov-meetings-status__item--muted">
+                Auto-gen: {autoGenerate ? 'On' : 'Off'}
+              </span>
+              <span className="ov-meetings-status__item ov-meetings-status__item--muted">
+                Queue: {queueDays === '1' ? '1 day' : queueDays === '3' ? '3 days' : '1 week'}
+              </span>
             </div>
           </div>
 
@@ -697,6 +829,93 @@ const Overview = ({ isChatExpanded, setIsChatExpanded }) => {
         {/* END RIGHT COLUMN */}
 
       </div>
+      {/* Meeting Prep Settings Modal */}
+      {showMeetingSettings && (
+        <div className="ov-modal-overlay" onClick={() => setShowMeetingSettings(false)}>
+          <div className="ov-settings-modal" onClick={e => e.stopPropagation()}>
+            <div className="ov-settings-modal__head">
+              <span className="ov-settings-modal__title"><SlidersHorizontal size={15} /> Meeting Prep Settings</span>
+              <button className="ov-settings-modal__close" onClick={() => setShowMeetingSettings(false)}>✕</button>
+            </div>
+            <div className="ov-settings-section">
+              <span className="ov-settings-section__label">Controls</span>
+              <div className="ov-settings-row">
+                <div className="ov-settings-row__info">
+                  <span className="ov-settings-row__name">Auto-generate prep</span>
+                  <span className="ov-settings-row__desc">Automatically generate meeting prep for meetings within 24 hours</span>
+                </div>
+                <button className={`ov-toggle${autoGenerate ? ' ov-toggle--on' : ''}`} onClick={() => setAutoGenerate(p => !p)}>
+                  <span className="ov-toggle__knob" />
+                </button>
+              </div>
+              <div className="ov-settings-row">
+                <div className="ov-settings-row__info">
+                  <span className="ov-settings-row__name">Queue prep ahead</span>
+                  <span className="ov-settings-row__desc">How many days ahead to queue meeting prep</span>
+                </div>
+                <select className="ov-settings-select" value={queueDays} onChange={e => setQueueDays(e.target.value)}>
+                  <option value="1">1 day</option>
+                  <option value="3">3 days</option>
+                  <option value="7">1 week</option>
+                </select>
+              </div>
+            </div>
+            <div className="ov-settings-section ov-settings-section--tinted">
+              <span className="ov-settings-section__label">Connectors</span>
+              <div className="ov-connector-row">
+                <div className="ov-connector-row__left">
+                  <div className="ov-connector-logo ov-connector-logo--outlook">O</div>
+                  <div className="ov-connector-row__info">
+                    <span className="ov-connector-row__name">Outlook Calendar</span>
+                    <span className="ov-connector-row__status ov-connector-row__status--connected">
+                      <span className="ov-connector-row__status-dot" />Connected
+                    </span>
+                  </div>
+                </div>
+                <button className="ov-connector-btn ov-connector-btn--disconnect">Disconnect</button>
+              </div>
+              <div className="ov-connector-row">
+                <div className="ov-connector-row__left">
+                  <div className="ov-connector-logo ov-connector-logo--google">G</div>
+                  <div className="ov-connector-row__info">
+                    <span className="ov-connector-row__name">Google Calendar</span>
+                    <span className={`ov-connector-row__status${googleStatus === 'connected' ? ' ov-connector-row__status--connected' : ' ov-connector-row__status--disabled'}`}>
+                      <span className="ov-connector-row__status-dot" />
+                      {googleStatus === 'connected' ? 'Connected' : 'Not connected'}
+                    </span>
+                  </div>
+                </div>
+                {googleStatus === 'idle' && (
+                  <button className="ov-connector-btn ov-connector-btn--connect" onClick={handleGoogleConnect}>Connect</button>
+                )}
+                {googleStatus === 'loading' && (
+                  <button className="ov-connector-btn ov-connector-btn--loading" disabled>
+                    <Spinner size={12} /> Connecting...
+                  </button>
+                )}
+                {googleStatus === 'connected' && (
+                  <button className="ov-connector-btn ov-connector-btn--disconnect" onClick={() => { setGoogleStatus('idle'); localStorage.removeItem('googleCalConnected'); }}>Disconnect</button>
+                )}
+              </div>
+            </div>
+            <div className="ov-settings-modal__footer">
+              <button className="ov-settings-footer-btn ov-settings-footer-btn--reset" onClick={() => {
+                setAutoGenerate(false);
+                setQueueDays('1');
+                setGoogleStatus('idle');
+                setPrepStatus({});
+                setPrepStep({});
+                localStorage.removeItem('googleCalConnected');
+              }}>Reset</button>
+              <div className="ov-settings-footer-right">
+                <button className="ov-settings-footer-btn ov-settings-footer-btn--cancel" onClick={() => setShowMeetingSettings(false)}>Cancel</button>
+                <button className="ov-settings-footer-btn ov-settings-footer-btn--apply" onClick={() => setShowMeetingSettings(false)}>Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
