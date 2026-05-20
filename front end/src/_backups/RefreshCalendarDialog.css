@@ -1,0 +1,112 @@
+/* ── Refresh / Re-auth overlay ── */
+@keyframes ov-fade-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ov-card-pop { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes gc-spin     { to { transform: rotate(360deg); } }
+
+.ov-auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-overlay);
+  animation: ov-fade-in 0.15s ease;
+}
+
+.ov-auth-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  animation: ov-card-pop 0.2s cubic-bezier(0.16,1,0.3,1);
+}
+
+.ov-auth-card .submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: none;
+  background: var(--success);
+  color: var(--bg-primary);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.ov-auth-card .submit-button:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.ov-auth-card .link-button {
+  background: none;
+  border: none;
+  color: var(--success);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+
+.ov-auth-card .link-button:hover { opacity: 0.7; }
+
+.ov-auth-card .gc-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+}
+
+.ov-auth-card .gc-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.ov-auth-card .gc-label {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 300px;
+}
+
+.ov-auth-card .gc-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+}
+
+.ov-auth-card .gc-spin { animation: gc-spin 0.9s linear infinite; }
+.gc-spin              { animation: gc-spin 0.9s linear infinite; }
+
+.gc-waiting-hint,
+.ov-auth-card .gc-waiting-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 1rem;
+  padding: 10px 14px;
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  text-align: left;
+  max-width: 320px;
+}

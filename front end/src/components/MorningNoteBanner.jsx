@@ -19,13 +19,18 @@ const MorningNoteBanner = () => {
 
   const handleRefreshMouseDown = () => {
     longPressRef.current = setTimeout(() => {
+      longPressRef.current = 'fired';
       localStorage.removeItem('mailerEventCompleted');
       setMailerCompleted(false);
-      window.location.reload();
-    }, 1000);
+    }, 1500);
   };
 
-  const handleRefreshMouseUp = () => clearTimeout(longPressRef.current);
+  const handleRefreshMouseUp = () => {
+    const didFire = longPressRef.current === 'fired';
+    clearTimeout(longPressRef.current);
+    longPressRef.current = null;
+    if (!didFire && !refreshing) refresh();
+  };
 
   const handleMouseEnter = (idx) => {
     clearTimeout(timeoutRef.current);
@@ -145,13 +150,15 @@ const MorningNoteBanner = () => {
 
         <button
           className={`mnb-refresh${refreshing ? ' mnb-refresh--spinning' : ''}`}
-          onClick={refresh}
           onMouseDown={handleRefreshMouseDown}
           onMouseUp={handleRefreshMouseUp}
-          onMouseLeave={handleRefreshMouseUp}
+          onMouseLeave={() => { clearTimeout(longPressRef.current); longPressRef.current = null; }}
+          onTouchStart={handleRefreshMouseDown}
+          onTouchEnd={handleRefreshMouseUp}
           title="Refresh morning notes"
         >
           <RefreshCw size={13} />
+          <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
         </button>
       </div>
 

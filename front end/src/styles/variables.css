@@ -92,4 +92,9 @@
   --z-elevated: 10;
   --z-modal: 100;
   --z-tooltip: 1000;
+  --z-dropdown: 2000;
+  --z-overlay: 10000;
+
+  /* Typography floor */
+  --font-size-min: 0.625rem;
 }

@@ -18,21 +18,15 @@ import PrioritizeMyDay from './pages/PrioritizeMyDay';
 import MeetingPrep from './pages/MeetingPrep';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
-import SignupOtp from './pages/Auth/SignupOtp';
-import ForgotPassword from './pages/Auth/ForgotPassword';
-import GoogleConnect from './pages/Auth/GoogleConnect';
 import { WorklistProvider } from './contexts/WorklistContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { MeetingPrepProvider } from './contexts/MeetingPrepContext';
-import { hasAuthCookies, isAuthSessionExpired } from './utils/authCookies';
 import './styles/variables.css';
 import './styles/themes.css';
 import './styles/global.css';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
-  const hadSession = hasAuthCookies() || isAuthSessionExpired(30 * 60 * 1000);
-  return isAuthenticated ? children : <Navigate to="/login" replace state={{ sessionExpired: hadSession }} />;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
 // Memoized tab content — prevents re-render when only activeTab changes
@@ -85,11 +79,11 @@ function AppRoutes() {
   const handleAssistClose = useCallback(() => setActiveTab('cockpit'), []);
 
   return (
-    <Routes>
+    <AuthProvider>
+      <WorklistProvider>
+        <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/signup/verify" element={<SignupOtp />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/" element={
             <ProtectedRoute>
             <MainLayout activeTab={activeTab} onTabChange={handleTabChange} isChatExpanded={isChatExpanded} onChatClose={handleChatClose}>
@@ -197,11 +191,6 @@ function AppRoutes() {
             </MainLayout>
             </ProtectedRoute>
           } />
-          <Route path="/google-connect" element={
-            <ProtectedRoute>
-              <GoogleConnect />
-            </ProtectedRoute>
-          } />
           <Route path="/meeting-prep/:clientId" element={
             <ProtectedRoute>
             <MainLayout activeTab={activeTab} onTabChange={handleTabChange}>
@@ -221,20 +210,16 @@ function AppRoutes() {
             </ProtectedRoute>
           } />
           <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        </Routes>
+      </WorklistProvider>
+    </AuthProvider>
   );
 }
 
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <WorklistProvider>
-          <MeetingPrepProvider>
-            <AppRoutes />
-          </MeetingPrepProvider>
-        </WorklistProvider>
-      </AuthProvider>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

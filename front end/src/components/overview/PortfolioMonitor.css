@@ -1,0 +1,20 @@
+/* ── Portfolio Monitor action list ── */
+.ov-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 24px 24px;
+}
+
+/* Strip UniversalCard shell inside the panel */
+.ov-actions-list .universal-card--action-list {
+  height: auto;
+  min-height: unset;
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.ov-actions-list .universal-card--action-list .ai-badge {
+  display: none;
+}

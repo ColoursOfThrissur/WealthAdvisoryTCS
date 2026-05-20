@@ -1,7 +1,9 @@
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Home } from 'lucide-react';
-import ThemeToggle from '../components/ThemeToggle';
+import { ArrowLeft, Home, LogOut, User, ChevronDown, Settings, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
 import MorningNoteBanner from '../components/MorningNoteBanner';
+import { useAuth } from '../contexts/AuthContext';
 import './MainLayout.css';
 
 const TOP_LEVEL_PREFIXES = ['/worklist', '/prioritize', '/meeting-prep', '/report-chat', '/action'];
@@ -12,6 +14,27 @@ const isTopLevelRoute = (pathname) =>
 const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  const handleLogout = () => {
+    setProfileOpen(false);
+    logout();
+    navigate('/login');
+  };
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
   const isHome = location.pathname === '/';
 
   const renderNavBar = () => {
@@ -110,12 +133,12 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
           <div className="main-layout__metrics">
             <div className="ticker-item">
               <span className="ticker-label">S&P 500</span>
-              <span className="ticker-value ticker-value--positive">+0.02%</span>
+              <span className="ticker-value ticker-value--positive">5,308 <span className="ticker-change">+0.02%</span></span>
             </div>
             <div className="ticker-divider" />
             <div className="ticker-item">
               <span className="ticker-label">AUM</span>
-              <span className="ticker-value ticker-value--positive">+0.05%</span>
+              <span className="ticker-value ticker-value--positive">$6.2M <span className="ticker-change">+0.05%</span></span>
             </div>
             <div className="ticker-divider" />
             <div className="ticker-item">
@@ -123,12 +146,54 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
               <span className="ticker-value">250</span>
             </div>
           </div>
-          <div className="main-layout__user-profile">
-            <ThemeToggle />
-            <div className="user-profile-avatar">
-              <img src="/wealthmanager.png" alt="Profile" />
-            </div>
-            <span className="user-profile-name">John Doe</span>
+          <div className="main-layout__user-profile" ref={profileRef}>
+            <button
+              className="user-profile-trigger"
+              onClick={() => setProfileOpen(p => !p)}
+            >
+              <div className="user-profile-avatar">
+                <img src="/wealthmanager.png" alt="Profile" />
+              </div>
+              <span className="user-profile-name">Derik Shaju</span>
+              <ChevronDown size={13} className={`user-profile-chevron${profileOpen ? ' user-profile-chevron--open' : ''}`} />
+            </button>
+
+            {profileOpen && (
+              <div className="user-profile-dropdown">
+                <div className="user-profile-dropdown__header">
+                  <div className="user-profile-dropdown__avatar">
+                    <img src="/wealthmanager.png" alt="Profile" />
+                  </div>
+                  <div>
+                    <span className="user-profile-dropdown__name">Derik Shaju</span>
+                    <span className="user-profile-dropdown__role">Wealth Advisor</span>
+                  </div>
+                </div>
+                <div className="user-profile-dropdown__divider" />
+                <button className="user-profile-dropdown__item" onClick={() => { setProfileOpen(false); }}>
+                  <User size={14} /> My Profile
+                </button>
+                <button className="user-profile-dropdown__item" onClick={() => { setProfileOpen(false); }}>
+                  <Settings size={14} /> Settings
+                </button>
+                <div className="user-profile-dropdown__divider" />
+                <div className="user-profile-dropdown__theme">
+                  <span className="user-profile-dropdown__theme-label">
+                    {theme === 'dark' ? <Moon size={14} /> : <Sun size={14} />}
+                    {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+                  </span>
+                  <button className="user-profile-dropdown__theme-toggle" onClick={toggleTheme}>
+                    <span className={`theme-pill${theme === 'dark' ? ' theme-pill--on' : ''}`}>
+                      <span className="theme-pill__knob" />
+                    </span>
+                  </button>
+                </div>
+                <div className="user-profile-dropdown__divider" />
+                <button className="user-profile-dropdown__item user-profile-dropdown__item--danger" onClick={handleLogout}>
+                  <LogOut size={14} /> Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>

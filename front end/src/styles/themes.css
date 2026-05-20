@@ -35,11 +35,11 @@
 
 [data-theme="light"] {
   --bg-primary: #f0fdf4;
-  --bg-secondary: rgba(255, 255, 255, 0.8);
-  --bg-tertiary: #bbf7d0;
+  --bg-secondary: rgba(255, 255, 255, 0.9);
+  --bg-tertiary: #dcfce7;
   --bg-chat-gradient: #f0fdf4;
-  --bg-card-solid: #064e3b;
-  --bg-chat-card: rgba(6, 78, 59, 0.8);
+  --bg-card-solid: #1e293b;
+  --bg-chat-card: rgba(30, 41, 59, 0.9);
   --card-bg: #ffffff;
   --border-color: rgba(0, 0, 0, 0.12);
   --info-light: #dbeafe;

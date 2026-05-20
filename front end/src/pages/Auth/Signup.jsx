@@ -2,17 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "../../hooks/useTheme";
-import { API_BASE_URL } from "../../config/api";
+import { signUpWithCognito } from "../../utils/cognito";
 import InfoModal from "./InfoModal";
 import "./Auth.css";
 
 export default function Signup() {
-  
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [alertmsg, setAlertmsg] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [isConsentChecked, setIsConsentChecked] = useState(false);
@@ -21,6 +18,9 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData(e.target);
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
 
     if (password !== confirmPassword) {
       setAlertmsg("Passwords do not match.");
@@ -42,18 +42,10 @@ export default function Signup() {
 
     try {
       setIsSubmitting(true);
-      const res = await fetch(`${API_BASE_URL}/api/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userID: email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.detail || "Registration failed.");
-      }
-      setAlertmsg("Registration successful! Redirecting to login...");
+      await signUpWithCognito(email, password);
+      setAlertmsg("Account created! Check your email for a verification code.");
       setAlertColor("text-green-600");
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/signup/verify", { state: { email, password } }), 1200);
     } catch (error) {
       setAlertmsg(error.message || "Registration failed. Please try again.");
       setAlertColor("text-red-600");
@@ -65,7 +57,7 @@ export default function Signup() {
   return (
     <div className="auth-container" data-theme={theme}>
       <div className="auth-background" />
-      
+
       <button onClick={toggleTheme} className="theme-toggle" title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
         {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
       </button>
@@ -83,6 +75,7 @@ export default function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              autoComplete="username"
               required
             />
           </div>
@@ -90,10 +83,10 @@ export default function Signup() {
           <div className="form-group">
             <label>Password</label>
             <input
+              name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               placeholder="Create a password"
+              autoComplete="new-password"
               required
             />
           </div>
@@ -101,10 +94,10 @@ export default function Signup() {
           <div className="form-group">
             <label>Confirm Password</label>
             <input
+              name="confirmPassword"
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your password"
+              autoComplete="new-password"
               required
             />
           </div>

@@ -242,7 +242,7 @@ body {
   flex-direction: column;
   gap: var(--space-sm);
   align-items: center;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -252,7 +252,7 @@ body {
   flex-direction: column;
   gap: var(--space-sm);
   align-items: center;
-  width: 70%;
+  width: 80%;
   margin-top: 1.5rem;
 }
 
@@ -639,3 +639,19 @@ body {
 .message.user .formatted-content strong {
   color: white !important;
 }
+
+/* Meeting prep response — purple accent, mirrors research-response */
+.meeting-response { color: var(--text-primary); }
+.meeting-response .research-content { display: flex; flex-direction: column; gap: 0.5rem; }
+.meeting-response .research-p  { margin: 0.25rem 0; color: var(--text-primary); line-height: 1.6; }
+.meeting-response .research-h1 { font-size: 1.25rem; font-weight: 700; color: #8b5cf6; margin: 0.75rem 0 0.25rem; }
+.meeting-response .research-h2 { font-size: 1.1rem;  font-weight: 700; color: #8b5cf6; margin: 0.75rem 0 0.25rem; }
+.meeting-response .research-h3 { font-size: 1rem;    font-weight: 600; color: #a78bfa; margin: 0.5rem 0 0.25rem; }
+.meeting-response .research-h4 { font-size: 0.9rem;  font-weight: 600; color: #c4b5fd; margin: 0.5rem 0 0.25rem; }
+.meeting-response .research-li { margin: 0.2rem 0 0.2rem 1.25rem; color: var(--text-primary); line-height: 1.5; list-style: disc; }
+.meeting-response .research-divider { border: none; border-top: 1px solid rgba(139, 92, 246, 0.25); margin: 0.75rem 0; }
+.meeting-response .research-table-wrapper { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid rgba(139, 92, 246, 0.3); margin: 0.5rem 0; }
+.meeting-response .research-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; background: var(--bg-secondary); }
+.meeting-response .research-table th { background: rgba(139, 92, 246, 0.12); color: #a78bfa; font-weight: 600; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid rgba(139, 92, 246, 0.25); }
+.meeting-response .research-table td { padding: 0.5rem 0.75rem; color: var(--text-secondary); border-bottom: 1px solid var(--glass-border); background: var(--bg-secondary); }
+.meeting-response .research-table tbody tr:hover td { background: rgba(139, 92, 246, 0.06); }

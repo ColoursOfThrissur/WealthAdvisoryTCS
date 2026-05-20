@@ -1,18 +1,85 @@
 import { useReportChat } from '../hooks/useReportChat';
 import AgentTrace from '../components/AgentTrace';
 import SectionResult from '../components/SectionResult';
-import MeetingPrepSection from '../components/sections/MeetingPrepSection';
 import SuggestedPrompts from './SuggestedPrompts';
-import { Send, Sparkles, CheckCircle2, XCircle, FileText, TrendingUp, Mail, Users, ArrowUp, ArrowDown } from 'lucide-react';
+import { Send, Sparkles, CheckCircle2, XCircle, FileText, TrendingUp, Mail, Users, ArrowUp, ArrowDown, Loader, Calendar } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { getApiUrl } from '../config/api';
+import { getApiUrl, MEETING_PREP_API_URL } from '../config/api';
+import { checkAuth } from '../services/meetingPrepService';
 import { getSuggestedPromptsForMode } from '../utils/suggestedPromptsHelper';
+import { useAuth } from '../contexts/AuthContext';
 
 const BackendChatInterface = ({ onClose }) => {
+  const { userId } = useAuth();
+  const effectiveUserId = userId || 'my-test-user';
   const [chatMode, setChatMode] = useState('normal'); // 'normal', 'research', 'report', 'email', 'meeting'
   const [researchLoading, setResearchLoading] = useState(false);
   const [localMessages, setLocalMessages] = useState([]); // For research mode messages
   const [suggestedPrompts, setSuggestedPrompts] = useState([]);
+
+  // Google auth overlay state
+  const [authOverlay, setAuthOverlay] = useState(null); // null | { url, status: 'idle'|'waiting' }
+  const pendingQueryRef = useRef(null);
+  const authPopupRef = useRef(null);
+  const authPollRef = useRef(null);
+
+  function stopAuthPolling() {
+    if (authPollRef.current) { clearInterval(authPollRef.current); authPollRef.current = null; }
+  }
+
+  function openAuthPopup(url) {
+    const w = 500, h = 650;
+    const left = Math.round(window.screenX + (window.outerWidth - w) / 2);
+    const top  = Math.round(window.screenY + (window.outerHeight - h) / 2);
+    const popup = window.open(url, 'googleAuthMeeting',
+      `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`);
+    if (!popup) { window.open(url, '_blank'); return; }
+    authPopupRef.current = popup;
+    setAuthOverlay(prev => ({ ...prev, status: 'waiting' }));
+    startAuthPolling();
+  }
+
+  function startAuthPolling() {
+    stopAuthPolling();
+    authPollRef.current = setInterval(async () => {
+      try {
+        const href = authPopupRef.current?.location?.href || '';
+        if (href.includes('lambda-url') || href.includes('auth=success')) {
+          stopAuthPolling();
+          if (!authPopupRef.current?.closed) authPopupRef.current.close();
+          onAuthSuccess();
+          return;
+        }
+      } catch { /* cross-origin */ }
+
+      if (authPopupRef.current?.closed) {
+        stopAuthPolling();
+        const r = await checkAuth(effectiveUserId);
+        if (r.ok && r.data?.status === 'authenticated') onAuthSuccess();
+        else setAuthOverlay(prev => ({ ...prev, status: 'idle' }));
+        return;
+      }
+
+      const r = await checkAuth(effectiveUserId);
+      if (r.ok && r.data?.status === 'authenticated') {
+        stopAuthPolling();
+        if (!authPopupRef.current?.closed) authPopupRef.current.close();
+        onAuthSuccess();
+      }
+    }, 3000);
+  }
+
+  function onAuthSuccess() {
+    setAuthOverlay(null);
+    if (pendingQueryRef.current) {
+      const q = pendingQueryRef.current;
+      pendingQueryRef.current = null;
+      sendMeetingPrepDirectly(q);
+    }
+  }
+
+  // Cleanup on unmount
+  useEffect(() => () => stopAuthPolling(), []);
   
   const {
     isConnected,
@@ -60,57 +127,142 @@ const BackendChatInterface = ({ onClose }) => {
     setResearchLoading(true);
 
     try {
-      // Step 1: resolve client name → ID via /api/clients (fuzzy match on backend)
-      const clientsRes = await fetch(getApiUrl('/api/clients'));
-      if (!clientsRes.ok) throw new Error('Could not load client list');
-      const clientsData = await clientsRes.json();
+      const response = await fetch(`${MEETING_PREP_API_URL}/client-prep`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: effectiveUserId, client_name: query })
+      });
 
-      const lowerQuery = query.toLowerCase();
-      const matched = (clientsData.clients || []).find(c =>
-        lowerQuery.includes(c.name.toLowerCase()) ||
-        c.name.toLowerCase().split(' ').some(part => lowerQuery.includes(part))
-      );
-
-      if (!matched) {
-        setLocalMessages(prev => [...prev, {
-          id: Date.now() + 1,
-          sender: 'assistant',
-          text: 'Please specify a client name from your book (e.g. "Robert Anderson" or "Sarah Mitchell").',
-          timestamp: Date.now()
-        }]);
+      if (response.status === 401) {
+        const detail = await response.json().catch(() => ({}));
+        const url = detail?.detail?.authorization_url;
+        pendingQueryRef.current = query;
+        setAuthOverlay({ url, status: 'idle' });
         return;
       }
 
-      // Step 2: fetch meeting prep for resolved client ID
-      const response = await fetch(getApiUrl(`/api/client/${matched.client_id}/meeting-prep`));
-
-      if (response.ok) {
-        const result = await response.json();
-        setLocalMessages(prev => [...prev, {
-          id: Date.now() + 1,
-          sender: 'assistant',
-          meetingPrepData: result.data,
-          timestamp: Date.now()
-        }]);
-      } else {
-        setLocalMessages(prev => [...prev, {
-          id: Date.now() + 1,
-          sender: 'assistant',
-          text: `Meeting prep not available for ${matched.name}.`,
-          timestamp: Date.now()
-        }]);
+      if (!response.ok) {
+        const errBody = await response.json().catch(() => ({}));
+        console.error('[MEETING] Server error detail:', errBody);
+        throw new Error(`Server error ${response.status}: ${errBody?.detail || JSON.stringify(errBody)}`);
       }
+
+      const data = await response.json();
+      console.log('[MEETING] Response:', data);
+
+      const meeting = data.meetings?.[0];
+      const resultText = meeting ? formatMeetingData(meeting) : (data.result || 'Meeting prep complete.');
+      setLocalMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        sender: 'assistant',
+        text: resultText,
+        isMeeting: true,
+        timestamp: Date.now()
+      }]);
     } catch (error) {
       console.error('[MEETING] Call failed:', error);
       setLocalMessages(prev => [...prev, {
         id: Date.now() + 1,
         sender: 'assistant',
-        text: 'Failed to load meeting prep data.',
+        text: 'Failed to connect to the Meeting Prep service. Check that it is running.',
         timestamp: Date.now()
       }]);
     } finally {
       setResearchLoading(false);
     }
+  };
+
+  const formatMeetingData = (m) => {
+    const lines = [];
+    const c = m.client || {};
+    const h = m.holdings || {};
+
+    // Header
+    const name = c.name || 'Client';
+    const meta = [c.tier, c.aum ? `AUM ${c.aum}` : null, c.riskProfile, c.sentiment]
+      .filter(Boolean).join(' · ');
+    lines.push(`## ${name} — Meeting Brief`);
+    if (meta) lines.push(`*${meta}*`);
+    if (c.profileIntro) lines.push('', c.profileIntro);
+
+    // Client profile
+    const profileFields = [
+      c.meetingTime    && `**Meeting** ${c.meetingTime}`,
+      c.meetingGoal    && `**Goal** ${c.meetingGoal}`,
+      c.lifecycleStage && `**Lifecycle** ${c.lifecycleStage}`,
+      c.advicePosture  && `**Advice posture** ${c.advicePosture}`,
+      c.lastInteraction && `**Last interaction** ${c.lastInteraction}`,
+    ].filter(Boolean);
+    if (profileFields.length) {
+      lines.push('', '---', '', '### Client Profile');
+      profileFields.forEach(f => lines.push(`- ${f}`));
+    }
+
+    // Holdings
+    const hasHoldings = h.totalValue || (h.returns?.length) || (h.allocation?.length);
+    if (hasHoldings) {
+      lines.push('', '---', '', '### Holdings');
+      if (h.totalValue) lines.push(`- **Total Value** ${h.totalValue}`);
+      if (h.costBasis)  lines.push(`- **Cost Basis** ${h.costBasis}`);
+      if (h.unrealizedGL) lines.push(`- **Unrealized G/L** ${h.unrealizedGL}`);
+      if (h.keyInsight?.length) {
+        lines.push('', ...h.keyInsight.map(k => `- ${k}`));
+      }
+      if (h.returns?.length) {
+        lines.push('', '| Period | Return |', '| --- | --- |');
+        h.returns.forEach(r => lines.push(`| ${r.label} | ${r.value} |`));
+      }
+      if (h.allocation?.length) {
+        lines.push('', '| Asset | % | Target | Diff | Status |', '| --- | --- | --- | --- | --- |');
+        h.allocation.forEach(a => lines.push(`| ${a.asset} | ${a.pct} | ${a.target} | ${a.diff} | ${a.status} |`));
+      }
+    }
+
+    // Risks
+    if (m.risk?.risks?.length) {
+      lines.push('', '---', '', '### Risks');
+      m.risk.risks.forEach(r => lines.push(`- **${r.label}** (${r.severity}): ${r.detail}`));
+    }
+
+    // Opportunities
+    if (m.risk?.opportunities?.length) {
+      lines.push('', '### Opportunities');
+      m.risk.opportunities.forEach(o => lines.push(`- **${o.label}**: ${o.detail}`));
+    }
+
+    // Activity
+    if (m.activity?.length) {
+      lines.push('', '---', '', '### Recent Activity');
+      m.activity.forEach(a => lines.push(`- **${a.date}** ${a.summary}${a.sentiment ? ` — ${a.sentiment}` : ''}${a.decision ? ` · ${a.decision}` : ''}`));
+    }
+
+    // Fund news
+    if (m.fundNews?.length) {
+      lines.push('', '---', '', '### Fund News');
+      m.fundNews.forEach(n => lines.push(`- ${n}`));
+    }
+
+    // Next best actions
+    if (m.nextBestActions?.length) {
+      lines.push('', '---', '', '### Next Best Actions');
+      m.nextBestActions.forEach(a => {
+        lines.push(`- **${a.label}**: ${a.desc}`);
+        if (a.agentReasoning) lines.push(`  ${a.agentReasoning}`);
+      });
+    }
+
+    // Discussion angles
+    if (m.discussionAngles?.length) {
+      lines.push('', '---', '', '### Discussion Angles');
+      m.discussionAngles.forEach(a => lines.push(`- **${a.title}**: ${a.desc}`));
+    }
+
+    // Opening script
+    if (c.nbcScript) {
+      lines.push('', '---', '', '### Opening Script', '', c.nbcScript);
+    }
+
+    return lines.join('\n');
   };
 
   const sendResearchDirectly = async (query) => {
@@ -412,6 +564,63 @@ const BackendChatInterface = ({ onClose }) => {
   return (
     <div className={`bci-root ${chatMode}-mode`}>
 
+      {/* Google auth overlay */}
+      {authOverlay && (
+        <div className="ov-auth-overlay" onClick={() => {
+          if (authOverlay.status === 'idle') {
+            stopAuthPolling();
+            setAuthOverlay(null);
+            pendingQueryRef.current = null;
+          }
+        }}>
+          <div className="ov-auth-card" onClick={e => e.stopPropagation()}>
+
+            {authOverlay.status === 'idle' && (
+              <>
+                <div className="gc-icon-wrap">
+                  <Calendar size={22} style={{ color: '#8b5cf6' }} />
+                </div>
+                <h2 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center', marginBottom: '0.375rem', marginTop: 0 }}>
+                  Connect Google Calendar
+                </h2>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-tertiary)', textAlign: 'center', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+                  Meeting prep needs access to your Google Calendar to find today's meetings.
+                </p>
+                <button className="submit-button" onClick={() => authOverlay.url && openAuthPopup(authOverlay.url)}>
+                  Connect with Google
+                </button>
+                <button className="link-button" style={{ marginTop: '0.875rem', display: 'block', textAlign: 'center', width: '100%' }}
+                  onClick={() => { stopAuthPolling(); setAuthOverlay(null); pendingQueryRef.current = null; }}>
+                  Cancel
+                </button>
+              </>
+            )}
+
+            {authOverlay.status === 'waiting' && (
+              <div className="gc-center" style={{ padding: '1.5rem 0' }}>
+                <Loader size={26} className="gc-spin" style={{ color: '#8b5cf6' }} />
+                <p className="gc-title" style={{ marginTop: '1rem' }}>Waiting for Google authorization</p>
+                <p className="gc-label" style={{ marginTop: '0.375rem' }}>
+                  Complete the sign-in in the popup window.
+                </p>
+                <div className="gc-waiting-hint">
+                  <CheckCircle2 size={13} style={{ color: '#8b5cf6', flexShrink: 0 }} />
+                  After signing in, meeting prep will resume automatically.
+                </div>
+                <button className="link-button" style={{ marginTop: '1.5rem' }} onClick={() => {
+                  stopAuthPolling();
+                  if (authPopupRef.current && !authPopupRef.current.closed) authPopupRef.current.close();
+                  setAuthOverlay(prev => ({ ...prev, status: 'idle' }));
+                }}>
+                  Cancel
+                </button>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
+
       {/* Messages — scrollable, fills available space */}
       <div className="bci-messages" ref={messagesRef} onScroll={handleMessagesScroll}>
         <div className="bci-messages-inner">
@@ -463,12 +672,12 @@ const BackendChatInterface = ({ onClose }) => {
             {displayMessages.map((message) => (
               <div key={message.id} className={`chat-message chat-message--${message.sender}`}>
                 <div className="message-bubble">
-                  {message.meetingPrepData ? (
-                    <MeetingPrepSection data={message.meetingPrepData} />
-                  ) : !message.data && !message.sections ? (
-                    chatMode === 'research' && message.sender === 'assistant'
-                      ? <div className="research-response">{formatMessageWithIcons(message.text)}</div>
-                      : formatMessageWithIcons(message.text)
+                  {!message.data && !message.sections ? (
+                    message.isMeeting && message.sender === 'assistant'
+                      ? <div className="meeting-response">{formatMessageWithIcons(message.text)}</div>
+                      : chatMode === 'research' && message.sender === 'assistant'
+                        ? <div className="research-response">{formatMessageWithIcons(message.text)}</div>
+                        : formatMessageWithIcons(message.text)
                   ) : null}
                   {message.data && <SectionResult section={message.section} data={message.data} />}
                   {message.sections?.length > 0 && (
@@ -483,7 +692,11 @@ const BackendChatInterface = ({ onClose }) => {
                 <span className="message-timestamp">{formatTime(message.timestamp)}</span>
               </div>
             ))}
-            <AgentTrace statusHistory={statusHistory} isProcessing={isProcessing || researchLoading} researchMode={researchLoading} />
+            <AgentTrace
+              statusHistory={statusHistory}
+              isProcessing={isProcessing || researchLoading}
+              researchMode={researchLoading ? (chatMode === 'meeting' ? 'Preparing meeting brief...' : 'Researching') : false}
+            />
           </>
         )}
         </div>

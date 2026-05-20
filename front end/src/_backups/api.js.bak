@@ -17,10 +17,6 @@ export const REBALANCING_API_URL =
   import.meta.env.VITE_REBALANCING_API_URL ||
   (DEV ? 'http://localhost:8003' : 'https://rebalance-api.107-21-43-216.sslip.io');
 
-export const MEETING_PREP_API_URL =
-  import.meta.env.VITE_MEETING_PREP_API_URL ||
-  (DEV ? 'http://localhost:8002' : 'https://meetingprep.107-21-43-216.sslip.io');
-
 /** Full URL for an API path (e.g. /api/health) */
 export const getApiUrl = (path) => {
   const base = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');

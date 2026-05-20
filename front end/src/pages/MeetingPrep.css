@@ -1004,3 +1004,322 @@
     flex-direction: column;
   }
 }
+
+/* ── Generating overlay ── */
+.mp-generating-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.mp-generating-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.mp-generating-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.mp-generating-sub {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.mp-generating-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.mp-generating-bar {
+  flex: 1;
+  height: 5px;
+  background: var(--glass-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mp-generating-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.mp-generating-pct {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--success);
+  min-width: 32px;
+  text-align: right;
+}
+
+.mp-activity-sentiment {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+/* ── Export button override — primary action ── */
+.mp-export-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: var(--bg-primary) !important;
+  background: var(--success) !important;
+  border: none !important;
+  border-radius: var(--radius-full) !important;
+  padding: 6px 16px !important;
+  cursor: pointer !important;
+  transition: all 0.15s !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.35) !important;
+  text-decoration: none !important;
+}
+
+.mp-export-btn:hover {
+  background: var(--success-dark) !important;
+  box-shadow: 0 4px 14px rgba(16,185,129,0.45) !important;
+  transform: translateY(-1px) !important;
+  color: var(--bg-primary) !important;
+}
+
+.mp-export-btn:active {
+  transform: translateY(1px) !important;
+  box-shadow: 0 1px 4px rgba(16,185,129,0.25) !important;
+}
+
+.mp-export-btn {
+  padding: 8px 24px !important;
+  min-width: 110px !important;
+  justify-content: center !important;
+  font-size: 0.8125rem !important;
+}
+
+/* ── Step 1: Performance table internal scroll ── */
+.mp-table-wrap {
+  max-height: 220px !important;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+}
+
+.mp-table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
+.mp-table-wrap::-webkit-scrollbar-track { background: transparent; }
+.mp-table-wrap::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+
+/* Sticky table header so column labels stay visible while scrolling */
+.mp-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--glass-bg) !important;
+}
+
+/* ── Scroll body with dynamic fade gradient ── */
+.mp-scroll-body {
+  position: relative;
+  overflow-y: auto;
+  max-height: 240px;
+  flex: 1;
+}
+
+/* Fade gradient at bottom — indicates more content below */
+.mp-scroll-body::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: block;
+  background: linear-gradient(transparent, var(--bg-secondary));
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  margin-top: -48px;
+}
+
+/* Fade disappears when scrolled to bottom */
+.mp-scroll-body--at-bottom::after {
+  opacity: 0;
+}
+
+/* Scrollbar styling */
+.mp-scroll-body::-webkit-scrollbar { width: 3px; }
+.mp-scroll-body::-webkit-scrollbar-track { background: transparent; }
+.mp-scroll-body::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
+
+/* Risks & Opp scroll body — slightly taller since it has more structured content */
+.mp-card--row1-right .mp-scroll-body {
+  max-height: 280px;
+}
+
+/* Remove old collapsible styles that conflict */
+.mp-card--row2 .mp-collapsible-body,
+.mp-card--row3 .mp-collapsible-body {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.mp-card--row2 .mp-collapsible-body::after,
+.mp-card--row3 .mp-collapsible-body::after {
+  display: none !important;
+}
+
+.mp-card--row2 .mp-view-more,
+.mp-card--row3 .mp-view-more {
+  display: none !important;
+}
+
+/* ── Scrollbar: hidden by default, visible on hover ── */
+.mp-scroll-body::-webkit-scrollbar { width: 3px; }
+.mp-scroll-body::-webkit-scrollbar-track { background: transparent; }
+.mp-scroll-body::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+.mp-scroll-body:hover::-webkit-scrollbar-thumb { background: var(--glass-border); }
+
+/* ── Reduce gradient height — was 48px, too tall ── */
+.mp-scroll-body::after {
+  height: 28px !important;
+  margin-top: -28px !important;
+}
+
+/* ── Row 3 cards taller ── */
+.mp-card--row3 .mp-scroll-body {
+  max-height: 320px !important;
+}
+
+/* ── Gradient: subtle, short, low opacity ── */
+.mp-scroll-body::after {
+  height: 20px !important;
+  margin-top: -20px !important;
+  background: linear-gradient(transparent, var(--bg-secondary)) !important;
+  opacity: 0.6 !important;
+}
+
+.mp-scroll-body--at-bottom::after {
+  opacity: 0 !important;
+}
+
+/* ── Table wrap: no gradient, just clean scroll ── */
+.mp-table-wrap {
+  box-shadow: none !important;
+}
+
+/* ── Scroll body: don't stretch — only take content height up to max ── */
+.mp-scroll-body {
+  flex: none !important;
+}
+
+/* Row 1 cards — risk & opp scroll body */
+.mp-grid > section:nth-child(1) .mp-scroll-body,
+.mp-grid > section:nth-child(2) .mp-scroll-body {
+  max-height: 260px !important;
+}
+
+/* ── Remove old space-between gap in Risks & Opp ── */
+.mp-risk-opp-body {
+  flex: none !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+}
+
+.mp-grid > section:nth-child(2) .mp-risk-list,
+.mp-grid > section:nth-child(2) .mp-risk-list:last-of-type {
+  flex: none !important;
+  justify-content: flex-start !important;
+}
+
+/* ── Complete gradient fix — remove sticky approach entirely ── */
+.mp-scroll-body {
+  position: relative !important;
+  overflow-y: auto !important;
+  flex: none !important;
+}
+
+/* Remove the sticky pseudo-element gradient completely */
+.mp-scroll-body::after {
+  display: none !important;
+}
+
+/* Use a separate fade overlay div approach via the card wrapper */
+.mp-scroll-wrap {
+  position: relative;
+}
+
+.mp-scroll-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: linear-gradient(transparent, var(--bg-secondary));
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.2s;
+  border-radius: 0 0 8px 8px;
+}
+
+.mp-scroll-wrap--at-bottom::after {
+  opacity: 0;
+}
+
+/* ── Final gradient fix: purely CSS, no wrapper needed ── */
+/* Hide the ::after entirely — it causes blank space issues */
+.mp-scroll-body::after {
+  content: none !important;
+}
+
+/* Instead put gradient on the card itself, clipped to bottom of scroll area */
+.mp-card--row2,
+.mp-card--row3 {
+  position: relative;
+}
+
+/* ── Row 1: don't force stretch — let cards be natural height ── */
+.mp-grid > section:nth-child(1),
+.mp-grid > section:nth-child(2) {
+  align-self: start !important;
+}
+
+/* ── Revert: Row 1 cards should still match height ── */
+.mp-grid > section:nth-child(1),
+.mp-grid > section:nth-child(2) {
+  align-self: stretch !important;
+}
+
+/* But scroll body inside should not stretch — content sits at top, no blank gap ── */
+.mp-grid > section:nth-child(2) .mp-scroll-body {
+  flex: none !important;
+  align-self: flex-start !important;
+}
+
+/* ── Risks & Opp: taller scroll body to fit all risk + opp cards ── */
+.mp-grid > section:nth-child(2) .mp-scroll-body {
+  max-height: 420px !important;
+}

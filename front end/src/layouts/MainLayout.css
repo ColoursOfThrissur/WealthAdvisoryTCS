@@ -195,6 +195,128 @@
   margin-left: var(--space-sm);
   border-left: var(--border-thin) solid var(--glass-border);
   flex-shrink: 0;
+  position: relative;
+}
+
+.user-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 10px;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.user-profile-trigger:hover {
+  background: var(--glass-bg);
+}
+
+.user-profile-chevron {
+  color: var(--text-tertiary);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.user-profile-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.user-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.04);
+  z-index: var(--z-dropdown);
+  overflow: hidden;
+  animation: profile-dropdown-in 0.15s ease;
+}
+
+@keyframes profile-dropdown-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.user-profile-dropdown__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 12px;
+}
+
+.user-profile-dropdown__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.user-profile-dropdown__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 0;
+}
+
+.user-profile-dropdown__name {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.user-profile-dropdown__role {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.user-profile-dropdown__divider {
+  height: 1px;
+  background: var(--glass-border);
+  margin: 2px 0;
+}
+
+.user-profile-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+  text-align: left;
+}
+
+.user-profile-dropdown__item:hover {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
+
+.user-profile-dropdown__item--danger {
+  color: var(--error);
+}
+
+.user-profile-dropdown__item--danger:hover {
+  background: rgba(239,68,68,0.06);
+  color: var(--error);
 }
 
 .user-profile-avatar {
@@ -254,4 +376,72 @@
   .brand-logo-text {
     font-size: 1rem;
   }
+}
+
+/* ── Ticker change value ── */
+.ticker-change {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  margin-left: 3px;
+}
+
+.ticker-value--positive .ticker-change { color: var(--success); }
+.ticker-value--negative .ticker-change { color: var(--error); }
+
+/* ── Theme toggle row in dropdown ── */
+.user-profile-dropdown__theme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+}
+
+.user-profile-dropdown__theme-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.user-profile-dropdown__theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Pill toggle */
+.theme-pill {
+  display: flex;
+  align-items: center;
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--glass-border);
+  padding: 2px;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.theme-pill--on {
+  background: var(--success);
+}
+
+.theme-pill__knob {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+  position: absolute;
+  left: 2px;
+}
+
+.theme-pill--on .theme-pill__knob {
+  transform: translateX(16px);
 }

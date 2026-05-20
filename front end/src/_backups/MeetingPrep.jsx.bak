@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   User, TrendingUp, Target, MessageSquare,
@@ -6,8 +6,6 @@ import {
   Sparkles, Clock, Shield, Rocket, Newspaper, ChevronDown
 } from 'lucide-react';
 import AIBadge from '../components/AIBadge';
-import { useMeetingPrep } from '../contexts/MeetingPrepContext';
-import { getPptxDownloadUrl } from '../services/meetingPrepService';
 import {
   CLIENT_DATA,
   HOLDINGS_DATA,
@@ -24,127 +22,35 @@ import './MeetingPrep.css';
 const MeetingPrep = () => {
   const { clientId } = useParams();
   const navigate = useNavigate();
-  const { results, generating, progress } = useMeetingPrep();
 
-  // clientId for live events is 'live-{meetingId}' — extract the Google event ID
-  const liveMeetingId = clientId?.startsWith('live-') ? clientId.slice(5) : null;
-  const liveResult = liveMeetingId ? results[liveMeetingId] : null;
-  const isGenerating = liveMeetingId ? !!generating[liveMeetingId] : false;
+  const client   = CLIENT_DATA[clientId]        || FALLBACK_CLIENT;
+  const holdings = HOLDINGS_DATA[clientId]      || HOLDINGS_DATA['15600001'];
+  const risk     = RISK_DATA[clientId]          || RISK_DATA['15600001'];
+  const activity = ACTIVITY_DATA[clientId]      || ACTIVITY_DATA['15600001'];
+  const news     = CLIENT_NEWS[clientId]        || CLIENT_NEWS['15600001'];
+  const upcoming = UPCOMING_MEETINGS[clientId]  || UPCOMING_MEETINGS['15600001'];
+  const angles   = DISCUSSION_ANGLES[clientId]  || DISCUSSION_ANGLES['15600001'];
+  const actions  = RECOMMENDED_ACTIONS[clientId]|| RECOMMENDED_ACTIONS['15600001'];
 
-  // Map live API response to the shape the UI expects
-  const fmtMoney = (v) => typeof v === 'number' ? `$${v.toLocaleString()}` : (v || 'N/A');
-  const fmtWeight = (v) => typeof v === 'number' ? (v < 1 ? Math.round(v * 100) : v) : v;
+  const isEnhanced = clientId === 'C005' || clientId === 'C012';
 
-  const mapLiveData = (r) => ({
-    client: {
-      ...r.client,
-      riskStatus: r.client?.riskStatus || '',
-      nbaTrigger: r.client?.nbaTrigger || '',
-      profileIntro: r.client?.profileIntro || '',
-      nbcScript: r.client?.nbcScript || '',
-      meetingGoal: r.client?.meetingGoal || '',
-      sentiment: r.client?.sentiment || '',
-      tier: r.client?.tier || '',
-      aum: fmtMoney(r.client?.aum),
-      meetingTime: r.client?.meetingTime || '',
-      name: r.client?.name || 'Client',
-    },
-    holdings: {
-      totalValue: fmtMoney(r.holdings?.totalValue),
-      costBasis: fmtMoney(r.holdings?.costBasis),
-      unrealizedGL: fmtMoney(r.holdings?.unrealizedGL),
-      performance: (r.holdings?.performance || []).map(p => ({
-        ...p,
-        weight: fmtWeight(p.weight),
-      })),
-      returns: r.holdings?.returns || [],
-      keyInsight: r.holdings?.keyInsight || [],
-    },
-    risk: {
-      riskMetrics: r.risk?.riskMetrics || [],
-      risks: r.risk?.risks || [],
-      opportunities: r.risk?.opportunities || [],
-    },
-    activity: r.activity || [],
-    news: r.fundNews || [],
-    upcoming: r.upcomingMeetings || [],
-    angles: r.discussionAngles || [],
-    actions: { primary: (r.nextBestActions || []).map(a => ({ label: a.label, desc: a.desc, reasoning: a.agentReasoning })) },
-    pptxId: r.pptxIds?.[0] || r.pptxId || null,
-    isLive: true,
-  });
-
-  const live = liveResult ? mapLiveData(liveResult) : null;
-
-  // Fall back to static data for non-live clientIds
-  const client   = live?.client   || CLIENT_DATA[clientId]        || FALLBACK_CLIENT;
-  const holdings = live?.holdings || HOLDINGS_DATA[clientId]      || HOLDINGS_DATA['15600001'];
-  const risk     = live?.risk     || RISK_DATA[clientId]          || RISK_DATA['15600001'];
-  const activity = live?.activity || ACTIVITY_DATA[clientId]      || ACTIVITY_DATA['15600001'];
-  const news     = live?.news     || CLIENT_NEWS[clientId]        || CLIENT_NEWS['15600001'];
-  const upcoming = live?.upcoming || UPCOMING_MEETINGS[clientId]  || UPCOMING_MEETINGS['15600001'];
-  const angles   = live?.angles   || DISCUSSION_ANGLES[clientId]  || DISCUSSION_ANGLES['15600001'];
-  const actions  = live?.actions  || RECOMMENDED_ACTIONS[clientId]|| RECOMMENDED_ACTIONS['15600001'];
-  const pptxId   = live?.pptxId   || null;
-
-  const isEnhanced = live?.isLive || clientId === 'C005' || clientId === 'C012';
-
-  // For Quick Links — use real clientId from live data if available, else URL param
-  const navClientId = live
-    ? (liveResult?.clientId || liveResult?.client?.customerId || null)
-    : clientId;
-
+  const [newsExpanded,     setNewsExpanded]     = useState(false);
+  const [activityExpanded, setActivityExpanded] = useState(false);
+  const [anglesExpanded,   setAnglesExpanded]   = useState(false);
   const [showScript,       setShowScript]       = useState(false);
-  const handleScrollFade = useCallback((e) => {
-    const el = e.target;
-    const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 4;
-    el.classList.toggle('mp-scroll-body--at-bottom', atBottom);
-  }, []);
-
   const [reasoningAction,  setReasoningAction]  = useState(null);
 
   return (
     <div className="mp-page">
-
-      {/* ── Generating loading state ── */}
-      {isGenerating && (
-        <div className="mp-generating-overlay">
-          <div className="mp-generating-card">
-            <Sparkles size={28} style={{ color: 'var(--success)' }} />
-            <p className="mp-generating-title">Generating Meeting Brief</p>
-            <p className="mp-generating-sub">Analysing portfolio, risks & activity via Snowflake...</p>
-            <div className="mp-generating-progress">
-              <div className="mp-generating-bar">
-                <div className="mp-generating-fill" style={{ width: `${progress[liveMeetingId] || 0}%` }} />
-              </div>
-              <span className="mp-generating-pct">{progress[liveMeetingId] || 0}%</span>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── Header ── */}
       <div className="mp-header">
         <div className="mp-header__title-row">
           <Sparkles size={18} style={{ color: isEnhanced ? 'var(--error)' : 'var(--success)', flexShrink: 0 }} />
           <h1 className="mp-header__title">Meeting Prep — {client.name}</h1>
-          {isEnhanced && client.riskStatus && client.riskStatus !== 'Low' && client.riskStatus !== 'Not Available' && (
-            <span className="mp-header__critical">{client.riskStatus}</span>
-          )}
+          {isEnhanced && <span className="mp-header__critical">{client.riskStatus}</span>}
           <span className="mp-header__time">{client.meetingTime}</span>
-          {pptxId ? (
-            <a
-              href={getPptxDownloadUrl(pptxId)}
-              download
-              className="mp-export-btn"
-            >
-              <Download size={13} /> Export
-            </a>
-          ) : (
-            <button className="mp-export-btn" disabled title="Generate a brief first to enable export" style={{ opacity: 0.45, cursor: 'not-allowed' }}>
-              <Download size={13} /> Export
-            </button>
-          )}
+          <button className="mp-export-btn"><Download size={13} /> Export</button>
         </div>
         {isEnhanced && (
           <p className="mp-header__insight">{client.profileIntro}</p>
@@ -240,7 +146,7 @@ const MeetingPrep = () => {
           </div>
           {isEnhanced && risk.riskMetrics && (
             <div className="mp-risk-metrics">
-              {risk.riskMetrics.slice(0, 4).map((m, i) => (
+              {risk.riskMetrics.map((m, i) => (
                 <div key={i} className="mp-risk-metric">
                   <span className="mp-risk-metric__label">{m.label}</span>
                   <span className={`mp-risk-metric__value${m.warn ? ' mp-risk-metric__value--warn' : ''}`}>{m.value}</span>
@@ -248,7 +154,6 @@ const MeetingPrep = () => {
               ))}
             </div>
           )}
-          <div className="mp-scroll-body" onScroll={handleScrollFade}>
           <div className="mp-risk-opp-body">
             <div>
               <h3 className="mp-card__sub">Risks</h3>
@@ -276,7 +181,6 @@ const MeetingPrep = () => {
               </div>
             </div>
           </div>
-          </div>
         </section>
 
         {/* ROW 2 LEFT: Recent Activity */}
@@ -285,7 +189,7 @@ const MeetingPrep = () => {
             <div className="mp-card__icon"><Clock size={15} /></div>
             <h2 className="mp-card__title">Recent Activity</h2>
           </div>
-          <div className="mp-scroll-body" onScroll={handleScrollFade}>
+          <div className={`mp-collapsible-body${activityExpanded ? ' mp-collapsible-body--expanded' : ''}`}>
             <div className="mp-activity-list">
               {activity.map((a, i) => (
                 <div key={i} className="mp-activity-row">
@@ -293,14 +197,14 @@ const MeetingPrep = () => {
                   <div className="mp-activity-body">
                     <span className="mp-activity-summary">{a.summary}</span>
                     <span className="mp-activity-decision">→ {a.decision}</span>
-                    {a.sentiment && (
-                      <span className="mp-activity-sentiment">{a.sentiment}</span>
-                    )}
                   </div>
                 </div>
               ))}
             </div>
           </div>
+          <button className="mp-view-more" onClick={() => setActivityExpanded(p => !p)}>
+            {activityExpanded ? 'Show less' : 'View more'} <ChevronDown size={12} className={activityExpanded ? 'mp-chevron--up' : ''} />
+          </button>
         </section>
 
         {/* ROW 2 RIGHT: Fund News */}
@@ -310,7 +214,7 @@ const MeetingPrep = () => {
             <h2 className="mp-card__title">Fund News</h2>
             <AIBadge size="sm" />
           </div>
-          <div className="mp-scroll-body" onScroll={handleScrollFade}>
+          <div className={`mp-collapsible-body${newsExpanded ? ' mp-collapsible-body--expanded' : ''}`}>
             <ul className="mp-bullets">
               {news.map((n, i) => {
                 const [label, ...rest] = n.split(':');
@@ -318,6 +222,9 @@ const MeetingPrep = () => {
               })}
             </ul>
           </div>
+          <button className="mp-view-more" onClick={() => setNewsExpanded(p => !p)}>
+            {newsExpanded ? 'Show less' : 'View more'} <ChevronDown size={12} className={newsExpanded ? 'mp-chevron--up' : ''} />
+          </button>
         </section>
 
         {/* ROW 3 LEFT: Discussion Angles */}
@@ -328,7 +235,7 @@ const MeetingPrep = () => {
             <button className="mp-script-btn" onClick={() => setShowScript(true)}>Show Script</button>
             <AIBadge size="sm" />
           </div>
-          <div className="mp-scroll-body" onScroll={handleScrollFade}>
+          <div className={`mp-collapsible-body${anglesExpanded ? ' mp-collapsible-body--expanded' : ''}`}>
             <div className="mp-discussion-list">
               {angles.map((a, i) => (
                 <div key={i} className="mp-discussion-item">
@@ -341,6 +248,9 @@ const MeetingPrep = () => {
               ))}
             </div>
           </div>
+          <button className="mp-view-more" onClick={() => setAnglesExpanded(p => !p)}>
+            {anglesExpanded ? 'Show less' : 'View more'} <ChevronDown size={12} className={anglesExpanded ? 'mp-chevron--up' : ''} />
+          </button>
         </section>
 
         {/* ROW 3 RIGHT: Next Best Actions */}
@@ -350,7 +260,6 @@ const MeetingPrep = () => {
             <h2 className="mp-card__title">Next Best Actions</h2>
             <AIBadge size="sm" />
           </div>
-          <div className="mp-scroll-body" onScroll={handleScrollFade}>
           <div className="mp-nba-list">
             {actions.primary.map((a, i) => (
               <div key={i} className="mp-nba-card mp-nba-card--primary">
@@ -365,29 +274,26 @@ const MeetingPrep = () => {
               </div>
             ))}
           </div>
-          </div>
         </section>
 
       </div>
 
-      {/* ── Quick Links — only shown when a real clientId is available ── */}
-      {navClientId && (
+      {/* ── Quick Links ── */}
       <div className="mp-quicklinks">
         <span className="mp-ql-label">Jump to</span>
-        <button className="mp-ql-btn" onClick={() => navigate(`/client/${navClientId}/rebalancing`)}>
+        <button className="mp-ql-btn" onClick={() => navigate(`/client/${clientId}/rebalancing`)}>
           <TrendingUp size={12} /> Rebalancing
         </button>
-        <button className="mp-ql-btn" onClick={() => navigate(`/client/${navClientId}/risk-analysis`)}>
+        <button className="mp-ql-btn" onClick={() => navigate(`/client/${clientId}/risk-analysis`)}>
           <AlertTriangle size={12} /> Risk Analysis
         </button>
-        <button className="mp-ql-btn" onClick={() => navigate(`/client/${navClientId}/profile`)}>
+        <button className="mp-ql-btn" onClick={() => navigate(`/client/${clientId}/profile`)}>
           <User size={12} /> Profile
         </button>
-        <button className="mp-ql-btn" onClick={() => navigate(`/client/${navClientId}/ips`)}>
+        <button className="mp-ql-btn" onClick={() => navigate(`/client/${clientId}/ips`)}>
           <Shield size={12} /> IPS
         </button>
       </div>
-      )}
 
       {/* ── Script Modal ── */}
       {showScript && (

@@ -46,8 +46,9 @@ const AgentTrace = ({ statusHistory = [], isProcessing, researchMode }) => {
   }, [isProcessing]);
 
   // Get the latest status
+  // researchMode can be a string label or boolean true (legacy)
   const current = researchMode
-    ? { label: 'Researching', Icon: Search }
+    ? { label: typeof researchMode === 'string' ? researchMode : 'Researching', Icon: Search }
     : statusHistory.length > 0 ? resolveStep(statusHistory[statusHistory.length - 1]) : null;
 
   if (!isProcessing && !current) return null;

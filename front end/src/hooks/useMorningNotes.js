@@ -108,9 +108,9 @@ const HARDCODED_SECTIONS = [
 ];
 
 const useMorningNotes = () => {
-  const [sections, setSections] = useState(HARDCODED_SECTIONS);
+  const [sections, setSections] = useState([]);
   const [rawOutput, setRawOutput] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(new Date().toISOString());
@@ -152,7 +152,7 @@ const useMorningNotes = () => {
   };
 
   const fetchMorningNote = useCallback(async (forceRefresh = false) => {
-    if (fetchingRef.current) return;
+    if (fetchingRef.current && !forceRefresh) return;
     fetchingRef.current = true;
 
     try {
@@ -201,6 +201,8 @@ const useMorningNotes = () => {
       if (stale) {
         applyData(stale);
       } else {
+        // Fall back to hardcoded sections so UI is never empty
+        setSections(HARDCODED_SECTIONS);
         setError(err.message);
       }
     } finally {
@@ -211,8 +213,7 @@ const useMorningNotes = () => {
   }, []);
 
   useEffect(() => {
-    // endpoint preserved — skipped while hardcoded sections are active
-    // fetchMorningNote(false);
+    fetchMorningNote(false);
   }, [fetchMorningNote]);
 
   const refresh = useCallback(() => {
