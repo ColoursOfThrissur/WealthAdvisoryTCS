@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, CheckCircle, AlertCircle, Loader, Sun, Moon, Sparkles, Clock } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
@@ -27,7 +27,7 @@ export default function GoogleConnect() {
 
   async function silentCheck() {
     setStatus('checking');
-    const res = await checkAuth(userId || 'my-test-user');
+    const res = await checkAuth(userId);
 
     // Backend unreachable
     if (!res.ok && !res.authRequired) {
@@ -97,7 +97,7 @@ export default function GoogleConnect() {
       if (popupRef.current?.closed) {
         stopPolling();
         // Final check — user may have completed auth before closing
-        const res = await checkAuth(userId || 'my-test-user');
+        const res = await checkAuth(userId);
         if (res.ok && res.data?.status === 'authenticated') {
           handleSuccess();
         } else {
@@ -107,7 +107,7 @@ export default function GoogleConnect() {
       }
 
       // Regular poll
-      const res = await checkAuth(userId || 'my-test-user');
+      const res = await checkAuth(userId);
       if (res.ok && res.data?.status === 'authenticated') {
         stopPolling();
         if (popupRef.current && !popupRef.current.closed) popupRef.current.close();

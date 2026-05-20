@@ -4,6 +4,18 @@ const BASE = MEETING_PREP_API_URL;
 const TIMEOUT_MS = 300_000; // 5 min — matches backend AgentCore read_timeout
 
 async function post(path, body) {
+  // Guard: if user_id is missing, return auth-required immediately
+  // rather than sending an empty string to the backend and getting a 500
+  if (body?.user_id !== undefined && !body.user_id) {
+    return {
+      ok: false,
+      status: 401,
+      authRequired: true,
+      authUrl: null,
+      error: 'Not logged in. Please sign in first.',
+    };
+  }
+
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {

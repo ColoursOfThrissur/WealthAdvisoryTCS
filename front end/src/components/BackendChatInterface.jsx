@@ -1,4 +1,4 @@
-import { useReportChat } from '../hooks/useReportChat';
+﻿import { useReportChat } from '../hooks/useReportChat';
 import AgentTrace from '../components/AgentTrace';
 import SectionResult from '../components/SectionResult';
 import SuggestedPrompts from './SuggestedPrompts';
@@ -11,7 +11,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const BackendChatInterface = ({ onClose }) => {
   const { userId } = useAuth();
-  const effectiveUserId = userId || 'my-test-user';
+  const effectiveUserId = userId;
   const [chatMode, setChatMode] = useState('normal'); // 'normal', 'research', 'report', 'email', 'meeting'
   const [researchLoading, setResearchLoading] = useState(false);
   const [localMessages, setLocalMessages] = useState([]); // For research mode messages
