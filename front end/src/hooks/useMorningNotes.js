@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { getApiUrl } from '../config/api';
 
 const CACHE_KEY = 'mn_cache';
@@ -31,25 +31,18 @@ const isBackendError = (output = '') =>
  * Parses the raw markdown output from the morning-note skill into
  * an array of { title, content[] } section objects.
  */
-const SECTION_KEYWORDS = [
-  'Top Call',
-  'Overnight',
-  'Pre-Market',
-  'Key Events',
-  'Trade Ideas',
-  'Market Recap',
-  'Macro',
-];
-
 export const parseSections = (output = '') => {
   const lines = output.split('\n');
   const sections = [];
   let current = null;
 
+  // Known 2-word section titles that don't have 3 words but are real sections
+  const KNOWN_SECTIONS = /^(Trade Ideas|Market Recap|Macro Update|Market Tone|Top Picks|Key Risks|Watch List|Action Items|Client Impact|Risk Factors)$/i;
+
   for (const line of lines) {
     const trimmed = line.trim();
 
-    // Skip completeness checklist and separators
+    // Skip separators and checklist lines
     if (
       trimmed === '---' ||
       trimmed === '***' ||
@@ -60,10 +53,20 @@ export const parseSections = (output = '') => {
       continue;
     }
 
-    // Detect **Section Header** lines
+    // Accept standalone **Bold Lines** as section headers if:
+    // - contains ':' or '/' (e.g. "Top Call:", "Overnight/Pre-Market")
+    // - OR 3+ words with no digits (e.g. "Key Events Today")
+    // - OR matches known 2-word section titles (e.g. "Trade Ideas")
+    // Rejects: date lines (**May 20, 2026...**) and short labels (**Global Technology**)
     if (trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length > 4) {
       const title = trimmed.slice(2, -2).trim();
-      if (SECTION_KEYWORDS.some((kw) => title.includes(kw))) {
+      const wordCount = title.split(/\s+/).length;
+      const hasDigits = /\d/.test(title);
+      const isSection =
+        /^[A-Z]/.test(title) &&
+        !hasDigits &&
+        (title.includes(':') || title.includes('/') || wordCount >= 3 || KNOWN_SECTIONS.test(title));
+      if (isSection) {
         if (current) sections.push(current);
         current = { title, content: [] };
         continue;
@@ -76,11 +79,19 @@ export const parseSections = (output = '') => {
   }
 
   if (current) sections.push(current);
+
+  // Always put Top Call first
+  const topCallIdx = sections.findIndex(s => s.title.toLowerCase().includes('top call'));
+  if (topCallIdx > 0) {
+    const [topCall] = sections.splice(topCallIdx, 1);
+    sections.unshift(topCall);
+  }
+
   return sections;
 };
 
 /**
- * useMorningNotes — fetches, caches (localStorage, daily), and exposes
+ * useMorningNotes â€” fetches, caches (localStorage, daily), and exposes
  * parsed morning note sections. Safe for concurrent renders (ref guard).
  */
 const HARDCODED_SECTIONS = [
@@ -101,8 +112,8 @@ const HARDCODED_SECTIONS = [
   {
     title: 'Key Events Today',
     content: [
-      'MSFT, GOOGL, META earnings after market close — expect volatility in tech-heavy portfolios',
-      'Q1 GDP first estimate and PCE inflation data release — key signals for Fed rate path and bond positioning',
+      'MSFT, GOOGL, META earnings after market close â€” expect volatility in tech-heavy portfolios',
+      'Q1 GDP first estimate and PCE inflation data release â€” key signals for Fed rate path and bond positioning',
     ],
   },
 ];
@@ -126,7 +137,7 @@ const useMorningNotes = () => {
         return parsed;
       }
     } catch {
-      // corrupted cache — ignore
+      // corrupted cache â€” ignore
     }
     return null;
   };
@@ -139,7 +150,7 @@ const useMorningNotes = () => {
       localStorage.setItem(CACHE_DATE_KEY, today);
       localStorage.setItem(CACHE_HASH_KEY, hash);
     } catch {
-      // storage quota — ignore
+      // storage quota â€” ignore
     }
   };
 
@@ -168,7 +179,7 @@ const useMorningNotes = () => {
       const response = await fetch(getApiUrl('/api/morning-notes'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // No sensitive data in body — just a role hint for the prompt
+        // No sensitive data in body â€” just a role hint for the prompt
         body: JSON.stringify({ user_name: 'advisor' }),
         signal: AbortSignal.timeout(120_000),
       });

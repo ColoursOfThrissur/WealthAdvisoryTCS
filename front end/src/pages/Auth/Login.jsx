@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Eye, EyeOff } from "lucide-react";
 import { useTheme } from "../../hooks/useTheme";
 import { useAuth } from "../../contexts/AuthContext";
 import { signInWithCognito } from "../../utils/cognito";
@@ -13,12 +13,15 @@ export default function Login() {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { login } = useAuth();
+
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [alertmsg, setAlertmsg] = useState(
     location.state?.sessionExpired ? "Session expired. Please sign in again." : ""
   );
   const [alertColor, setAlertColor] = useState(
-    location.state?.sessionExpired ? "text-red-600" : ""
+    location.state?.sessionExpired ? "text-error" : ""
   );
   const [isConsentChecked, setIsConsentChecked] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
@@ -28,18 +31,16 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const password = formData.get("password");
 
     if (!email || !password) {
       setAlertmsg("Please enter both email and password.");
-      setAlertColor("text-red-600");
+      setAlertColor("text-error");
       return;
     }
 
     if (!isConsentChecked) {
       setAlertmsg("Please agree to the Terms of Use and Privacy Policy.");
-      setAlertColor("text-red-600");
+      setAlertColor("text-error");
       return;
     }
 
@@ -63,7 +64,6 @@ export default function Login() {
         return;
       }
 
-      // Map Cognito error codes to friendly messages
       let friendlyMessage = errorMessage;
       if (safeErrorDump.includes("notauthorizedexception") || safeErrorDump.includes("incorrect username or password")) {
         friendlyMessage = "Incorrect email or password. Please try again.";
@@ -76,7 +76,7 @@ export default function Login() {
       }
 
       setAlertmsg(friendlyMessage || "Login failed. Please try again.");
-      setAlertColor("text-red-600");
+      setAlertColor("text-error");
     } finally {
       setIsSubmitting(false);
     }
@@ -86,7 +86,11 @@ export default function Login() {
     <div className="auth-container" data-theme={theme}>
       <div className="auth-background" />
 
-      <button onClick={toggleTheme} className="theme-toggle" title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
+      <button
+        onClick={toggleTheme}
+        className="theme-toggle"
+        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      >
         {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
       </button>
 
@@ -96,6 +100,7 @@ export default function Login() {
         <p className="auth-subtitle">Please sign in to continue</p>
 
         <form onSubmit={handleSubmit} className="auth-form">
+
           <div className="form-group">
             <label>Email</label>
             <input
@@ -111,14 +116,26 @@ export default function Login() {
 
           <div className="form-group">
             <label>Password</label>
-            <input
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              autoComplete="current-password"
-              onFocus={clearAlert}
-              required
-            />
+            <div className="form-group--password">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={clearAlert}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(p => !p)}
+                tabIndex={-1}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           <div className="form-actions">

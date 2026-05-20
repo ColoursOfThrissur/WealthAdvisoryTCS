@@ -15,9 +15,10 @@
   align-items: center;
   padding: var(--space-md) var(--space-lg);
   background: transparent;
-  border-bottom: none;
+  border-bottom: 1px solid var(--glass-border);
   z-index: 1001;
   position: relative;
+  min-height: 70px;
   height: 70px;
 }
 
@@ -110,6 +111,7 @@
   transition: color 0.15s ease;
   font-family: inherit;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .main-layout__tab:hover {
@@ -142,8 +144,8 @@
 .main-layout__metrics {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding: 4px 12px;
+  gap: 8px;
+  padding: 4px 8px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 8px;
@@ -155,7 +157,7 @@
   flex-direction: column;
   gap: 2px;
   align-items: center;
-  min-width: 60px;
+  min-width: 44px;
 }
 
 .ticker-label {
@@ -350,15 +352,60 @@
 }
 
 /* ── Responsive ──
-   At 1100px: left(380) + tabs(180) + right(380) + padding(48) = 988px — still fits.
-   At 900px things get tight — shrink side widths and hide metrics. */
+   Metrics hide one at a time as width decreases:
+   ≤ 1400px: shrink side widths
+   ≤ 1280px: hide Clients (least critical)
+   ≤ 1180px: hide AUM too, keep only S&P 500
+   ≤ 1050px: hide entire metrics bar
+   ≤ 700px:  collapse to auto widths */
+
+@media (max-width: 1400px) {
+  .main-layout__left,
+  .main-layout__right {
+    width: 280px;
+  }
+}
+
+/* Hide Clients at 1280px */
+@media (max-width: 1280px) {
+  .main-layout__left,
+  .main-layout__right {
+    width: 240px;
+  }
+
+  .main-layout__metrics > :nth-child(4),
+  .main-layout__metrics > :nth-child(5) {
+    display: none;
+  }
+}
+
+/* Hide AUM at 1180px — only S&P 500 remains */
+@media (max-width: 1180px) {
+  .main-layout__left,
+  .main-layout__right {
+    width: 220px;
+  }
+
+  .main-layout__metrics > :nth-child(2),
+  .main-layout__metrics > :nth-child(3),
+  .main-layout__metrics > :nth-child(4),
+  .main-layout__metrics > :nth-child(5) {
+    display: none;
+  }
+}
+
+/* Hide entire metrics bar and name at 1050px */
 @media (max-width: 1050px) {
   .main-layout__left,
   .main-layout__right {
-    width: 260px;
+    width: 200px;
   }
 
   .main-layout__metrics {
+    display: none;
+  }
+
+  .user-profile-name {
     display: none;
   }
 }
@@ -376,72 +423,4 @@
   .brand-logo-text {
     font-size: 1rem;
   }
-}
-
-/* ── Ticker change value ── */
-.ticker-change {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  margin-left: 3px;
-}
-
-.ticker-value--positive .ticker-change { color: var(--success); }
-.ticker-value--negative .ticker-change { color: var(--error); }
-
-/* ── Theme toggle row in dropdown ── */
-.user-profile-dropdown__theme {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-}
-
-.user-profile-dropdown__theme-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.user-profile-dropdown__theme-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-
-/* Pill toggle */
-.theme-pill {
-  display: flex;
-  align-items: center;
-  width: 36px;
-  height: 20px;
-  border-radius: 10px;
-  background: var(--glass-border);
-  padding: 2px;
-  transition: background 0.2s;
-  position: relative;
-}
-
-.theme-pill--on {
-  background: var(--success);
-}
-
-.theme-pill__knob {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
-  position: absolute;
-  left: 2px;
-}
-
-.theme-pill--on .theme-pill__knob {
-  transform: translateX(16px);
 }
