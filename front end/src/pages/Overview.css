@@ -9,6 +9,7 @@
 
 .overview--chat-open {
   overflow: hidden;
+  height: 100%;
 }
 
 .overview::before {
@@ -1620,15 +1621,16 @@
 
 
 .overview__chat-overlay {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 132px;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 132px);
   display: flex;
   animation: slideIn 0.3s ease;
-  background: transparent;
+  background: var(--bg-primary);
   overflow: hidden;
+  z-index: 100;
 }
 
 /* chat-expanded fills the overlay and stacks content vertically */
