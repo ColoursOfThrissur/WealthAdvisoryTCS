@@ -11,7 +11,7 @@ import './MeetingIntelligence.css';
 // Static priority clients — always shown in Today tab with View Prep ready
 const STATIC_TODAY_MEETINGS = [
   { clientId: '15600001', name: 'Alex Morgan',    topic: 'Portfolio Drift & Rebalancing Review', time: '10:00 AM', sortMinutes: 600 },
-  { clientId: 'C012',     name: 'Kevin Smyth',    topic: 'Cash Deployment Review',               time: '10:00 AM', sortMinutes: 600 },
+  { clientId: 'C012',     name: 'Kevin Smyth',    topic: 'Cash Deployment Review',               time: '2:30 PM',  sortMinutes: 870 },
 ];
 
 const PROGRESS_PHASES = [
