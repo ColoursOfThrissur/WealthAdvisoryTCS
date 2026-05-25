@@ -56,6 +56,11 @@ export const parseSections = (output = '') => {
       // Skip coverage/metadata header lines
       if (/^(Coverage|Sector Coverage|Analyst Name|Coverage Universe):/i.test(title)) continue;
 
+      // Skip pure sector label lines e.g. **Macro, Equities, Fixed Income** or **Global Technology**
+      // These are coverage metadata lines the AI outputs without a "Coverage:" prefix
+      const SECTOR_WORDS = /^(Macro|Equities|Fixed Income|Tech|Healthcare|Energy|Crypto|Real Estate|Global|US|Europe|Asia|Bonds|Commodities)(,\s*(Macro|Equities|Fixed Income|Tech|Healthcare|Energy|Crypto|Real Estate|Global|US|Europe|Asia|Bonds|Commodities))*$/i;
+      if (SECTOR_WORDS.test(title)) continue;
+
       // Must start with capital and be meaningful
       const wordCount = title.split(/\s+/).length;
       const isSection =

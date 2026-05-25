@@ -74,8 +74,14 @@ export async function getUpcomingEvents(userId, dayOffset = 1, numDays = 3) {
  * @param {string} userId
  * @param {string} meetingId - Google Calendar event ID
  */
-export async function runMeetingPrepById(userId, meetingId, forceRefresh = true) {
-  return post('/meeting-prep-by-id', { user_id: userId, meeting_id: meetingId, force_refresh: forceRefresh });
+export async function runMeetingPrepById(userId, meetingId, forceRefresh = true, meetingConfig = {}) {
+  return post('/meeting-prep-by-id', {
+    user_id: userId,
+    meeting_id: meetingId,
+    force_refresh: forceRefresh,
+    meeting_type: meetingConfig.meetingType || 'portfolio_review',
+    meeting_subject: meetingConfig.meetingSubject || 'Portfolio Review & Performance Update',
+  });
 }
 
 /**

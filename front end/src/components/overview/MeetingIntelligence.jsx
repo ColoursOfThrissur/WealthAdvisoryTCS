@@ -67,7 +67,13 @@ const MeetingIntelligence = ({
     setGeneratingFor(meetingId, true);
     setGenerateError(prev => ({ ...prev, [meetingId]: '' }));
     const timer = startProgressTimer(meetingId);
-    const res = await runMeetingPrepById(userId, meetingId);
+    // Read meeting config from localStorage
+    let meetingConfig = {};
+    try {
+      const stored = localStorage.getItem('meeting_prep_config');
+      if (stored) meetingConfig = JSON.parse(stored);
+    } catch { /* ignore */ }
+    const res = await runMeetingPrepById(userId, meetingId, true, meetingConfig);
     clearInterval(timer);
     if (!res.ok) {
       setGeneratingFor(meetingId, false);

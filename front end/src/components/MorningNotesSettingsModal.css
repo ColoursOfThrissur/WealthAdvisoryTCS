@@ -144,14 +144,16 @@
   flex-shrink: 0;
 }
 
+/* ── Label uses text-secondary for readable heading hierarchy ── */
 .mn-label {
   font-size: var(--font-size-min, 0.6875rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
 }
 
+/* Description stays tertiary — intentionally dimmer than label */
 .mn-desc {
   font-size: 0.6875rem;
   color: var(--text-tertiary);
