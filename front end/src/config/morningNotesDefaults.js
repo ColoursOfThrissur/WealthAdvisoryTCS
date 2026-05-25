@@ -1,0 +1,23 @@
+export const MORNING_NOTE_DEFAULTS = {
+  sectors: ['Macro', 'Equities', 'Fixed Income'],
+  tickers: [],
+  geography: 'US',
+  tone: 'brief',
+  sections: {
+    top_call: true,
+    overnight: true,
+    key_events: true,
+    trade_ideas: false,
+    earnings_table: false,
+    macro_rates: true,
+  },
+  opinion: 'balanced',
+  schedule: {
+    frequency: 'once',
+    morning_time: '06:30',
+    afternoon_time: '13:00',
+    timezone: 'US/Eastern',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    paused: false,
+  },
+};

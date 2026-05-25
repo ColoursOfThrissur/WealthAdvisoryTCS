@@ -1,0 +1,466 @@
+================================================================================
+WEALTH ADVISORY DEMO — SOLUTION STRUCTURE & UI ASSESSMENT
+================================================================================
+Last updated: May 2026
+================================================================================
+
+
+================================================================================
+1. COCKPIT PAGE  (/  — activeTab: 'cockpit')
+================================================================================
+
+COMPONENTS:
+  PriorityQueue        — Left column. Client list + detail panel
+  MeetingIntelligence  — Right column top. Calendar + meeting prep card
+  PortfolioMonitor     — Right column bottom. Action item counts
+  MorningNoteBanner    — Top bar. News pills + market event pill
+  MassMailerChat       — Full overlay. Market event mailer flow
+
+--- PriorityQueue ---
+Features:
+  - Ranked client list (6 clients) with priority pills (Critical/High/Medium)
+  - Left-border color coding per priority
+  - Click to expand right detail panel
+  - Detail panel: avatar, metrics row (AUM/Return/Risk/Credit/Age), trigger reason, recommended actions
+  - Actions navigate to rebalancing / meeting prep / proposals
+
+HARDCODED:
+  - All 6 client profiles built from worklistCustomers.json + 4 manually hardcoded (Sam Pai, Kevin Smyth, Sarah Jenkins, David Thompson)
+  - Priority ranking is manual — no AI scoring
+  - "AI-ranked clients" label is misleading — it is not AI ranked
+  - Trigger text, key context, recommended actions all static
+  - "Why this client is prioritised" paragraph is template-generated from static fields, not AI
+
+NEEDS BACKEND:
+  - Real AI priority scoring from portfolio analysis engine
+  - Dynamic trigger detection (drift, compliance breach, sentiment)
+  - Live AUM, return, risk profile from portfolio data source
+  - Recommended actions generated from actual client state
+
+--- MeetingIntelligence ---
+Features:
+  - Today tab: static fixtures (Alex Morgan, Kevin Smyth) always visible + live Google Calendar events
+  - Upcoming tab: fully dynamic from Google Calendar API (next 3 days)
+  - Generate button → calls AgentCore /meeting-prep-by-id → navigates to MeetingPrep page
+  - Progress bar with phase labels during generation
+  - Session expired banner with Reconnect
+  - Calendar error with Retry
+  - Loading skeleton
+  - Refresh button (re-fetches both today + upcoming)
+  - Settings button → MeetingSettingsModal
+  - Status strip (Outlook disabled, Google connected/disconnected, schedule time)
+
+HARDCODED:
+  - Alex Morgan and Kevin Smyth as permanent static fixtures
+  - Schedule frequency/time display is cosmetic — no actual scheduling runs
+  - Outlook connector shows "Coming soon" — not implemented
+
+NEEDS BACKEND:
+  - Scheduled auto-generation of meeting briefs at configured times
+  - Outlook Calendar integration
+  - Persistent storage of generated briefs (currently lost on server restart)
+
+--- PortfolioMonitor ---
+Features:
+  - 6 action item rows: Portfolio Rebalancing, Investment Proposals, Tax Analysis, Invest Idle Cash, KYC Expiring, Portfolio Review
+  - Click navigates to worklist pages (Rebalancing, Proposals)
+
+HARDCODED:
+  - ALL counts are hardcoded (12, 8, 3, 5, 1, 12)
+  - Tax Analysis, Invest Idle Cash, KYC Expiring, Portfolio Review have no destination (onClick: () => {})
+  - "AI" badge is decorative — no AI involved
+
+NEEDS BACKEND:
+  - Real counts from portfolio analysis engine
+  - Destination pages for Tax Analysis, Idle Cash, KYC, Portfolio Review
+  - Actual AI prioritisation of action items
+
+--- MorningNoteBanner ---
+Features:
+  - Fetches from StockStory server (port 7000) via main backend /api/morning-notes
+  - Daily localStorage cache (mn_cache, mn_date)
+  - Scrollable pill row with hover dropdown previews
+  - Full note popup modal
+  - Refresh button (short press = refresh, long press 1.5s = reset mailerCompleted flag)
+  - Market event pill (Hormuz crisis) — navigates to /?event=mailer
+  - Loading spinner state
+
+HARDCODED:
+  - Market event (Hormuz blockade) is hardcoded in marketEventData.js
+  - Fallback sections (Fed Rate Cuts, Tech Results, Key Events) shown when StockStory fails
+  - Morning note prompt is hardcoded: "yesterday's market recap, macro updates, global tech sector"
+
+NEEDS BACKEND:
+  - Dynamic market event detection and injection
+  - Configurable morning note topics per advisor
+  - Scheduled generation (currently on-demand only)
+
+--- MassMailerChat ---
+Features:
+  - Full viewport overlay triggered by /?event=mailer
+  - Event overview card (stats, affected clients table)
+  - Suggestion buttons → email generation flow → mail preview modal → confirm send
+  - Mail preview modal with holdings, allocation comparison, impact stats
+  - "Return to Dashboard" marks event as completed (localStorage)
+  - Completion summary with sent client list
+
+HARDCODED:
+  - Entire Hormuz event data (3 affected clients, impact figures, portfolio details)
+  - Email generation is simulated (setTimeout, no real email sending)
+  - "Emails sent" confirmation is fake — no actual email API call
+  - Client impact figures ($32K, $34K, $19K losses) are static
+
+NEEDS BACKEND:
+  - Real market event detection from news/market data feed
+  - Actual email sending via Gmail/Outlook API
+  - Dynamic client impact calculation from live portfolio data
+  - CRM integration for follow-up task creation
+
+
+================================================================================
+2. ASSIST PAGE  (/  — activeTab: 'advisor-assist')
+================================================================================
+
+COMPONENT: BackendChatInterface
+
+Features:
+  - 4 mode chips: Draft Email, Meeting Prep, Research Sector, Generate Client Report
+  - Mode-specific color theming (purple=meeting, indigo=research, green=report, blue=email)
+  - Welcome screen with suggested prompts per mode
+  - Scroll buttons (up/down) when messages overflow
+  - AgentTrace spinner with phase labels during processing
+  - Google auth overlay (popup + polling) for meeting prep 401s
+
+--- Normal / Report / Email modes ---
+  - WebSocket connection to main backend (port 8001)
+  - Session persisted in localStorage (report_session_id)
+  - Streams status messages → AgentTrace
+  - Renders SectionResult cards for structured report data
+  - Report mode: generates client portfolio reports via orchestrator
+
+HARDCODED:
+  - Quick actions for each mode are static strings
+  - Email mode sends to WebSocket but no actual email drafting backend exists
+  - Suggested prompts reference hardcoded client names (Sarah Mitchell, David Chen, Robert Anderson)
+
+--- Research mode ---
+  - Direct HTTP POST to /api/research/{sessionId} on main backend
+  - Forwards to StockStory server (port 7000) with session memory (last 5 messages)
+  - Renders formatted markdown response with tables, headings, lists
+  - Indigo color accent
+
+HARDCODED:
+  - Research suggested prompts (AAPL, Large cap tech, Renewable energy) are static
+
+--- Meeting Prep mode ---
+  - Direct HTTP POST to MEETING_PREP_API_URL/client-prep
+  - Sends { user_id: logged-in email, client_name: query }
+  - AgentCore backend finds calendar event, runs 5-agent pipeline, returns structured JSON
+  - formatMeetingData() converts meetings[0] to markdown
+  - Renders with purple .meeting-response styling
+  - Auth overlay on 401 with popup + polling
+
+HARDCODED:
+  - Suggested prompts (Mary Hargrave, Sam Pai) are static names
+  - user_id falls back to 'my-test-user' if not logged in
+
+NEEDS BACKEND:
+  - Email drafting backend for email mode
+  - Meeting prep suggested prompts should come from today's actual calendar
+
+
+================================================================================
+3. REBALANCING WORKLIST  (/worklist/rebalancing)
+================================================================================
+
+Features:
+  - Fetches from Rebalancing API (port 8003) /api/worklist/rebalancing
+  - Falls back to MOCK_CLIENTS from worklistCustomers.json if API fails
+  - Search, sort (name/AUM/priority), filter by priority
+  - Engagement bar (calculated from age + contribution — not real engagement data)
+  - Priority badges (Critical/Warning/On Track/Low)
+  - Click row → navigates to /client/{id}/rebalancing (PortfolioRebalancingNative)
+  - Action button → marks completed in WorklistContext, navigates to rebalancing
+
+HARDCODED:
+  - MOCK_CLIENTS appended to API results as fallback — always shows even when API works
+  - Engagement score formula (age + contribution) is arbitrary, not real
+  - Stats (total, critical, high, medium, low) come from API but fallback is 0s
+  - "Next Best Action" label has AI badge but action is just the rebalanceReason string
+
+NEEDS BACKEND:
+  - Real engagement scoring from CRM/interaction data
+  - Completed action state should persist to backend, not just React context
+  - Deduplication logic between API clients and mock clients
+
+
+================================================================================
+4. PROPOSALS WORKLIST  (/worklist/proposals)
+================================================================================
+
+Features:
+  - Data from WorklistContext (loaded from worklistCustomers.json investment_proposals)
+  - Search, sort, filter by priority
+  - Engagement bar (same formula as rebalancing)
+  - Time badge (getTimeAgo — hash-based fake timestamps, Sam Pai hardcoded to "3d")
+  - Click action → navigates to /action/proposal/{clientId}
+
+HARDCODED:
+  - ALL data is static from worklistCustomers.json — no backend connection
+  - Time badges are fake (hash of clientId)
+  - Sam Pai "3d" is hardcoded by name check
+  - proposalPhrases array defined but never used
+  - Priority labels (High/Medium/Low) don't match rebalancing (Critical/Warning/On Track)
+
+NEEDS BACKEND:
+  - Real proposal pipeline data
+  - Actual timestamps from CRM
+  - Consistent priority labelling across worklists
+
+
+================================================================================
+5. PORTFOLIO REBALANCING  (/action/rebalancing/{clientId} or /client/{id}/rebalancing)
+================================================================================
+
+COMPONENT: PortfolioRebalancingNative
+
+Features:
+  - Full agentic rebalancing flow with WebSocket streaming
+  - Multi-step agent trace (planning → analysis → execution)
+  - Portfolio comparison (current vs proposed allocation)
+  - Fund-level drift analysis
+  - Rebalancing recommendations with rationale
+  - Document generation (consent letter)
+  - Connected to Rebalancing API (port 8003) + MCP server (port 8004)
+
+HARDCODED:
+  - Mary Hargrave's portfolio data (portfolioRebalancingData in mockData.js) used as static reference
+  - Some client profiles fall back to static data when API doesn't return full profile
+
+NEEDS BACKEND:
+  - Persistent rebalancing state (currently lost on refresh)
+  - Actual trade execution integration
+  - Compliance check integration
+
+
+================================================================================
+6. INVESTMENT PROPOSAL  (/action/proposal/{clientId})
+================================================================================
+
+COMPONENT: InvestmentProposalSimple / InvestmentProposalNative
+
+Features:
+  - Client profile display
+  - Portfolio allocation proposal
+  - Risk assessment
+  - Document sections (performance, holdings, documents)
+
+HARDCODED:
+  - Sam Pai's data is the primary demo client
+  - investmentProposalData in mockData.js has minimal structure
+  - Most proposal content is static
+
+NEEDS BACKEND:
+  - Real proposal generation engine
+  - Integration with portfolio data source
+  - Document generation and e-signature
+
+
+================================================================================
+7. MEETING PREP PAGE  (/meeting-prep/{clientId})
+================================================================================
+
+COMPONENT: MeetingPrep
+
+Features:
+  - Header: client name, risk status badge, meeting time, Export button (PPTX download)
+  - Profile intro paragraph + NBA trigger strip (enhanced clients only)
+  - Portfolio Snapshot card: KPIs + performance trends table + key insights
+  - Risks & Opportunities card: risk metrics + risk list + opportunities
+  - Recent Activity card: interaction history
+  - Fund News card: bullet list
+  - Discussion Angles card: numbered list + "Show Script" button → NBC Script modal
+  - Next Best Actions card: action cards + "View Agent Reasoning" modal (when reasoning exists)
+  - Quick Links bar: Rebalancing / Risk Analysis / Profile / IPS
+  - Generating overlay with progress bar (for live events)
+
+DATA SOURCES:
+  - Live (clientId starts with 'live-'): AgentCore result from MeetingPrepContext
+  - C005 (David Thompson): full static data from meetingPrepData.js
+  - C012 (Kevin Smyth): full static data from meetingPrepData.js
+  - 15600001 (Alex Morgan): full static data from meetingPrepData.js
+  - 15634602 (Mary Hargrave): partial static (profile only, falls back to Alex Morgan data)
+  - Any other: falls back to Alex Morgan's data
+
+HARDCODED:
+  - isEnhanced flag only true for C005, C012, live events — others get reduced UI
+  - Mary Hargrave, Jean Williams, Marcus Thompson have no holdings/risk/activity data
+  - PPTX export only works for live AgentCore results (pptxId is null for static)
+
+NEEDS BACKEND:
+  - Full static data for all clients (Mary Hargrave especially)
+  - PPTX generation for static clients
+  - Persistent brief storage so refresh doesn't lose live results
+
+
+================================================================================
+8. CLIENT DETAIL / PROFILE VIEWS
+================================================================================
+
+Pages: ClientDetail, ClientProfileView, RiskAnalysisView, InvestmentDetailsView, IPSView
+
+Features:
+  - ClientDetail: routes to sub-views based on type param
+  - ClientProfileView: personal info, KYC status, account details
+  - RiskAnalysisView: full risk dashboard (riskAnalysisData from mockData.js)
+  - InvestmentDetailsView: holdings breakdown
+  - IPSView: IPS objectives, strategy, mandates, constraints
+
+HARDCODED:
+  - RiskAnalysisView uses Mary Hargrave's riskAnalysisData entirely
+  - IPSView uses Mary Hargrave's IPS data
+  - ClientProfileView data varies — some from worklistCustomers.json, some hardcoded
+  - C005, C012, C013 profiles exist only in Overview.jsx priorityProfiles — no dedicated data files
+
+NEEDS BACKEND:
+  - All client data from a real CRM/portfolio system
+  - Dynamic risk calculations
+  - Live IPS compliance monitoring
+
+
+================================================================================
+9. PRIORITIZE MY DAY  (/prioritize)
+================================================================================
+
+Features:
+  - Daily agenda view
+  - Priority client actions
+  - Meeting schedule
+
+HARDCODED:
+  - Largely static content
+  - Linked from Meeting Intelligence "View More"
+
+NEEDS BACKEND:
+  - Real calendar integration
+  - Dynamic priority scoring
+
+
+================================================================================
+UI ASSESSMENT
+================================================================================
+
+--- WHAT WORKS WELL ---
+
+1. Dark theme palette — the deep green-black (#050807 → #0a1a14) is distinctive and professional.
+   The success green (#10b981) as the primary accent creates strong visual hierarchy.
+
+2. Mode-based color theming in Assist — purple/indigo/green/blue per mode is a smart pattern.
+   The CSS variable --mode-color cascading to input focus, send button, user bubble is elegant.
+
+3. MeetingPrep page layout — the 3-row 2-column grid is well structured. Cards have clear
+   hierarchy (icon + title + AI badge). Scroll fade on overflow cards is a nice touch.
+
+4. AgentTrace component — the single-line spinner with phase labels and elapsed timer is clean
+   and informative without being noisy.
+
+5. Priority Queue split layout — list + detail panel side by side works well for the use case.
+   Left-border color coding for priority is immediately readable.
+
+6. Morning Notes banner — horizontal scrollable pills with hover dropdowns is space-efficient.
+   The long-press refresh to reset mailer state is a clever hidden gesture.
+
+7. Meeting Intelligence card — the static + live merge with time sorting is clean.
+   Progress bar with phase labels during generation is informative.
+
+8. Auth overlay — reusing ov-auth-card / ov-auth-overlay across Overview and Assist is consistent.
+
+--- UI ISSUES ---
+
+1. CARD CONTRAST — Cards (bg-secondary #0a1a14) sit on a background gradient that passes through
+   the same color. Cards are nearly invisible without hover. No glassmorphism works here because
+   the background has no visual depth to blur through.
+   FIX IDEA: Add a very subtle top border highlight (1px rgba(255,255,255,0.06)) and slightly
+   increase shadow depth. Or use a background image/noise texture on body to give blur something
+   to work with.
+
+2. PORTFOLIO MONITOR — All counts are fake (12, 8, 3, 5, 1, 12). The "AI" badge is misleading.
+   4 of 6 items have no destination. This card actively misleads users in a demo context.
+   FIX: Either connect to real data or clearly label as "Coming Soon" for unconnected items.
+
+3. MASS MAILER — Email sending is completely simulated. The "✓ Emails sent successfully" message
+   is fake. In a demo this is fine but needs a clear disclaimer or visual indicator that it's a
+   simulation. The completion summary says "Follow-up tasks created in CRM" which is also fake.
+
+4. PRIORITY QUEUE — "AI-ranked clients" label is inaccurate. The ranking is manual/hardcoded.
+   The "Why this client is prioritised" text is template-generated, not AI reasoning.
+   FIX: Either connect real AI scoring or change label to "Priority Clients" without the AI claim.
+
+5. ENGAGEMENT BAR in worklists — The formula (age + contribution) / 2 produces arbitrary numbers
+   that have no real meaning. A 28-year-old with high contribution scores higher than a 58-year-old
+   with medium contribution — this is not engagement, it's age bias.
+   FIX: Remove or replace with a real metric (last interaction date, response rate, etc.)
+
+6. PROPOSALS WORKLIST — Time badges are hash-based fake timestamps. Sam Pai "3d" is hardcoded
+   by name. Priority labels differ from Rebalancing worklist (High vs Critical, On Track vs Medium).
+   FIX: Consistent priority labelling across all worklists.
+
+7. MEETING PREP — Mary Hargrave, Jean Williams, Marcus Thompson fall back to Alex Morgan's data.
+   If you navigate to /meeting-prep/15634602 you see Alex Morgan's holdings and risks with
+   Mary Hargrave's name in the header. This is a data integrity issue.
+   FIX: Add proper static data for Mary Hargrave at minimum (she appears in multiple flows).
+
+8. ASSIST PAGE — Meeting prep placeholder text says "What meeting prep do you need?" but the
+   mode actually calls /client-prep which requires a specific client name. Users may type
+   questions instead of names and get confusing results.
+   FIX: Placeholder should say "Enter a client name (e.g. David Thompson)"
+
+9. LIVE MEETING tab — activeTab: 'meeting-assist' shows a "Coming soon" placeholder. The tab
+   exists in the nav but leads nowhere. This creates a dead end in the navigation.
+   FIX: Either remove the tab or add a meaningful placeholder with roadmap context.
+
+10. MASS MAILER OVERLAY — position: fixed with top: 132px assumes header (70px) + banner (62px)
+    is always exactly 132px. If the banner is loading or absent, the overlay has a gap at the top.
+    FIX: Use a CSS variable or JS measurement for the offset rather than a hardcoded pixel value.
+
+11. TICKER in header — S&P 500 (5,308 +0.02%), AUM ($6.2M +0.05%), Clients (250) are all
+    hardcoded static values. In a demo this is fine but they never update.
+    FIX: Connect S&P to a market data API, AUM to portfolio sum, Clients to actual count.
+
+12. REPORT MODE in Assist — The WebSocket backend generates PDF reports but the UI shows
+    section cards inline. The download link works but the inline rendering of large reports
+    can overflow the chat area with no pagination or collapsing.
+    FIX: Add collapsible sections or a "View Full Report" button that opens in a new view.
+
+--- IMPROVEMENT IDEAS ---
+
+1. MEETING PREP CHAT — The formatMeetingData() markdown output is good but long. Consider
+   adding a collapsible section per category (Holdings, Risks, Activity etc.) so the user
+   can scan quickly and expand what they need.
+
+2. PRIORITY QUEUE — Add a "last contacted" indicator on each client row. Even a simple
+   "3d ago" badge would make the list feel more actionable and real.
+
+3. MORNING NOTES — The pill row only shows one section before the market event pill.
+   Consider showing 2-3 pills before the event pill so the banner feels richer.
+
+4. MEETING INTELLIGENCE — When Google Calendar is connected and has events, the static
+   Alex Morgan / Kevin Smyth rows blend in with live events. A subtle visual differentiator
+   (e.g. a small "Static" or "Pre-loaded" label, or a slightly different left border color)
+   would help distinguish them.
+
+5. ASSIST PAGE — Research and Meeting Prep both use localMessages (separate from WebSocket
+   chatMessages). Switching modes clears the visible messages but they're still in state.
+   A "Clear conversation" button per mode would be useful.
+
+6. PPTX EXPORT — Currently only works for live AgentCore results. Adding PPTX generation
+   for static clients (C005, C012, Alex Morgan) would make the demo more complete since
+   those are the most polished briefs.
+
+7. WORKLIST TABLES — Both worklists use plain HTML tables with custom CSS. Consider adding
+   row-level expand to show the trigger/key context inline without navigating away.
+   This would reduce navigation friction for quick triage.
+
+================================================================================
+END OF SOLUTION STRUCTURE & UI ASSESSMENT
+================================================================================

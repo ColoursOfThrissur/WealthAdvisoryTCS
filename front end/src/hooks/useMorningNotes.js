@@ -1,18 +1,6 @@
-﻿import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getApiUrl } from '../config/api';
-
-const CACHE_KEY = 'mn_cache';
-const CACHE_DATE_KEY = 'mn_date';
-const CACHE_HASH_KEY = 'mn_hash';
-
-// Simple hash to detect if cached content changed
-const hashString = (str) => {
-  let h = 0;
-  for (let i = 0; i < Math.min(str.length, 500); i++) {
-    h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
-  }
-  return h.toString(36);
-};
+import { MORNING_NOTE_DEFAULTS } from '../config/morningNotesDefaults';
 
 const ERROR_PHRASES = [
   'experiencing issues',
@@ -27,54 +15,68 @@ const ERROR_PHRASES = [
 const isBackendError = (output = '') =>
   ERROR_PHRASES.some((p) => output.toLowerCase().includes(p));
 
-/**
- * Parses the raw markdown output from the morning-note skill into
- * an array of { title, content[] } section objects.
- */
 export const parseSections = (output = '') => {
   const lines = output.split('\n');
   const sections = [];
   let current = null;
+  let inChecklist = false;
 
-  // Known 2-word section titles that don't have 3 words but are real sections
   const KNOWN_SECTIONS = /^(Trade Ideas|Market Recap|Macro Update|Market Tone|Top Picks|Key Risks|Watch List|Action Items|Client Impact|Risk Factors)$/i;
+
+  const cleanLine = (line) =>
+    line.replace(/\*\*([^*]+)\*\*:/g, '$1:').replace(/^\*+\s+/, '').replace(/^-\s+/, '').trim();
 
   for (const line of lines) {
     const trimmed = line.trim();
+    if (!trimmed) continue;
 
-    // Skip separators and checklist lines
+    // Stop at checklist markers
     if (
       trimmed === '---' ||
       trimmed === '***' ||
-      trimmed.includes('Completeness Checklist') ||
-      /^\[x\]|\[ \]/i.test(trimmed) ||
-      (trimmed.startsWith('*Note:') && trimmed.includes('checklist'))
+      /^\*{3,}$/.test(trimmed) ||
+      /^\[x\]/i.test(trimmed) ||
+      /^\[\s\]/i.test(trimmed) ||
+      trimmed.toLowerCase().includes('completeness checklist') ||
+      (trimmed.startsWith('**') && trimmed.endsWith('**') && /checklist|skipped:/i.test(trimmed))
     ) {
+      inChecklist = true;
       continue;
     }
+    if (inChecklist) continue;
 
-    // Accept standalone **Bold Lines** as section headers if:
-    // - contains ':' or '/' (e.g. "Top Call:", "Overnight/Pre-Market")
-    // - OR 3+ words with no digits (e.g. "Key Events Today")
-    // - OR matches known 2-word section titles (e.g. "Trade Ideas")
-    // Rejects: date lines (**May 20, 2026...**) and short labels (**Global Technology**)
+    // Detect section headers — **bold** lines
     if (trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length > 4) {
       const title = trimmed.slice(2, -2).trim();
-      const wordCount = title.split(/\s+/).length;
       const hasDigits = /\d/.test(title);
+
+      // Skip date/metadata lines (contain year digits)
+      if (hasDigits) continue;
+
+      // Skip coverage/metadata header lines
+      if (/^(Coverage|Sector Coverage|Analyst Name|Coverage Universe):/i.test(title)) continue;
+
+      // Must start with capital and be meaningful
+      const wordCount = title.split(/\s+/).length;
       const isSection =
         /^[A-Z]/.test(title) &&
-        !hasDigits &&
         (title.includes(':') || title.includes('/') || wordCount >= 3 || KNOWN_SECTIONS.test(title));
+
       if (isSection) {
         if (current) sections.push(current);
-        current = { title, content: [] };
+        current = { title: title.replace(/:$/, '').trim(), impact: '', detail: [] };
         continue;
       }
     }
 
-    if (current && trimmed) {
-      current.content.push(line);
+    if (current) {
+      const cleaned = cleanLine(trimmed);
+      if (!cleaned) continue;
+      if (!current.impact) {
+        current.impact = cleaned;
+      } else {
+        current.detail.push(cleaned);
+      }
     }
   }
 
@@ -87,78 +89,38 @@ export const parseSections = (output = '') => {
     sections.unshift(topCall);
   }
 
-  return sections;
+  return sections.map(s => ({
+    ...s,
+    content: [s.impact, ...s.detail].filter(Boolean),
+  }));
 };
-
-/**
- * useMorningNotes â€” fetches, caches (localStorage, daily), and exposes
- * parsed morning note sections. Safe for concurrent renders (ref guard).
- */
-const HARDCODED_SECTIONS = [
-  {
-    title: 'Fed Rate Cuts Delayed',
-    content: [
-      'Elevated inflation and geopolitical climate will push cuts to 2026 end',
-      'Impact on 45 bond heavy portfolios and 12 clients seen as sensitive to income stability, as bond yields become more attractive and intermediate duration bonds regain relevance as stabilizers',
-    ],
-  },
-  {
-    title: 'Dispersed Q1 Tech Results',
-    content: [
-      'Semiconductor & AI companies earn high, Software & services weak',
-      '34 portfolios heavily exposed to big tech and software services will face sharp drawdowns on earnings data; 8 clients are particularly sensitive to headlines based volatility',
-    ],
-  },
-  {
-    title: 'Key Events Today',
-    content: [
-      'MSFT, GOOGL, META earnings after market close â€” expect volatility in tech-heavy portfolios',
-      'Q1 GDP first estimate and PCE inflation data release â€” key signals for Fed rate path and bond positioning',
-    ],
-  },
-];
 
 const useMorningNotes = () => {
   const [sections, setSections] = useState([]);
   const [rawOutput, setRawOutput] = useState('');
+  const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
+  const [isStale, setIsStale] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date().toISOString());
   const fetchingRef = useRef(false);
 
-  const loadFromCache = () => {
+  const getConfig = () => {
     try {
-      const today = new Date().toDateString();
-      const cachedDate = localStorage.getItem(CACHE_DATE_KEY);
-      const cachedData = localStorage.getItem(CACHE_KEY);
-      if (cachedDate === today && cachedData) {
-        const parsed = JSON.parse(cachedData);
-        return parsed;
-      }
-    } catch {
-      // corrupted cache â€” ignore
-    }
-    return null;
+      const stored = localStorage.getItem('mn_config');
+      if (stored) return { ...MORNING_NOTE_DEFAULTS, ...JSON.parse(stored) };
+    } catch { /* ignore */ }
+    return MORNING_NOTE_DEFAULTS;
   };
 
-  const saveToCache = (data) => {
-    try {
-      const today = new Date().toDateString();
-      const hash = hashString(data.output || '');
-      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-      localStorage.setItem(CACHE_DATE_KEY, today);
-      localStorage.setItem(CACHE_HASH_KEY, hash);
-    } catch {
-      // storage quota â€” ignore
-    }
-  };
-
-  const applyData = (data) => {
+  const applyData = (data, stale = false) => {
     const output = data?.output || '';
     setRawOutput(output);
     setSections(parseSections(output));
+    setTopics(data?.topics_covered || []);
     setLastUpdated(data?.timestamp || new Date().toISOString());
+    setIsStale(stale);
     setError(null);
   };
 
@@ -167,55 +129,66 @@ const useMorningNotes = () => {
     fetchingRef.current = true;
 
     try {
+      // 1. Check today's note from DynamoDB + S3
       if (!forceRefresh) {
-        const cached = loadFromCache();
-        if (cached) {
-          applyData(cached);
-          setLoading(false);
-          return;
-        }
+        try {
+          const todayRes = await fetch(getApiUrl('/api/morning-notes/today'), {
+            signal: AbortSignal.timeout(5_000),
+          });
+          if (todayRes.ok) {
+            const todayData = await todayRes.json();
+            if (todayData.success && todayData.status === 'completed' && todayData.data?.output) {
+              applyData({ output: todayData.data.output, timestamp: todayData.timestamp, topics_covered: todayData.topics_covered || [] }, false);
+              setLoading(false);
+              return;
+            }
+            // Today's note is generating or failed — try yesterday
+            if (todayData.status === 'generating' || todayData.status === 'failed' || todayData.status === 'not_found') {
+              const yesterday = new Date();
+              yesterday.setDate(yesterday.getDate() - 1);
+              const yDate = yesterday.toISOString().split('T')[0];
+              try {
+                const yRes = await fetch(getApiUrl(`/api/morning-notes/date/${yDate}`), {
+                  signal: AbortSignal.timeout(5_000),
+                });
+                if (yRes.ok) {
+                  const yData = await yRes.json();
+                  if (yData.success && yData.data?.output) {
+                    applyData({ output: yData.data.output, timestamp: yData.timestamp, topics_covered: yData.topics_covered || [] }, true);
+                    setLoading(false);
+                    return;
+                  }
+                }
+              } catch { /* no yesterday note — fall through to generate */ }
+            }
+          }
+        } catch { /* backend not running — fall through to generate */ }
       }
 
+      // 2. Generate fresh note with current config
+      const config = getConfig();
       const response = await fetch(getApiUrl('/api/morning-notes'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // No sensitive data in body â€” just a role hint for the prompt
-        body: JSON.stringify({ user_name: 'advisor' }),
+        body: JSON.stringify({ user_name: 'advisor', config }),
         signal: AbortSignal.timeout(120_000),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       const result = await response.json();
-
-      if (!result?.success || !result?.data) {
-        throw new Error('Invalid response format');
-      }
+      if (!result?.success || !result?.data) throw new Error('Invalid response format');
 
       const data = result.data;
+      if (isBackendError(data.output)) throw new Error('Backend returned an error response');
 
-      if (isBackendError(data.output)) {
-        throw new Error('Backend returned an error response');
-      }
-
-      // Attach timestamp from envelope if present
       data.timestamp = result.timestamp || new Date().toISOString();
+      data.topics_covered = result.topics_covered || [];
+      applyData(data, false);
 
-      applyData(data);
-      saveToCache(data);
     } catch (err) {
       console.error('[useMorningNotes]', err.message);
-      // Try to fall back to stale cache on error
-      const stale = loadFromCache();
-      if (stale) {
-        applyData(stale);
-      } else {
-        // Fall back to hardcoded sections so UI is never empty
-        setSections(HARDCODED_SECTIONS);
-        setError(err.message);
-      }
+      setError(err.message);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -232,7 +205,7 @@ const useMorningNotes = () => {
     fetchMorningNote(true);
   }, [fetchMorningNote]);
 
-  return { sections, rawOutput, loading, refreshing, error, lastUpdated, refresh };
+  return { sections, rawOutput, topics, loading, refreshing, error, isStale, lastUpdated, refresh };
 };
 
 export default useMorningNotes;

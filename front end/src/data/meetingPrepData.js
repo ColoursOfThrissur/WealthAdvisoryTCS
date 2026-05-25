@@ -318,8 +318,8 @@ export const RECOMMENDED_ACTIONS = {
   },
   '15600001': {
     primary: [
-      { label: 'Execute Phase-1 Rebalance',    desc: 'Proceed with the approved $10K bond-to-equity shift' },
-      { label: 'Target Selective Equity Adds', desc: 'Increase AEPGX and AMECX exposure; avoid adding to high-volatility growth funds.' },
+      { label: 'Execute Phase-1 Rebalance',    desc: 'Proceed with the approved $10K bond-to-equity shift', reasoning: 'Client approved Phase-1 rebalance in Feb 2026 review. Equity is 8% below target at 52% vs 60% IPS target. Executing now captures current international momentum (AEPGX +28.72% YTD) while staying within the phased approach agreed to reduce timing anxiety.' },
+      { label: 'Target Selective Equity Adds', desc: 'Increase AEPGX and AMECX exposure; avoid adding to high-volatility growth funds.', reasoning: 'AEPGX is the standout performer at +28.72% YTD with improving fundamentals. AMECX provides defensive income with improving trend. FSPGX and AGTHX already at 38% combined — adding to them increases concentration risk beyond IPS limits.' },
     ],
     clientAligned: [
       'Phased Approach: Continue $10K increments to align with client comfort and reduce timing risk.',

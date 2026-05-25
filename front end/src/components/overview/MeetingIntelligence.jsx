@@ -8,6 +8,12 @@ import Spinner from '../Spinner';
 import './OverviewShared.css';
 import './MeetingIntelligence.css';
 
+// Static priority clients — always shown in Today tab with View Prep ready
+const STATIC_TODAY_MEETINGS = [
+  { clientId: '15600001', name: 'Alex Morgan',    topic: 'Portfolio Drift & Rebalancing Review', time: '10:00 AM', sortMinutes: 600 },
+  { clientId: 'C012',     name: 'Kevin Smyth',    topic: 'Cash Deployment Review',               time: '10:00 AM', sortMinutes: 600 },
+];
+
 const PROGRESS_PHASES = [
   { until: 5,  label: 'Connecting to Google Calendar...' },
   { until: 20, label: 'Fetching portfolio data from Snowflake...' },
@@ -150,21 +156,6 @@ const MeetingIntelligence = ({
               </div>
             )}
 
-            {!googleConnected && !sessionExpiredBanner && (
-              <div className="ov-meetings-empty">
-                <div className="ov-meetings-empty__icon"><Calendar size={24} /></div>
-                <span className="ov-meetings-empty__title">Calendar not connected</span>
-                <span className="ov-meetings-empty__sub">Connect your Google Calendar to load today's meetings and generate AI-powered briefs.</span>
-                <button
-                  className="ov-meetings-empty__action"
-                  onClick={onConnect}
-                  disabled={googleConnecting || !authUrlReady}
-                >
-                  {googleConnecting ? 'Connecting...' : !authUrlReady ? 'Loading...' : 'Connect Google Calendar'}
-                </button>
-              </div>
-            )}
-
             {googleConnected && calendarLoading && (
               <div className="ov-calendar-loading-state">
                 <Spinner size={20} />
@@ -180,28 +171,62 @@ const MeetingIntelligence = ({
               </div>
             )}
 
-            {googleConnected && !calendarLoading && !calendarError && calendarEvents && calendarEvents.length === 0 && (
-              <div className="ov-meetings-empty">
-                <div className="ov-meetings-empty__icon"><Sun size={24} /></div>
-                <span className="ov-meetings-empty__title">No meetings today</span>
-                <span className="ov-meetings-empty__sub">Your Google Calendar has no events scheduled for today.</span>
-              </div>
-            )}
+            {/* ── Merged static + live rows, sorted by time ── */}
+            {(() => {
+              // Build live rows with sortMinutes
+              const liveRows = (googleConnected && !calendarLoading && !calendarError && calendarEvents?.length > 0)
+                ? calendarEvents.map((ev, idx) => {
+                    const startRaw = ev.start?.dateTime || ev.start?.date || '';
+                    let timeStr = '', sortMinutes = 9999;
+                    try {
+                      const d = new Date(startRaw);
+                      timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                      sortMinutes = d.getHours() * 60 + d.getMinutes();
+                    } catch { timeStr = startRaw; }
+                    return { type: 'live', ev, idx, timeStr, sortMinutes, meetingId: ev.id || String(idx) };
+                  })
+                : [];
 
-            {googleConnected && !calendarLoading && !calendarError && calendarEvents && calendarEvents.length > 0 &&
-              calendarEvents.map((ev, idx) => {
-                const startRaw = ev.start?.dateTime || ev.start?.date || '';
-                let timeStr = '';
-                try { const d = new Date(startRaw); timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); }
-                catch { timeStr = startRaw; }
-                const clientName = ev.summary || 'Meeting';
-                const topic = ev.description || ev.summary || '';
-                const meetingId = ev.id || String(idx);
-                const isGen = generating[meetingId];
+              // Merge and sort by time
+              const allRows = [
+                ...STATIC_TODAY_MEETINGS.map(s => ({ type: 'static', ...s })),
+                ...liveRows,
+              ].sort((a, b) => a.sortMinutes - b.sortMinutes);
+
+              return allRows.map((row, i) => {
+                if (row.type === 'static') {
+                  const [timePart, period] = row.time.split(' ');
+                  return (
+                    <div key={`static-${row.clientId}`} className="ov-meeting-row-wrap">
+                      <div className="ov-meeting-row">
+                        <div className="ov-meeting-row__time">
+                          <span>{timePart}</span>
+                          <span className="ov-meeting-row__period">{period}</span>
+                        </div>
+                        <div className="ov-meeting-row__info">
+                          <span className="ov-meeting-row__client">{row.name}</span>
+                          <span className="ov-meeting-row__topic">{row.topic}</span>
+                        </div>
+                        <div className="ov-meeting-row__action">
+                          <button
+                            className="ov-meeting-row__btn ov-meeting-row__btn--ready"
+                            onClick={() => navigate(`/meeting-prep/${row.clientId}`)}
+                          >View Prep</button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Live row
+                const { ev, idx, timeStr, meetingId } = row;
+                const isGen   = generating[meetingId];
                 const isReady = !!results[meetingId];
-                const pct = progress[meetingId] || 0;
-                const errMsg = generateError[meetingId];
-                const navId = `live-${meetingId}`;
+                const pct     = progress[meetingId] || 0;
+                const errMsg  = generateError[meetingId];
+                const navId   = `live-${meetingId}`;
+                const clientName = ev.summary || 'Meeting';
+                const topic      = ev.description || ev.summary || '';
                 return (
                   <div key={ev.id || idx} className="ov-meeting-row-wrap">
                     <div className="ov-meeting-row">
@@ -236,8 +261,22 @@ const MeetingIntelligence = ({
                     </div>
                   </div>
                 );
-              })
-            }
+              });
+            })()}
+
+            {/* Inline note when calendar not connected */}
+            {!googleConnected && !sessionExpiredBanner && (
+              <div className="ov-meetings-empty ov-meetings-empty--inline">
+                <span className="ov-meetings-empty__sub">Connect Google Calendar to load your other meetings today.</span>
+                <button
+                  className="ov-meetings-empty__action"
+                  onClick={onConnect}
+                  disabled={googleConnecting || !authUrlReady}
+                >
+                  {googleConnecting ? 'Connecting...' : !authUrlReady ? 'Loading...' : 'Connect Google Calendar'}
+                </button>
+              </div>
+            )}
           </>
         ) : (
           <>

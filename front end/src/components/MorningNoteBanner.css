@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 8px var(--space-2xl);
+  padding: 0 var(--space-2xl);
   min-height: 62px;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--glass-border);
@@ -17,6 +17,47 @@
   gap: var(--space-sm);
   color: var(--text-tertiary);
   font-size: 0.8rem;
+}
+
+/* ── Stacked controls on the right ── */
+.mnb-ctrl-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.mnb-ctrl-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.mnb-ctrl-btn:hover {
+  color: var(--success);
+  background: rgba(16,185,129,0.06);
+}
+
+.mnb-ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mnb-ctrl-btn--spinning svg {
+  animation: mnb-spin 0.8s linear infinite;
 }
 
 .mnb-spinner {
@@ -34,6 +75,17 @@
 
 .mnb-label {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 130px;
+  min-width: 130px;
+  max-width: 130px;
+  flex-shrink: 0;
+}
+
+.mnb-label__title {
+  display: flex;
   align-items: center;
   gap: 5px;
   font-size: 0.6875rem;
@@ -42,7 +94,48 @@
   letter-spacing: 0.07em;
   color: var(--success);
   white-space: nowrap;
-  flex: 0 0 auto;
+}
+
+.mnb-topics {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.mnb-topic-tag {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1px 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mnb-topic-tag--more {
+  color: var(--success);
+  border-color: rgba(16,185,129,0.3);
+  background: rgba(16,185,129,0.06);
+}
+
+
+.mnb-stale-badge {
+  font-size: var(--font-size-min, 0.6875rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #f59e0b;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 20px;
+  padding: 2px 7px;
+  margin-left: 4px;
 }
 
 .mnb-divider {
@@ -63,7 +156,6 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding: 2px 0;
-  /* Take remaining space but NEVER grow beyond it */
   width: 0;
   flex: 1 1 auto;
 }
@@ -164,10 +256,10 @@
   position: fixed;
   min-width: 280px;
   max-width: 360px;
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.04);
   padding: 14px 16px;
   z-index: calc(var(--z-overlay) - 1);
   animation: mnb-drop 0.15s ease;
@@ -189,6 +281,36 @@
   overflow: hidden;
 }
 
+.mnb-dropdown__impact {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 10px 0;
+}
+
+.mnb-dropdown__detail {
+  margin: 0 0 12px 0;
+  padding-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mnb-dropdown__detail li {
+  font-size: 0.775rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.mnb-popup__impact {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 8px 0;
+}
+
 .mnb-dropdown__more {
   background: none;
   border: none;
@@ -203,35 +325,7 @@
 
 .mnb-dropdown__more:hover { opacity: 0.7; }
 
-/* Refresh button */
-.mnb-refresh {
-  background: transparent;
-  border: 1px solid var(--glass-border);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  border-radius: var(--radius-lg);
-  font-size: 0.75rem;
-  font-weight: 500;
-  font-family: inherit;
-  transition: all 0.15s;
-  flex: 0 0 auto;
-  margin-left: var(--space-sm);
-  white-space: nowrap;
-}
 
-.mnb-refresh:hover {
-  color: var(--success);
-  border-color: var(--success);
-  background: var(--success-light);
-}
-
-.mnb-refresh--spinning svg {
-  animation: mnb-spin 0.8s linear infinite;
-}
 
 /* Full note popup */
 .mnb-popup-overlay {

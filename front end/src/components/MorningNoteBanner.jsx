@@ -1,12 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, RefreshCw, ChevronDown, AlertTriangle, CheckCircle } from 'lucide-react';
+import { TrendingUp, RefreshCw, ChevronDown, AlertTriangle, CheckCircle, Settings } from 'lucide-react';
 import useMorningNotes from '../hooks/useMorningNotes';
 import { activeMarketEvent } from '../data/marketEventData';
+import MorningNotesSettingsModal from './MorningNotesSettingsModal';
 import './MorningNoteBanner.css';
 
 const MorningNoteBanner = () => {
-  const { sections, loading, refreshing, refresh } = useMorningNotes();
+  const { sections, loading, refreshing, refresh, isStale, topics } = useMorningNotes();
+  const configSectors = (() => {
+    try {
+      const stored = localStorage.getItem('mn_config');
+      if (stored) return JSON.parse(stored).sectors || [];
+    } catch { /* ignore */ }
+    return ['Macro', 'Equities', 'Fixed Income'];
+  })();
   const [activeIdx, setActiveIdx] = useState(null);
   const [dropdownPos, setDropdownPos] = useState({ left: 0, top: 0 });
   const [popupSection, setPopupSection] = useState(null);
@@ -15,6 +23,7 @@ const MorningNoteBanner = () => {
   const pillsRef = useRef(null);
   const navigate = useNavigate();
   const [mailerCompleted, setMailerCompleted] = useState(() => localStorage.getItem('mailerEventCompleted') === 'true');
+  const [showSettings, setShowSettings] = useState(false);
   const longPressRef = useRef(null);
 
   const handleRefreshMouseDown = () => {
@@ -46,7 +55,6 @@ const MorningNoteBanner = () => {
     timeoutRef.current = setTimeout(() => setActiveIdx(null), 150);
   };
 
-  // Convert vertical mouse wheel to horizontal scroll on pills
   useEffect(() => {
     const el = pillsRef.current;
     if (!el) return;
@@ -66,10 +74,21 @@ const MorningNoteBanner = () => {
     return () => window.removeEventListener('scroll', close, true);
   }, []);
 
-  const getPreview = (section) =>
-    (section.content.filter(l => l.trim())[1] || section.content.filter(l => l.trim())[0] || '')
-      .replace(/\*\*/g, '')
-      .slice(0, 200);
+  const renderPill = (section, idx, refIdx) => (
+    <div
+      key={idx}
+      ref={el => pillRefs.current[refIdx] = el}
+      className={`mnb-pill${activeIdx === refIdx ? ' mnb-pill--active' : ''}`}
+      onMouseEnter={() => handleMouseEnter(refIdx)}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="mnb-pill__text">
+        <span className="mnb-pill__title">{section.title}</span>
+        <span className="mnb-pill__subtitle">{section.impact || ''}</span>
+      </div>
+      <ChevronDown size={11} className="mnb-pill__chevron" />
+    </div>
+  );
 
   if (loading) {
     return (
@@ -80,41 +99,57 @@ const MorningNoteBanner = () => {
     );
   }
 
-  if (!sections.length) return null;
+  if (!sections.length) {
+    return (
+      <div className="mnb-root mnb-root--loading">
+        <TrendingUp size={13} />
+        <span style={{ marginLeft: 6, fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>No morning notes available</span>
+        <button
+          className="mnb-ctrl-btn"
+          style={{ marginLeft: 'auto' }}
+          onMouseDown={handleRefreshMouseDown}
+          onMouseUp={handleRefreshMouseUp}
+          onMouseLeave={() => { clearTimeout(longPressRef.current); longPressRef.current = null; }}
+          disabled={refreshing}
+        >
+          <RefreshCw size={11} />
+          <span>{refreshing ? 'Refreshing...' : 'Generate'}</span>
+        </button>
+      </div>
+    );
+  }
 
   const activeSection = activeIdx !== null ? sections[activeIdx] : null;
 
   return (
     <>
       <div className="mnb-root">
+
         <div className="mnb-label">
-          <TrendingUp size={13} />
-          <span>Morning Notes</span>
+          <span className="mnb-label__title">
+            <TrendingUp size={13} />
+            Morning Notes
+            {isStale && <span className="mnb-stale-badge">Yesterday</span>}
+          </span>
+          {configSectors.length > 0 && (
+            <div className="mnb-topics">
+              {configSectors.slice(0, 2).map(t => (
+                <span key={t} className="mnb-topic-tag">{t}</span>
+              ))}
+              {configSectors.length > 2 && (
+                <span className="mnb-topic-tag mnb-topic-tag--more">+{configSectors.length - 2}</span>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="mnb-divider" />
 
         <div className="mnb-pills" ref={pillsRef}>
           {/* First section pill */}
-          {sections.slice(0, 1).map((section, idx) => (
-            <div
-              key={idx}
-              ref={el => pillRefs.current[idx] = el}
-              className={`mnb-pill${activeIdx === idx ? ' mnb-pill--active' : ''}`}
-              onMouseEnter={() => handleMouseEnter(idx)}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="mnb-pill__text">
-                <span className="mnb-pill__title">{section.title}</span>
-                <span className="mnb-pill__subtitle">
-                  {section.content.find(l => l.trim() && !l.startsWith('#'))?.replace(/\*\*/g, '').substring(0, 120) || ''}
-                </span>
-              </div>
-              <ChevronDown size={11} className="mnb-pill__chevron" />
-            </div>
-          ))}
+          {sections.slice(0, 1).map((section, idx) => renderPill(section, idx, idx))}
 
-          {/* Market event pill — second position */}
+          {/* Market event pill */}
           <div
             className={`mnb-pill${!mailerCompleted ? ' mnb-pill--event' : ''}`}
             onClick={() => navigate('/?event=mailer')}
@@ -129,38 +164,38 @@ const MorningNoteBanner = () => {
           </div>
 
           {/* Remaining section pills */}
-          {sections.slice(1).map((section, idx) => (
-            <div
-              key={idx + 1}
-              ref={el => pillRefs.current[idx + 1] = el}
-              className={`mnb-pill${activeIdx === idx + 1 ? ' mnb-pill--active' : ''}`}
-              onMouseEnter={() => handleMouseEnter(idx + 1)}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="mnb-pill__text">
-                <span className="mnb-pill__title">{section.title}</span>
-                <span className="mnb-pill__subtitle">
-                  {section.content.find(l => l.trim() && !l.startsWith('#'))?.replace(/\*\*/g, '').substring(0, 120) || ''}
-                </span>
-              </div>
-              <ChevronDown size={11} className="mnb-pill__chevron" />
-            </div>
-          ))}
+          {sections.slice(1).map((section, idx) => renderPill(section, idx + 1, idx + 1))}
         </div>
 
-        <button
-          className={`mnb-refresh${refreshing ? ' mnb-refresh--spinning' : ''}`}
-          onMouseDown={handleRefreshMouseDown}
-          onMouseUp={handleRefreshMouseUp}
-          onMouseLeave={() => { clearTimeout(longPressRef.current); longPressRef.current = null; }}
-          onTouchStart={handleRefreshMouseDown}
-          onTouchEnd={handleRefreshMouseUp}
-          title="Refresh morning notes"
-        >
-          <RefreshCw size={13} />
-          <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
-        </button>
+        <div className="mnb-divider" />
+
+        <div className="mnb-ctrl-stack">
+          <button className="mnb-ctrl-btn" onClick={() => setShowSettings(true)}>
+            <Settings size={12} />
+            <span>Configure</span>
+          </button>
+          <button
+            className={`mnb-ctrl-btn${refreshing ? ' mnb-ctrl-btn--spinning' : ''}`}
+            onMouseDown={handleRefreshMouseDown}
+            onMouseUp={handleRefreshMouseUp}
+            onMouseLeave={() => { clearTimeout(longPressRef.current); longPressRef.current = null; }}
+            onTouchStart={handleRefreshMouseDown}
+            onTouchEnd={handleRefreshMouseUp}
+            disabled={refreshing}
+          >
+            <RefreshCw size={12} />
+            <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
+          </button>
+        </div>
+
       </div>
+
+      {showSettings && (
+        <MorningNotesSettingsModal
+          onClose={() => setShowSettings(false)}
+          onSaveAndRefresh={() => { setShowSettings(false); refresh(); }}
+        />
+      )}
 
       {/* Dropdown — fixed position, outside overflow:hidden */}
       {activeSection && (
@@ -170,7 +205,14 @@ const MorningNoteBanner = () => {
           onMouseEnter={() => { clearTimeout(timeoutRef.current); }}
           onMouseLeave={handleMouseLeave}
         >
-          <p className="mnb-dropdown__preview">{getPreview(activeSection)}</p>
+          <p className="mnb-dropdown__impact">{activeSection.impact}</p>
+          {activeSection.detail?.length > 0 && (
+            <ul className="mnb-dropdown__detail">
+              {activeSection.detail.map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          )}
           <button
             className="mnb-dropdown__more"
             onClick={() => { setPopupSection(activeSection); setActiveIdx(null); }}
@@ -189,8 +231,9 @@ const MorningNoteBanner = () => {
               <button onClick={() => setPopupSection(null)}>✕</button>
             </div>
             <div className="mnb-popup__body">
-              {popupSection.content.filter(l => l.trim()).map((line, i) => (
-                <p key={i}>{line.replace(/\*\*/g, '')}</p>
+              <p className="mnb-popup__impact">{popupSection.impact}</p>
+              {popupSection.detail?.map((line, i) => (
+                <p key={i}>{line}</p>
               ))}
             </div>
           </div>

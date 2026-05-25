@@ -357,9 +357,11 @@ const MeetingPrep = () => {
                 <div className="mp-nba-card__head">
                   <CheckCircle size={14} />
                   <span className="mp-nba-card__title">{a.label}</span>
-                  <button className="mp-view-more mp-view-more--reasoning" onClick={() => a.reasoning && setReasoningAction(a)}>
-                    View Agent Reasoning <ChevronDown size={11} />
-                  </button>
+                  {a.reasoning && (
+                    <button className="mp-view-more mp-view-more--reasoning" onClick={() => setReasoningAction(a)}>
+                      View Agent Reasoning <ChevronDown size={11} />
+                    </button>
+                  )}
                 </div>
                 <p className="mp-nba-card__desc">{a.desc}</p>
               </div>

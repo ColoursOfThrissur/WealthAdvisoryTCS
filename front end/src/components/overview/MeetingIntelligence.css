@@ -568,3 +568,20 @@
   background: var(--glass-border);
   margin: 4px 0;
 }
+
+/* Inline connect note — compact, shown below static rows when calendar not connected */
+.ov-meetings-empty--inline {
+  padding: 10px 14px 12px;
+  border-top: 1px dashed var(--glass-border);
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.ov-meetings-empty--inline .ov-meetings-empty__sub {
+  max-width: none;
+  text-align: left;
+}
+
+.ov-meetings-empty--inline .ov-meetings-empty__action {
+  margin-top: 2px;
+}
