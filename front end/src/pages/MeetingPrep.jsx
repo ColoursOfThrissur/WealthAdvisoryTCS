@@ -1,11 +1,14 @@
 import { useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   User, TrendingUp, Target, MessageSquare,
   BarChart3, AlertTriangle, CheckCircle, Download,
-  Sparkles, Clock, Shield, Rocket, Newspaper, ChevronDown
+  Sparkles, Clock, Shield, Rocket, Newspaper, ChevronDown, X
 } from 'lucide-react';
 import AIBadge from '../components/AIBadge';
+import Tooltip from '../components/Tooltip';
+import { formatCurrency } from '../utils/formatters';
 import { useMeetingPrep } from '../contexts/MeetingPrepContext';
 import { getPptxDownloadUrl } from '../services/meetingPrepService';
 import {
@@ -32,7 +35,7 @@ const MeetingPrep = () => {
   const isGenerating = liveMeetingId ? !!generating[liveMeetingId] : false;
 
   // Map live API response to the shape the UI expects
-  const fmtMoney = (v) => typeof v === 'number' ? `$${v.toLocaleString()}` : (v || 'N/A');
+  const fmtMoney = (v) => typeof v === 'number' ? formatCurrency(v) : (v || 'N/A');
   const fmtWeight = (v) => typeof v === 'number' ? (v < 1 ? Math.round(v * 100) : v) : v;
 
   const mapLiveData = (r) => ({
@@ -141,9 +144,11 @@ const MeetingPrep = () => {
               <Download size={13} /> Export
             </a>
           ) : (
-            <button className="mp-export-btn" disabled title="Generate a brief first to enable export" style={{ opacity: 0.45, cursor: 'not-allowed' }}>
-              <Download size={13} /> Export
-            </button>
+            <Tooltip content="Generate a brief first to enable export" placement="bottom">
+              <button className="mp-export-btn" disabled style={{ opacity: 0.45, cursor: 'not-allowed' }}>
+                <Download size={13} /> Export
+              </button>
+            </Tooltip>
           )}
         </div>
         {isEnhanced && (
@@ -392,34 +397,43 @@ const MeetingPrep = () => {
       )}
 
       {/* ── Script Modal ── */}
-      {showScript && (
-        <div className="mp-modal-overlay" onClick={() => setShowScript(false)}>
-          <div className="mp-modal" onClick={e => e.stopPropagation()}>
-            <div className="mp-modal__head">
-              <h3 className="mp-modal__title">NBC Script</h3>
-              <button className="mp-modal__close" onClick={() => setShowScript(false)}>✕</button>
+      {showScript && createPortal(
+        <div className="modal-overlay" onClick={() => setShowScript(false)}>
+          <div className="modal-shell" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-header__left">
+                <div className="modal-header__titles">
+                  <span className="modal-header__title">NBC Script</span>
+                </div>
+              </div>
+              <button className="modal-close" onClick={() => setShowScript(false)}><X size={14} /></button>
             </div>
-            <div className="mp-modal__body">
+            <div className="modal-body">
               <p className="mp-modal__script">{client.nbcScript || 'Script coming soon.'}</p>
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
 
       {/* ── Agent Reasoning Modal ── */}
-      {reasoningAction && (
-        <div className="mp-modal-overlay" onClick={() => setReasoningAction(null)}>
-          <div className="mp-modal" onClick={e => e.stopPropagation()}>
-            <div className="mp-modal__head">
-              <h3 className="mp-modal__title">Agent Reasoning — {reasoningAction.label}</h3>
-              <button className="mp-modal__close" onClick={() => setReasoningAction(null)}>✕</button>
+      {reasoningAction && createPortal(
+        <div className="modal-overlay" onClick={() => setReasoningAction(null)}>
+          <div className="modal-shell" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-header__left">
+                <div className="modal-header__titles">
+                  <span className="modal-header__title">Agent Reasoning</span>
+                  <span className="modal-header__subtitle">{reasoningAction.label}</span>
+                </div>
+              </div>
+              <button className="modal-close" onClick={() => setReasoningAction(null)}><X size={14} /></button>
             </div>
-            <div className="mp-modal__body">
+            <div className="modal-body">
               <p className="mp-modal__script">{reasoningAction.reasoning}</p>
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
 
     </div>
   );

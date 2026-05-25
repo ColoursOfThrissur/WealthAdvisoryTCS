@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { SlidersHorizontal, X, RotateCcw } from 'lucide-react';
 import Spinner from '../Spinner';
 import './MeetingSettingsModal.css';
@@ -82,20 +83,20 @@ const MeetingSettingsModal = ({
     onClose();
   };
 
-  return (
-    <div className="ov-modal-overlay" onClick={onClose}>
-      <div className="ov-settings-modal" onClick={e => e.stopPropagation()}>
+  return createPortal(
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-shell modal-shell--wide" onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="ov-settings-modal__head">
-          <div className="ov-settings-modal__title-group">
-            <div className="ov-settings-modal__icon"><SlidersHorizontal size={15} /></div>
-            <div>
-              <span className="ov-settings-modal__title">Meeting Prep Settings</span>
-              <span className="ov-settings-modal__subtitle">Configure how Meeting Intelligence runs</span>
+        <div className="modal-header">
+          <div className="modal-header__left">
+            <div className="modal-header__icon"><SlidersHorizontal size={15} /></div>
+            <div className="modal-header__titles">
+              <span className="modal-header__title">Meeting Prep Settings</span>
+              <span className="modal-header__subtitle">Configure how Meeting Intelligence runs</span>
             </div>
           </div>
-          <button className="ov-settings-modal__close" onClick={onClose}><X size={14} /></button>
+          <button className="modal-close" onClick={onClose}><X size={14} /></button>
         </div>
 
         {/* Tabs */}
@@ -110,7 +111,7 @@ const MeetingSettingsModal = ({
         </div>
 
         {/* Body — fixed height, tabs swap content */}
-        <div className="ov-settings-modal__body">
+        <div className="modal-body" style={{ padding: 0 }}>
 
           {/* ── MEETING TAB ── */}
           <div className={`ov-tab-content${activeTab === 'Meeting' ? ' ov-tab-content--active' : ''}`}>
@@ -267,19 +268,19 @@ const MeetingSettingsModal = ({
         </div>
 
         {/* Footer */}
-        <div className="ov-settings-modal__footer">
-          <button className="ov-settings-footer-btn ov-settings-footer-btn--reset" onClick={handleReset}>
+        <div className="modal-footer">
+          <button className="modal-btn modal-btn--danger" onClick={handleReset}>
             <RotateCcw size={13} /> Reset
           </button>
-          <div className="ov-settings-footer-right">
-            <button className="ov-settings-footer-btn ov-settings-footer-btn--cancel" onClick={onClose}>Cancel</button>
-            <button className="ov-settings-footer-btn ov-settings-footer-btn--apply" onClick={handleApply}>Apply</button>
+          <div className="modal-footer__right">
+            <button className="modal-btn modal-btn--ghost" onClick={onClose}>Cancel</button>
+            <button className="modal-btn modal-btn--primary" onClick={handleApply}>Apply</button>
           </div>
         </div>
 
       </div>
     </div>
-  );
+  , document.body);
 };
 
 export default MeetingSettingsModal;

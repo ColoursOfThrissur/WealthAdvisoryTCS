@@ -24,10 +24,13 @@ import GoogleConnect from './pages/Auth/GoogleConnect';
 import { WorklistProvider } from './contexts/WorklistContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { MeetingPrepProvider } from './contexts/MeetingPrepContext';
+import { ToastProvider } from './contexts/ToastContext';
+import ToastContainer from './components/ToastContainer';
 import { hasAuthCookies, isAuthSessionExpired } from './utils/authCookies';
 import './styles/variables.css';
 import './styles/themes.css';
 import './styles/global.css';
+import './styles/modal.css';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -229,11 +232,14 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <WorklistProvider>
-          <MeetingPrepProvider>
-            <AppRoutes />
-          </MeetingPrepProvider>
-        </WorklistProvider>
+        <ToastProvider>
+          <WorklistProvider>
+            <MeetingPrepProvider>
+              <AppRoutes />
+              <ToastContainer />
+            </MeetingPrepProvider>
+          </WorklistProvider>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   );

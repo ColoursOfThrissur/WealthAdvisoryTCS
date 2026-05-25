@@ -5,6 +5,7 @@ import { useMeetingPrep } from '../../contexts/MeetingPrepContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { runMeetingPrepById } from '../../services/meetingPrepService';
 import Spinner from '../Spinner';
+import Tooltip from '../Tooltip';
 import './OverviewShared.css';
 import './MeetingIntelligence.css';
 
@@ -118,20 +119,23 @@ const MeetingIntelligence = ({
             }}
           >Upcoming</button>
         </div>
-        <div className="ov-meeting-tabs-actions">
-          <button
-            className={`ov-refresh-btn${refreshing ? ' ov-refresh-btn--spinning' : ''}`}
-            onClick={onRefreshClick}
-            disabled={refreshing}
-            title="Refresh calendar"
-          >
-            <RefreshCw size={13} className={refreshing ? 'ov-spin' : ''} />
-            {refreshing ? 'Refreshing...' : 'Refresh'}
-          </button>
-          <button className="ov-settings-btn" onClick={onOpenSettings} title="Meeting Prep Settings">
-            <SlidersHorizontal size={14} />
-          </button>
-        </div>
+          <div className="ov-meeting-tabs-actions">
+            <Tooltip content="Refresh calendar" placement="bottom">
+              <button
+                className={`ov-refresh-btn${refreshing ? ' ov-refresh-btn--spinning' : ''}`}
+                onClick={onRefreshClick}
+                disabled={refreshing}
+              >
+                <RefreshCw size={13} className={refreshing ? 'ov-spin' : ''} />
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </button>
+            </Tooltip>
+            <Tooltip content="Meeting Prep Settings" placement="bottom">
+              <button className="ov-settings-btn" onClick={onOpenSettings}>
+                <SlidersHorizontal size={14} />
+              </button>
+            </Tooltip>
+          </div>
       </div>
 
       <div className="ov-meetings-date-label">

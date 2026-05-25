@@ -4,6 +4,7 @@ import { Sun, Moon } from "lucide-react";
 import { useTheme } from "../../hooks/useTheme";
 import { signUpWithCognito } from "../../utils/cognito";
 import InfoModal from "./InfoModal";
+import Tooltip from "../../components/Tooltip";
 import "./Auth.css";
 
 export default function Signup() {
@@ -58,9 +59,11 @@ export default function Signup() {
     <div className="auth-container" data-theme={theme}>
       <div className="auth-background" />
 
-      <button onClick={toggleTheme} className="theme-toggle" title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
-        {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-      </button>
+      <Tooltip content={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} placement="left">
+        <button onClick={toggleTheme} className="theme-toggle">
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
+      </Tooltip>
 
       <div className="auth-card">
         <h1 className="auth-title">Wealth Management Platform</h1>

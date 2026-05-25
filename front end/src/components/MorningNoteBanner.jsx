@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, RefreshCw, ChevronDown, AlertTriangle, CheckCircle, Settings } from 'lucide-react';
+import { TrendingUp, RefreshCw, ChevronDown, AlertTriangle, CheckCircle, Settings, X } from 'lucide-react';
 import useMorningNotes from '../hooks/useMorningNotes';
 import { activeMarketEvent } from '../data/marketEventData';
 import MorningNotesSettingsModal from './MorningNotesSettingsModal';
@@ -223,22 +224,26 @@ const MorningNoteBanner = () => {
       )}
 
       {/* Full note popup */}
-      {popupSection && (
-        <div className="mnb-popup-overlay" onClick={() => setPopupSection(null)}>
-          <div className="mnb-popup" onClick={e => e.stopPropagation()}>
-            <div className="mnb-popup__head">
-              <span>{popupSection.title}</span>
-              <button onClick={() => setPopupSection(null)}>✕</button>
+      {popupSection && createPortal(
+        <div className="modal-overlay" onClick={() => setPopupSection(null)}>
+          <div className="modal-shell" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-header__left">
+                <div className="modal-header__titles">
+                  <span className="modal-header__title">{popupSection.title}</span>
+                </div>
+              </div>
+              <button className="modal-close" onClick={() => setPopupSection(null)}><X size={14} /></button>
             </div>
-            <div className="mnb-popup__body">
+            <div className="modal-body">
               <p className="mnb-popup__impact">{popupSection.impact}</p>
               {popupSection.detail?.map((line, i) => (
-                <p key={i}>{line}</p>
+                <p key={i} style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{line}</p>
               ))}
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </>
   );
 };

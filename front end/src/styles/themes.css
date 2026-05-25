@@ -2,6 +2,9 @@
   --bg-primary: #050807;
   --bg-secondary: #0a1a14;
   --bg-tertiary: #0f2419;
+  --modal-bg: #0d1f18;
+  --modal-header-bg: #080f0c;
+  --pill-bg: #061009;
   --bg-chat-gradient: #050807;
   --bg-card-solid: #050807;
   --bg-chat-card: rgba(5, 8, 7, 0.8);
@@ -37,6 +40,9 @@
   --bg-primary: #f0fdf4;
   --bg-secondary: rgba(255, 255, 255, 0.9);
   --bg-tertiary: #dcfce7;
+  --modal-bg: #ffffff;
+  --modal-header-bg: #f8fafc;
+  --pill-bg: #e8f5e9;
   --bg-chat-gradient: #f0fdf4;
   --bg-card-solid: #1e293b;
   --bg-chat-card: rgba(30, 41, 59, 0.9);

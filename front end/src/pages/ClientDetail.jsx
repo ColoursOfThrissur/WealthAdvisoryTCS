@@ -6,12 +6,14 @@ import AIBadge from '../components/AIBadge';
 import RerunModal from '../components/RerunModal';
 import ErrorBoundary from '../components/ErrorBoundary';
 import clientDataService from '../services/clientDataService';
+import { useToast } from '../contexts/ToastContext';
 import './ClientDetail.css';
 
 const ClientDetail = () => {
   const { clientId, type } = useParams();
   const navigate = useNavigate();
   const { setCompletedActions } = useWorklist();
+  const toast = useToast();
   
   // State for API data
   const [loading, setLoading] = useState(true);
@@ -934,13 +936,13 @@ const ClientDetail = () => {
               <div className="reco-action-buttons">
                 <button 
                   className="reco-btn reco-btn--approve"
-                  onClick={() => { setCompletedActions(prev => ({ ...prev, [clientId]: true })); navigate(-1); }}
+                  onClick={() => { setCompletedActions(prev => ({ ...prev, [clientId]: true })); toast('Portfolio rebalancing approved', 'success'); navigate(-1); }}
                 >
                   Approve
                 </button>
-                <button className="reco-btn reco-btn--hold">Hold</button>
-                <button className="reco-btn reco-btn--verify">Verify</button>
-                <button className="reco-btn reco-btn--scenario">Run Scenario</button>
+                <button className="reco-btn reco-btn--hold" onClick={() => toast('Portfolio placed on hold', 'warning')}>Hold</button>
+                <button className="reco-btn reco-btn--verify" onClick={() => toast('Sent for verification', 'info')}>Verify</button>
+                <button className="reco-btn reco-btn--scenario" onClick={() => toast('Scenario analysis coming soon', 'info')}>Run Scenario</button>
               </div>
             </div>
         </div>

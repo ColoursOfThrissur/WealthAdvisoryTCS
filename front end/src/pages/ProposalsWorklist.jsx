@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileText } from 'lucide-react';
 import { useWorklist } from '../contexts/WorklistContext';
 import AIBadge from '../components/AIBadge';
+import { useToast } from '../contexts/ToastContext';
 import './ProposalsWorklist.css';
 
 const ProposalsWorklist = () => {
   const navigate = useNavigate();
   const { proposalClients, proposalStats, hoveredClientId, setHoveredClientId, completedActions, setCompletedActions } = useWorklist();
+  const toast = useToast();
   const [filterPriority, setFilterPriority] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('priority');
@@ -182,6 +184,7 @@ const ProposalsWorklist = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           if (setCompletedActions) setCompletedActions(prev => ({ ...prev, [client.clientId]: true }));
+                          toast('Proposal review initiated', 'success');
                           navigate(`/action/proposal/${client.clientId}`);
                         }}
                       >

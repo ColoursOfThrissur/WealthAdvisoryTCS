@@ -1,4 +1,5 @@
 import { TrendingUp, AlertCircle } from 'lucide-react';
+import Tooltip from './Tooltip';
 import './SuggestedPrompts.css';
 
 const SuggestedPrompts = ({ prompts, onPromptClick, isLoading, mode }) => {
@@ -10,12 +11,11 @@ const SuggestedPrompts = ({ prompts, onPromptClick, isLoading, mode }) => {
         {prompts.map((prompt, index) => {
           const Icon = prompt.icon;
           return (
+          <Tooltip key={index} content={prompt.text} placement="top">
             <button
-              key={index}
               className={`suggested-prompt ${prompt.highlight ? 'suggested-prompt--highlight' : ''} ${prompt.trending ? 'suggested-prompt--trending' : ''} ${prompt.priority === 'critical' ? 'suggested-prompt--critical' : ''}`}
               onClick={() => onPromptClick(prompt)}
               disabled={isLoading}
-              title={prompt.text}
             >
               {Icon && (
                 <span className="suggested-prompt__icon">
@@ -34,6 +34,7 @@ const SuggestedPrompts = ({ prompts, onPromptClick, isLoading, mode }) => {
                 </span>
               )}
             </button>
+          </Tooltip>
           );
         })}
       </div>

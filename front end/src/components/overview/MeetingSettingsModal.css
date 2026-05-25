@@ -1,95 +1,16 @@
-/* ── Modal overlay ── */
-.ov-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: var(--z-overlay);
+/* Shell/overlay/header/footer handled by shared modal.css */
+
+/* ── Body scroll ── */
+.ov-settings-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
-/* ── Settings Modal ── */
-.ov-settings-modal {
-  background: var(--bg-secondary);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  width: 95%;
-  max-width: 820px;
-  height: 620px;
-  max-height: 88vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.05);
-}
+.ov-settings-modal__body::-webkit-scrollbar { width: 3px; }
+.ov-settings-modal__body::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
 
-/* Header */
-.ov-settings-modal__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 24px 16px;
-  border-bottom: 1px solid var(--glass-border);
-  flex-shrink: 0;
-  background: var(--bg-primary);
-}
-
-.ov-settings-modal__title-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ov-settings-modal__icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(16,185,129,0.12);
-  border: 1px solid rgba(16,185,129,0.2);
-  color: var(--success);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.ov-settings-modal__title {
-  display: block;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
-.ov-settings-modal__subtitle {
-  display: block;
-  font-size: 0.6875rem;
-  color: var(--text-tertiary);
-  margin-top: 2px;
-}
-
-.ov-settings-modal__close {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  color: var(--text-tertiary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-
-.ov-settings-modal__close:hover {
-  background: var(--glass-border);
-  color: var(--text-primary);
-}
-
-/* Tabs */
+/* ── Tabs ── */
 .ov-settings-tabs {
   display: flex;
   border-bottom: 1px solid var(--glass-border);
@@ -120,27 +41,20 @@
   border-bottom-color: var(--success);
 }
 
-/* Body — fixed height, no jumping */
-.ov-settings-modal__body {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-}
-
-.ov-settings-modal__body::-webkit-scrollbar { width: 3px; }
-.ov-settings-modal__body::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
-
-/* Tab content */
+/* ── Tab content ── */
 .ov-tab-content {
   display: none;
   flex-direction: column;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .ov-tab-content--active {
   display: flex;
 }
 
-/* Field group */
+/* ── Field group ── */
 .ov-field-group {
   display: flex;
   flex-direction: column;
@@ -154,7 +68,6 @@
   flex-shrink: 0;
 }
 
-/* ── Label uses text-secondary for readable heading hierarchy ── */
 .ov-field-label {
   font-size: var(--font-size-min, 0.6875rem);
   font-weight: 700;
@@ -163,7 +76,6 @@
   color: var(--text-secondary);
 }
 
-/* Description stays tertiary — intentionally dimmer than label */
 .ov-field-desc {
   font-size: 0.6875rem;
   color: var(--text-tertiary);
@@ -171,7 +83,7 @@
   line-height: 1.4;
 }
 
-/* Prompt textarea */
+/* ── Prompt textarea ── */
 .ov-prompt-textarea {
   width: 100%;
   background: var(--bg-primary);
@@ -179,7 +91,6 @@
   border-radius: 10px;
   color: var(--text-primary);
   font-size: 0.8125rem;
-  font-weight: 400;
   line-height: 1.6;
   padding: 12px 14px;
   font-family: inherit;
@@ -189,14 +100,8 @@
   transition: border-color 0.15s;
 }
 
-.ov-prompt-textarea:focus {
-  outline: none;
-  border-color: var(--success);
-}
-
-.ov-prompt-textarea::placeholder {
-  color: var(--text-tertiary);
-}
+.ov-prompt-textarea:focus { outline: none; border-color: var(--success); }
+.ov-prompt-textarea::placeholder { color: var(--text-tertiary); }
 
 .ov-prompt-reset-btn {
   align-self: flex-start;
@@ -215,7 +120,7 @@
 
 .ov-prompt-reset-btn:hover { color: var(--success); }
 
-/* Domain grid */
+/* ── Domain grid ── */
 .ov-domain-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -228,7 +133,6 @@
   gap: 6px;
 }
 
-/* ── Domain col label also uses text-secondary ── */
 .ov-domain-col__label {
   font-size: var(--font-size-min, 0.6875rem);
   font-weight: 700;
@@ -257,22 +161,9 @@
   text-align: left;
 }
 
-.ov-domain-item:hover:not(:disabled) {
-  border-color: var(--success);
-  color: var(--text-primary);
-}
-
-.ov-domain-item--selected {
-  border-color: rgba(16,185,129,0.4);
-  background: rgba(16,185,129,0.06);
-  color: var(--text-primary);
-}
-
-.ov-domain-item--fixed {
-  opacity: 0.45;
-  cursor: not-allowed;
-  border-style: dashed;
-}
+.ov-domain-item:hover:not(:disabled) { border-color: var(--success); color: var(--text-primary); }
+.ov-domain-item--selected { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.06); color: var(--text-primary); }
+.ov-domain-item--fixed { opacity: 0.45; cursor: not-allowed; border-style: dashed; }
 
 .ov-domain-check {
   width: 14px;
@@ -282,11 +173,8 @@
   flex-shrink: 0;
 }
 
-/* Schedule */
-.ov-freq-row {
-  display: flex;
-  gap: 8px;
-}
+/* ── Schedule ── */
+.ov-freq-row { display: flex; gap: 8px; }
 
 .ov-scheduler-radio {
   display: flex;
@@ -323,11 +211,7 @@
   border-radius: 10px;
 }
 
-.ov-time-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.ov-time-row { display: flex; align-items: center; gap: 12px; }
 
 .ov-time-label {
   font-size: 0.75rem;
@@ -351,15 +235,9 @@
   flex: 1;
 }
 
-.ov-scheduler-time-input:focus {
-  outline: none;
-  border-color: var(--success);
-}
+.ov-scheduler-time-input:focus { outline: none; border-color: var(--success); }
 
-.ov-scheduler-days {
-  display: flex;
-  gap: 6px;
-}
+.ov-scheduler-days { display: flex; gap: 6px; }
 
 .ov-scheduler-day {
   flex: 1;
@@ -378,18 +256,10 @@
   letter-spacing: 0.03em;
 }
 
-.ov-scheduler-day--active {
-  background: rgba(16,185,129,0.12);
-  border-color: rgba(16,185,129,0.4);
-  color: var(--success);
-}
+.ov-scheduler-day--active { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.4); color: var(--success); }
+.ov-scheduler-day:hover:not(.ov-scheduler-day--active) { border-color: var(--text-tertiary); color: var(--text-primary); }
 
-.ov-scheduler-day:hover:not(.ov-scheduler-day--active) {
-  border-color: var(--text-tertiary);
-  color: var(--text-primary);
-}
-
-/* Connectors */
+/* ── Connectors ── */
 .ov-connector-row {
   display: flex;
   align-items: center;
@@ -402,18 +272,9 @@
   min-height: 56px;
 }
 
-.ov-connector-row--disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
+.ov-connector-row--disabled { opacity: 0.5; pointer-events: none; }
 
-.ov-connector-row__left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
-}
+.ov-connector-row__left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
 
 .ov-connector-logo {
   width: 32px;
@@ -432,46 +293,16 @@
 .ov-connector-logo--google  { background: #ea4335; }
 .ov-connector-logo--disabled { background: var(--glass-border) !important; color: var(--text-tertiary) !important; }
 
-.ov-connector-row__info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
+.ov-connector-row__info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ov-connector-row__name { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
 
-.ov-connector-row__name {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.ov-connector-row__status {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-}
-
-.ov-connector-row__status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.ov-connector-row__status { display: flex; align-items: center; gap: 5px; font-size: 0.6875rem; font-weight: 500; }
+.ov-connector-row__status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
 .ov-connector-row__status--connected { color: var(--success); }
-.ov-connector-row__status--connected .ov-connector-row__status-dot {
-  background: var(--success);
-  box-shadow: 0 0 4px rgba(16,185,129,0.6);
-}
-
+.ov-connector-row__status--connected .ov-connector-row__status-dot { background: var(--success); box-shadow: 0 0 4px rgba(16,185,129,0.6); }
 .ov-connector-row__status--disabled { color: var(--text-tertiary); }
-.ov-connector-row__status--disabled .ov-connector-row__status-dot {
-  background: var(--text-tertiary);
-  opacity: 0.4;
-}
+.ov-connector-row__status--disabled .ov-connector-row__status-dot { background: var(--text-tertiary); opacity: 0.4; }
 
 .ov-connector-btn {
   font-size: 0.8125rem;
@@ -489,31 +320,11 @@
   gap: 6px;
 }
 
-.ov-connector-btn--connect {
-  background: var(--success);
-  color: var(--bg-primary);
-  border: none;
-}
-
+.ov-connector-btn--connect { background: var(--success); color: var(--bg-primary); border: none; }
 .ov-connector-btn--connect:hover { opacity: 0.85; }
-
-.ov-connector-btn--disconnect {
-  background: transparent;
-  color: var(--text-tertiary);
-  border: 1px solid var(--glass-border);
-}
-
-.ov-connector-btn--disconnect:hover {
-  border-color: var(--error);
-  color: var(--error);
-}
-
-.ov-connector-btn--loading {
-  background: transparent;
-  color: var(--text-tertiary);
-  border: 1px solid var(--glass-border);
-  cursor: not-allowed;
-}
+.ov-connector-btn--disconnect { background: transparent; color: var(--text-tertiary); border: 1px solid var(--glass-border); }
+.ov-connector-btn--disconnect:hover { border-color: var(--error); color: var(--error); }
+.ov-connector-btn--loading { background: transparent; color: var(--text-tertiary); border: 1px solid var(--glass-border); cursor: not-allowed; }
 
 .ov-connector-badge--coming-soon {
   font-size: var(--font-size-min, 0.6875rem);
@@ -527,61 +338,4 @@
   padding: 3px 10px;
   white-space: nowrap;
   flex-shrink: 0;
-}
-
-/* Footer */
-.ov-settings-modal__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 24px;
-  border-top: 1px solid var(--glass-border);
-  background: var(--bg-primary);
-  flex-shrink: 0;
-}
-
-.ov-settings-footer-right {
-  display: flex;
-  gap: 8px;
-}
-
-.ov-settings-footer-btn {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  padding: 7px 18px;
-  border-radius: 9px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.ov-settings-footer-btn--reset {
-  background: transparent;
-  border: 1px solid rgba(239,68,68,0.3);
-  color: var(--error);
-}
-
-.ov-settings-footer-btn--reset:hover { background: rgba(239,68,68,0.08); }
-
-.ov-settings-footer-btn--cancel {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  color: var(--text-secondary);
-}
-
-.ov-settings-footer-btn--cancel:hover { border-color: var(--text-secondary); }
-
-.ov-settings-footer-btn--apply {
-  background: var(--success);
-  border: none;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(16,185,129,0.3);
-}
-
-.ov-settings-footer-btn--apply:hover {
-  opacity: 0.9;
-  box-shadow: 0 4px 12px rgba(16,185,129,0.4);
 }

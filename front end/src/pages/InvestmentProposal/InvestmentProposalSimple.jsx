@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Home, Target, TrendingUp, PieChart, ChevronDown, ChevronUp, FileText } from 'lucide-react';
+import { ArrowLeft, Home, Target, TrendingUp, PieChart, ChevronDown, ChevronUp, FileText, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -584,26 +585,27 @@ const InvestmentProposalSimple = () => {
         </motion.section>
       </div>
 
-      {showMeetingNotes && (
-        <div className="ip-modal-overlay" onClick={() => setShowMeetingNotes(false)}>
-          <motion.div 
-            className="ip-modal-content"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3>Meeting Notes</h3>
-            <ul className="ip-notes-list">
-              {data.meeting_notes.map((note, idx) => (
-                <li key={idx}>{note}</li>
-              ))}
-            </ul>
-            <button className="ip-modal-close" onClick={() => setShowMeetingNotes(false)}>
-              Close
-            </button>
-          </motion.div>
+      {showMeetingNotes && createPortal(
+        <div className="modal-overlay" onClick={() => setShowMeetingNotes(false)}>
+          <div className="modal-shell" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-header__left">
+                <div className="modal-header__titles">
+                  <span className="modal-header__title">Meeting Notes</span>
+                </div>
+              </div>
+              <button className="modal-close" onClick={() => setShowMeetingNotes(false)}><X size={14} /></button>
+            </div>
+            <div className="modal-body">
+              <ul className="ip-notes-list">
+                {data.meeting_notes.map((note, idx) => (
+                  <li key={idx}>{note}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
-      )}
+      , document.body)}
     </div>
     )
   );

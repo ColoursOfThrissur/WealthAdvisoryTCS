@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { SlidersHorizontal, X, RotateCcw } from 'lucide-react';
 import { getApiUrl } from '../config/api';
 import './MorningNotesSettingsModal.css';
@@ -113,35 +114,35 @@ const MorningNotesSettingsModal = ({ onClose, onSaveAndRefresh }) => {
     return `${job.morning_time} ${job.timezone || 'EST'} on ${(job.days || []).join(', ')}`;
   };
 
-  return (
-    <div className="mn-modal-overlay" onClick={onClose}>
-      <div className="mn-modal" onClick={e => e.stopPropagation()}>
+  return createPortal(
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-shell modal-shell--wide" onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="mn-modal__head">
-          <div className="mn-modal__title-group">
-            <div className="mn-modal__icon"><SlidersHorizontal size={15} /></div>
-            <div>
-              <span className="mn-modal__title">Morning Notes Settings</span>
-              <span className="mn-modal__subtitle">Configure what your morning note covers</span>
+        <div className="modal-header">
+          <div className="modal-header__left">
+            <div className="modal-header__icon"><SlidersHorizontal size={15} /></div>
+            <div className="modal-header__titles">
+              <span className="modal-header__title">Morning Notes Settings</span>
+              <span className="modal-header__subtitle">Configure what your morning note covers</span>
             </div>
           </div>
-          <button className="mn-modal__close" onClick={onClose}><X size={14} /></button>
+          <button className="modal-close" onClick={onClose}><X size={14} /></button>
         </div>
 
         {/* Tabs */}
-        <div className="mn-tabs">
+        <div className="ov-settings-tabs">
           {TABS.map(t => (
             <button
               key={t}
-              className={`mn-tab${activeTab === t ? ' mn-tab--active' : ''}`}
+              className={`ov-settings-tab${activeTab === t ? ' ov-settings-tab--active' : ''}`}
               onClick={() => setActiveTab(t)}
             >{t}</button>
           ))}
         </div>
 
         {/* Body */}
-        <div className="mn-modal__body">
+        <div className="modal-body" style={{ padding: 0 }}>
 
           {/* ── CONTENT TAB ── */}
           {activeTab === 'Content' && (
@@ -369,16 +370,16 @@ const MorningNotesSettingsModal = ({ onClose, onSaveAndRefresh }) => {
         </div>
 
         {/* Footer */}
-        <div className="mn-modal__footer">
-          <button className="mn-footer-btn mn-footer-btn--reset" onClick={handleReset} disabled={saving}>
-            <RotateCcw size={13} /> Reset to Default
+        <div className="modal-footer">
+          <button className="modal-btn modal-btn--danger" onClick={handleReset} disabled={saving}>
+            <RotateCcw size={13} /> Reset
           </button>
-          <div className="mn-footer-right">
-            <button className="mn-footer-btn mn-footer-btn--cancel" onClick={onClose} disabled={saving}>Cancel</button>
-            <button className="mn-footer-btn mn-footer-btn--refresh" onClick={() => handleSave(true)} disabled={saving}>
+          <div className="modal-footer__right">
+            <button className="modal-btn modal-btn--ghost" onClick={onClose} disabled={saving}>Cancel</button>
+            <button className="modal-btn modal-btn--ghost" onClick={() => handleSave(true)} disabled={saving}>
               {saving ? 'Saving...' : 'Save & Refresh'}
             </button>
-            <button className="mn-footer-btn mn-footer-btn--save" onClick={() => handleSave(false)} disabled={saving}>
+            <button className="modal-btn modal-btn--primary" onClick={() => handleSave(false)} disabled={saving}>
               {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
@@ -386,7 +387,7 @@ const MorningNotesSettingsModal = ({ onClose, onSaveAndRefresh }) => {
 
       </div>
     </div>
-  );
+  , document.body);
 };
 
 export default MorningNotesSettingsModal;

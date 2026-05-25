@@ -4,13 +4,16 @@ import { ArrowLeft, TrendingUp, AlertCircle } from 'lucide-react';
 import { useWorklist } from '../contexts/WorklistContext';
 import { REBALANCING_API_URL } from '../config/api';
 import AIBadge from '../components/AIBadge';
+import Tooltip from '../components/Tooltip';
+import { formatCurrency } from '../utils/formatters';
+import { useToast } from '../contexts/ToastContext';
 import worklistData from '../data/worklistCustomers.json';
 import './RebalancingWorklist.css';
 
 const MOCK_CLIENTS = worklistData.rebalancing.map(c => ({
   clientId: c.CustomerID,
   name: `${c.FirstName} ${c.Surname}`,
-  fum: `$${(c.NetAssets / 1000).toFixed(0)}K`,
+  fum: formatCurrency(c.NetAssets, true),
   aum: c.NetAssets,
   riskProfile: c.RiskProfile,
   priority: c.Priority === 'Critical' ? 1 : 3,
@@ -24,6 +27,7 @@ const MOCK_CLIENTS = worklistData.rebalancing.map(c => ({
 const RebalancingWorklist = () => {
   const navigate = useNavigate();
   const { hoveredClientId, setHoveredClientId, completedActions, setCompletedActions } = useWorklist();
+  const toast = useToast();
   const [filterPriority, setFilterPriority] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('priority');
@@ -168,12 +172,14 @@ const RebalancingWorklist = () => {
       <td className="client-name">{client.name}</td>
       <td>{client.fum}</td>
       <td>
-        <div className="engagement-bar" title={`Engagement: ${getEngagementScore(client)}%`}>
-          <div className="engagement-fill" style={{ width: `${getEngagementScore(client)}%`, background: getEngagementColor(getEngagementScore(client)) }} />
-          <span className="engagement-score-label">{getEngagementScore(client)}</span>
-          <div style={{ position: 'absolute', top: 0, bottom: 0, left: '60%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }} />
-          <div style={{ position: 'absolute', top: 0, bottom: 0, left: '80%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }} />
-        </div>
+        <Tooltip content={`Engagement: ${getEngagementScore(client)}%`} placement="top">
+          <div className="engagement-bar">
+            <div className="engagement-fill" style={{ width: `${getEngagementScore(client)}%`, background: getEngagementColor(getEngagementScore(client)) }} />
+            <span className="engagement-score-label">{getEngagementScore(client)}</span>
+            <div style={{ position: 'absolute', top: 0, bottom: 0, left: '60%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }} />
+            <div style={{ position: 'absolute', top: 0, bottom: 0, left: '80%', width: '1px', background: 'var(--glass-border)', zIndex: 3 }} />
+          </div>
+        </Tooltip>
       </td>
       <td>
         <span className="priority-badge" style={{ backgroundColor: getPriorityColor(client.priority) }}>
@@ -186,6 +192,7 @@ const RebalancingWorklist = () => {
           onClick={(e) => {
             e.stopPropagation();
             if (setCompletedActions) setCompletedActions(prev => ({ ...prev, [client.clientId]: true }));
+            toast('Rebalancing action initiated', 'success');
             navigate(`/action/rebalancing/${client.clientId}`);
           }}
         >

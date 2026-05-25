@@ -4,6 +4,7 @@ import { Calendar, CheckCircle, AlertCircle, Loader, Sun, Moon, Sparkles, Clock 
 import { useTheme } from '../../hooks/useTheme';
 import { useAuth } from '../../contexts/AuthContext';
 import { checkAuth } from '../../services/meetingPrepService';
+import Tooltip from '../../components/Tooltip';
 import './Auth.css';
 
 const POLL_INTERVAL_MS = 3000;
@@ -134,9 +135,11 @@ export default function GoogleConnect() {
     <div className="auth-container gc-wide" data-theme={theme}>
       <div className="auth-background" />
 
-      <button onClick={toggleTheme} className="theme-toggle" title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
-        {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-      </button>
+      <Tooltip content={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} placement="left">
+        <button onClick={toggleTheme} className="theme-toggle">
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
+      </Tooltip>
 
       <div className="auth-card">
         <h1 className="auth-title">Wealth Management Platform</h1>

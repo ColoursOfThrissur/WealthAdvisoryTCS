@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, RefreshCw, AlertCircle, TrendingUp, Activity, BarChart2, TrendingDown } from 'lucide-react';
 import clientDataService from '../services/clientDataService';
 import './RerunModal.css';
@@ -103,20 +104,21 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
 
   if (!isOpen) return null;
 
-  return (
-    <div className="rerun-modal-overlay" onClick={onClose}>
-      <div className="rerun-modal-container" onClick={(e) => e.stopPropagation()}>
-        <div className="rerun-modal-header">
-          <div className="rerun-modal-title-group">
-            <RefreshCw size={24} className="rerun-modal-icon" />
-            <h2 className="rerun-modal-title">Configure Analysis Rerun</h2>
+  return createPortal(
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-shell modal-shell--wide" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <div className="modal-header__left">
+            <div className="modal-header__icon"><RefreshCw size={15} /></div>
+            <div className="modal-header__titles">
+              <span className="modal-header__title">Configure Analysis Rerun</span>
+              <span className="modal-header__subtitle">Customise what the AI agent analyses</span>
+            </div>
           </div>
-          <button className="rerun-modal-close" onClick={onClose}>
-            <X size={20} />
-          </button>
+          <button className="modal-close" onClick={onClose}><X size={20} /></button>
         </div>
 
-        <div className="rerun-modal-body">
+        <div className="modal-body">
           {/* Section 1: Sentiment Analysis Toggle */}
           <div className="rerun-section">
             <div className="rerun-section-header">
@@ -252,44 +254,19 @@ const RerunModal = ({ isOpen, onClose, onSubmit, clientId }) => {
           </div>
         </div>
 
-        <div className="rerun-modal-footer">
-          <button 
-            className="rerun-btn rerun-btn-reset" 
-            onClick={handleReset}
-            disabled={loading}
-          >
-            Reset
-          </button>
-          <div className="rerun-footer-actions">
-            <button 
-              className="rerun-btn rerun-btn-cancel" 
-              onClick={onClose}
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button 
-              className="rerun-btn rerun-btn-submit" 
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <div className="rerun-btn-spinner"></div>
-                  Running Analysis...
-                </>
-              ) : (
-                <>
-                  <RefreshCw size={16} />
-                  Run Analysis
-                </>
-              )}
+        <div className="modal-footer">
+          <button className="modal-btn modal-btn--danger" onClick={handleReset} disabled={loading}>Reset</button>
+          <div className="modal-footer__right">
+            <button className="modal-btn modal-btn--ghost" onClick={onClose} disabled={loading}>Cancel</button>
+            <button className="modal-btn modal-btn--primary" onClick={handleSubmit} disabled={loading}>
+              {loading ? (<><div className="rerun-btn-spinner"></div>Running...</>) : (<><RefreshCw size={14} />Run Analysis</>)}
             </button>
           </div>
         </div>
+
       </div>
     </div>
-  );
+  , document.body);
 };
 
 export default RerunModal;

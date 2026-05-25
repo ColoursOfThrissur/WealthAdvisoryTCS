@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, RefreshCw, FileText, ExternalLink } from 'lucide-react';
 import useMorningNotes from '../hooks/useMorningNotes';
+import Tooltip from './Tooltip';
 
 const CYCLE_INTERVAL_MS = 6000;
 
@@ -215,15 +216,16 @@ const MorningNoteTicker = () => {
         )}
 
         {/* Refresh */}
-        <button
-          className="mnt__refresh-btn"
-          onClick={(e) => { e.stopPropagation(); refresh(); }}
-          disabled={refreshing}
-          aria-label="Refresh morning notes"
-          title="Refresh morning notes"
-        >
-          <RefreshCw size={13} className={refreshing ? 'mnt__spin' : ''} />
-        </button>
+        <Tooltip content="Refresh morning notes" placement="bottom">
+          <button
+            className="mnt__refresh-btn"
+            onClick={(e) => { e.stopPropagation(); refresh(); }}
+            disabled={refreshing}
+            aria-label="Refresh morning notes"
+          >
+            <RefreshCw size={13} className={refreshing ? 'mnt__spin' : ''} />
+          </button>
+        </Tooltip>
 
         {/* Expand toggle */}
         <button

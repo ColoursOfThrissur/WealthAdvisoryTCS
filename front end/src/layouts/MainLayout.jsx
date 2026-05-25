@@ -200,7 +200,7 @@ const MainLayout = ({ children, activeTab, onTabChange, isChatExpanded, onChatCl
 
       {renderNavBar()}
 
-      <main className="main-layout__content">
+      <main className="main-layout__content page-transition" key={location.pathname}>
         {children}
       </main>
     </div>

@@ -6,6 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { signInWithCognito } from "../../utils/cognito";
 import { persistAuthTokens } from "../../utils/authCookies";
 import InfoModal from "./InfoModal";
+import Tooltip from "../../components/Tooltip";
 import "./Auth.css";
 
 export default function Login() {
@@ -86,13 +87,11 @@ export default function Login() {
     <div className="auth-container" data-theme={theme}>
       <div className="auth-background" />
 
-      <button
-        onClick={toggleTheme}
-        className="theme-toggle"
-        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      >
-        {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-      </button>
+      <Tooltip content={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} placement="left">
+        <button onClick={toggleTheme} className="theme-toggle">
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
+      </Tooltip>
 
       <div className="auth-card">
         <h1 className="auth-title">Wealth Management Platform</h1>
@@ -126,15 +125,16 @@ export default function Login() {
                 autoComplete="current-password"
                 required
               />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(p => !p)}
-                tabIndex={-1}
-                title={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
+              <Tooltip content={showPassword ? 'Hide password' : 'Show password'} placement="left">
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(p => !p)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </Tooltip>
             </div>
           </div>
 
